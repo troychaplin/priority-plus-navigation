@@ -24,8 +24,7 @@
       "padding": true
     },
     "color": {
-      "background": true,
-      "text": true
+      "background": true
     }
   },
   "attributes": {

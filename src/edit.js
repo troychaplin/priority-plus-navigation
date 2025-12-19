@@ -45,10 +45,6 @@ export default function Edit( { attributes, setAttributes } ) {
 				</PanelBody>
 			</InspectorControls>
 			
-			{/* <div className="priority-nav-editor-notice">
-				<p>{ __( '📱 Priority+ Navigation - Items will automatically move to "More" dropdown on smaller screens', 'priority-nav' ) }</p>
-			</div> */}
-			
 			<div { ...innerBlocksProps } />
 		</>
 	);
