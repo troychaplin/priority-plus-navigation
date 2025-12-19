@@ -1,8 +1,8 @@
 <?php
 /**
- * Plugin Name:       Priority+ Nav Block
+ * Plugin Name:       Priority+ Navigation Block
  * Plugin URI:        https://github.com/troychaplin/priority-plus-nav-block
- * Description:       A responsive navigation block implementing the Priority+ pattern that automatically moves overflow items to a "More" dropdown.
+ * Description:       A WordPress block plugin that adds Priority+ pattern functionality to core WordPress navigation block. It automatically moves navigation items that don't fit into a responsive "More" dropdown menu as the viewport narrows.
  * Version:           0.1.0
  * Requires at least: 6.0
  * Requires PHP:      7.4
@@ -11,7 +11,7 @@
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       priority-plus-nav
  *
- * @package PriorityNav
+ * @package PriorityPlusNavigationBlock
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -23,7 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @see https://developer.wordpress.org/reference/functions/register_block_type/
  */
-function priority_nav_block_init() {
+function priority_plus_navigation_block_init() {
 	register_block_type( __DIR__ . '/build/' );
 }
-add_action( 'init', 'priority_nav_block_init' );
+add_action( 'init', 'priority_plus_navigation_block_init' );

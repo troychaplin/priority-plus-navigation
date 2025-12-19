@@ -1,4 +1,4 @@
-# Priority+ Nav Block
+# Priority+ Navigation Block
 
 A WordPress block plugin that adds Priority+ pattern functionality to core WordPress navigation block. It automatically moves navigation items that don't fit into a responsive "More" dropdown menu as the viewport narrows.
 
