@@ -59,19 +59,7 @@ class PriorityNav {
 		                           openSubmenusOnClickAttr === '1' || 
 		                           openSubmenusOnClickAttr === '';
 		
-		// Debug log - log all nav attributes for debugging
-		if ( typeof console !== 'undefined' && console.log ) {
-			const allAttrs = {};
-			if ( this.nav.attributes ) {
-				for ( let i = 0; i < this.nav.attributes.length; i++ ) {
-					const attr = this.nav.attributes[ i ];
-					allAttrs[ attr.name ] = attr.value;
-				}
-			}
-			console.log( 'Priority Nav - All nav attributes:', allAttrs );
-			console.log( 'Priority Nav - openSubmenusOnClick:', this.openSubmenusOnClick, 'from attr:', openSubmenusOnClickAttr );
-			console.log( 'Priority Nav - Nav classes:', Array.from( this.nav.classList ) );
-		}
+		// (Debug logging removed for production.)
 		
 		if ( ! this.list ) {
 			return;
@@ -86,6 +74,12 @@ class PriorityNav {
 		this.isCalculating = false;
 		this.openAccordions = [];
 		this.submenuCounter = 0; // For generating unique IDs
+		
+		// Track responsive container for hamburger mode detection
+		this.responsiveContainer = this.nav.querySelector( '.wp-block-navigation__responsive-container' );
+		this.mutationObserver = null;
+		this.retryTimeout = null;
+		this.isEnabled = true; // Track if Priority Nav should be active
 
 		this.init();
 	}
@@ -129,29 +123,228 @@ class PriorityNav {
 	}
 
 	init() {
-		this.cacheItemWidths();
 		this.setupEventListeners();
+		this.setupResponsiveObserver();
 		
-		requestAnimationFrame( () => {
-			this.checkOverflow();
-		} );
+		// Check if we should enable Priority Nav
+		if ( this.isInHamburgerMode() ) {
+			this.disablePriorityNav();
+		} else {
+			this.enablePriorityNav();
+		}
 		
 		const resizeObserver = new ResizeObserver( () => {
 			if ( ! this.isCalculating ) {
-				requestAnimationFrame( () => this.checkOverflow() );
+				// Check if we've transitioned between hamburger and desktop mode
+				const wasEnabled = this.isEnabled;
+				const inHamburger = this.isInHamburgerMode();
+				
+				if ( inHamburger && wasEnabled ) {
+					this.disablePriorityNav();
+				} else if ( ! inHamburger && ! wasEnabled ) {
+					this.enablePriorityNav();
+				} else if ( ! inHamburger && wasEnabled ) {
+					// Still in desktop mode, just recalculate
+					requestAnimationFrame( () => this.checkOverflow() );
+				}
 			}
 		} );
 		resizeObserver.observe( this.wrapper );
 	}
 
-	cacheItemWidths() {
+	/**
+	 * Check if navigation is in hamburger/responsive mode
+	 * Returns true if the menu container is hidden or in responsive overlay mode
+	 */
+	isInHamburgerMode() {
+		// Check if responsive container exists and is the active one
+		if ( this.responsiveContainer ) {
+			const containerStyles = window.getComputedStyle( this.responsiveContainer );
+			const isHidden = containerStyles.display === 'none' || 
+			                containerStyles.visibility === 'hidden' ||
+			                this.responsiveContainer.getAttribute( 'aria-hidden' ) === 'true';
+			
+			// If responsive container exists and is hidden, we're in hamburger mode
+			if ( isHidden ) {
+				return true;
+			}
+		}
+		
+		// Check if the main list container is hidden (fallback detection)
+		if ( this.list ) {
+			const listStyles = window.getComputedStyle( this.list );
+			const listRect = this.list.getBoundingClientRect();
+			
+			// If list is hidden or has zero width, likely in hamburger mode
+			if ( listStyles.display === 'none' || 
+			     listStyles.visibility === 'hidden' ||
+			     listRect.width === 0 ) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+
+	/**
+	 * Check if the navigation list is measurable (visible and has dimensions)
+	 */
+	isMeasurable() {
+		if ( ! this.list ) {
+			return false;
+		}
+		
+		const styles = window.getComputedStyle( this.list );
+		const rect = this.list.getBoundingClientRect();
+		
+		// Must be visible and have actual width
+		return styles.display !== 'none' && 
+		       styles.visibility !== 'hidden' &&
+		       rect.width > 0 &&
+		       rect.height > 0;
+	}
+
+	/**
+	 * Disable Priority Nav when in hamburger mode
+	 */
+	disablePriorityNav() {
+		this.isEnabled = false;
+		
+		// Show all items
 		this.items.forEach( item => {
 			item.style.display = '';
 		} );
 		
-		this.itemWidths = this.items.map( item => {
-			return item.getBoundingClientRect().width;
+		// Hide the More button
+		if ( this.moreContainer ) {
+			this.moreContainer.style.display = 'none';
+		}
+		
+		// Close dropdown if open
+		this.closeDropdown();
+	}
+
+	/**
+	 * Enable Priority Nav and recalculate
+	 */
+	enablePriorityNav() {
+		this.isEnabled = true;
+		
+		// Only proceed if measurable
+		if ( ! this.isMeasurable() ) {
+			// Schedule retry
+			this.scheduleRetry();
+			return;
+		}
+		
+		// Cache widths if needed (or if they contain zeros from previous hidden state)
+		const needsRecache = this.itemWidths.length === 0 || 
+		                     this.itemWidths.some( width => width === 0 );
+		
+		if ( needsRecache ) {
+			this.cacheItemWidths();
+		}
+		
+		// Recalculate overflow
+		requestAnimationFrame( () => {
+			this.checkOverflow();
 		} );
+	}
+
+	/**
+	 * Schedule a retry when menu becomes visible
+	 */
+	scheduleRetry( maxAttempts = 20 ) {
+		if ( this.retryTimeout ) {
+			clearTimeout( this.retryTimeout );
+		}
+		
+		let attempts = 0;
+		const tryEnable = () => {
+			attempts++;
+			
+			if ( this.isMeasurable() && ! this.isInHamburgerMode() ) {
+				this.enablePriorityNav();
+				this.retryTimeout = null;
+			} else if ( attempts < maxAttempts ) {
+				this.retryTimeout = setTimeout( tryEnable, 100 );
+			} else {
+				// Give up after max attempts
+				this.retryTimeout = null;
+			}
+		};
+		
+		this.retryTimeout = setTimeout( tryEnable, 100 );
+	}
+
+	/**
+	 * Set up observer for responsive container changes
+	 */
+	setupResponsiveObserver() {
+		if ( ! this.responsiveContainer ) {
+			return;
+		}
+		
+		// Watch for attribute and class changes on responsive container
+		this.mutationObserver = new MutationObserver( ( mutations ) => {
+			let shouldCheck = false;
+			
+			mutations.forEach( ( mutation ) => {
+				if ( mutation.type === 'attributes' && 
+				     ( mutation.attributeName === 'aria-hidden' || 
+				       mutation.attributeName === 'class' ) ) {
+					shouldCheck = true;
+				}
+			} );
+			
+			if ( shouldCheck ) {
+				const inHamburger = this.isInHamburgerMode();
+				
+				if ( inHamburger && this.isEnabled ) {
+					this.disablePriorityNav();
+				} else if ( ! inHamburger && ! this.isEnabled ) {
+					this.enablePriorityNav();
+				}
+			}
+		} );
+		
+		this.mutationObserver.observe( this.responsiveContainer, {
+			attributes: true,
+			attributeFilter: [ 'aria-hidden', 'class' ]
+		} );
+		
+		// Also observe the list container for visibility changes
+		if ( this.list ) {
+			this.mutationObserver.observe( this.list, {
+				attributes: true,
+				attributeFilter: [ 'style', 'class' ],
+				attributeOldValue: false
+			} );
+		}
+	}
+
+	cacheItemWidths() {
+		// Only cache if measurable
+		if ( ! this.isMeasurable() ) {
+			return;
+		}
+		
+		this.items.forEach( item => {
+			item.style.display = '';
+		} );
+		
+		// Force a reflow to ensure accurate measurements
+		void this.list.offsetHeight;
+		
+		this.itemWidths = this.items.map( item => {
+			const rect = item.getBoundingClientRect();
+			return rect.width > 0 ? rect.width : 0;
+		} );
+		
+		// If we got zero widths, schedule a retry
+		if ( this.itemWidths.some( width => width === 0 ) ) {
+			this.scheduleRetry();
+		}
 	}
 
 	setupEventListeners() {
@@ -195,18 +388,44 @@ class PriorityNav {
 	}
 
 	checkOverflow() {
+		// Don't run if disabled (hamburger mode) or not measurable
+		if ( ! this.isEnabled || ! this.isMeasurable() ) {
+			this.isCalculating = false;
+			return;
+		}
+		
 		this.isCalculating = true;
 		
-		const wrapperWidth = this.wrapper.getBoundingClientRect().width;
+		// Get actual visible container width - prefer the nav element itself
+		const navRect = this.nav.getBoundingClientRect();
 		const navStyles = window.getComputedStyle( this.nav );
 		const padding = parseFloat( navStyles.paddingLeft ) + parseFloat( navStyles.paddingRight );
-		const gap = parseFloat( navStyles.gap ) || 8;
+		
+		// Get gap from the container that actually has it (usually the list container)
+		const listStyles = window.getComputedStyle( this.list );
+		const gap = parseFloat( listStyles.gap ) || 
+		            parseFloat( navStyles.gap ) || 
+		            8; // Fallback
+		
+		// Use nav width if available, otherwise fall back to wrapper
+		let availableWidth = navRect.width > 0 ? navRect.width - padding : this.wrapper.getBoundingClientRect().width - padding;
 		
 		// Temporarily show more button to measure it
 		this.moreContainer.style.display = '';
+		// Force a reflow for accurate measurement
+		void this.moreButton.offsetHeight;
 		const moreButtonWidth = this.moreButton.getBoundingClientRect().width;
 		
-		let availableWidth = wrapperWidth - padding;
+		// Ensure we have valid item widths
+		if ( this.itemWidths.length === 0 || this.itemWidths.some( width => width === 0 ) ) {
+			this.cacheItemWidths();
+			// If still invalid, abort
+			if ( this.itemWidths.length === 0 || this.itemWidths.some( width => width === 0 ) ) {
+				this.isCalculating = false;
+				return;
+			}
+		}
+		
 		let visibleCount = 0;
 		
 		// First pass: try to fit all items
@@ -264,11 +483,6 @@ class PriorityNav {
 			// Create container and insert HTML
 			const container = document.createElement( 'li' );
 			container.innerHTML = accordionHTML;
-			
-			if ( typeof console !== 'undefined' && console.log ) {
-				console.log( 'Built accordion HTML:', accordionHTML );
-				console.log( 'Item data:', itemData );
-			}
 			
 			this.dropdown.appendChild( container );
 			hasHiddenItems = true;
@@ -457,10 +671,6 @@ class PriorityNav {
 	toggleAccordionItem( button, submenu ) {
 		const isExpanded = button.getAttribute( 'aria-expanded' ) === 'true';
 		
-		if ( typeof console !== 'undefined' && console.log ) {
-			console.log( 'toggleAccordionItem called, isExpanded:', isExpanded, 'submenu ID:', submenu.id );
-		}
-		
 		if ( isExpanded ) {
 			// Close this accordion
 			button.setAttribute( 'aria-expanded', 'false' );
@@ -484,9 +694,6 @@ class PriorityNav {
 				}
 			} );
 			
-			if ( typeof console !== 'undefined' && console.log ) {
-				console.log( 'Accordion closed' );
-			}
 		} else {
 			// Open this accordion
 			button.setAttribute( 'aria-expanded', 'true' );
@@ -497,14 +704,6 @@ class PriorityNav {
 			submenu.style.setProperty( 'position', 'static', 'important' );
 			submenu.classList.add( 'is-open' );
 			submenu.setAttribute( 'aria-hidden', 'false' );
-			
-			if ( typeof console !== 'undefined' && console.log ) {
-				console.log( 'Accordion opened, submenu styles:', {
-					display: window.getComputedStyle( submenu ).display,
-					opacity: window.getComputedStyle( submenu ).opacity,
-					visibility: window.getComputedStyle( submenu ).visibility
-				} );
-			}
 			
 			// Add to open accordions array
 			this.openAccordions.push( { button, submenu } );
@@ -519,6 +718,21 @@ class PriorityNav {
 			submenu.setAttribute( 'aria-hidden', 'true' );
 		} );
 		this.openAccordions = [];
+	}
+
+	/**
+	 * Cleanup observers and timeouts
+	 */
+	destroy() {
+		if ( this.mutationObserver ) {
+			this.mutationObserver.disconnect();
+			this.mutationObserver = null;
+		}
+		
+		if ( this.retryTimeout ) {
+			clearTimeout( this.retryTimeout );
+			this.retryTimeout = null;
+		}
 	}
 }
 
