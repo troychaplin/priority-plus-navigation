@@ -1,15 +1,26 @@
 class PriorityNav {
 	constructor( element ) {
-		this.wrapper = element;
-		this.nav = element.querySelector( '.wp-block-navigation' );
+		// Support both wrapper mode and direct mode
+		// Wrapper mode: element has [data-priority-nav] and contains .wp-block-navigation
+		// Direct mode: element IS .wp-block-navigation with [data-priority-nav]
+		if ( element.classList.contains( 'wp-block-navigation' ) && element.hasAttribute( 'data-priority-nav' ) ) {
+			// Direct mode: element is the nav itself
+			this.nav = element;
+			this.wrapper = element; // Use nav as wrapper for compatibility
+		} else {
+			// Wrapper mode: look for nav inside
+			this.wrapper = element;
+			this.nav = element.querySelector( '.wp-block-navigation' );
+		}
 		
 		if ( ! this.nav ) {
 			return;
 		}
 		
 		this.list = this.nav.querySelector( '.wp-block-navigation__container' );
-		this.moreLabel = element.getAttribute( 'data-more-label' ) || 'More';
-		this.moreIcon = element.getAttribute( 'data-more-icon' ) || 'dots';
+		// Get attributes from nav element (works for both modes since we inject on nav)
+		this.moreLabel = this.nav.getAttribute( 'data-more-label' ) || 'More';
+		this.moreIcon = this.nav.getAttribute( 'data-more-icon' ) || 'dots';
 		
 		// Check if navigation has openSubmenusOnClick setting
 		// WordPress stores this as data attribute on the nav block
@@ -738,6 +749,15 @@ class PriorityNav {
 
 // Initialize on DOM ready
 document.addEventListener( 'DOMContentLoaded', () => {
-	const navElements = document.querySelectorAll( '[data-priority-nav]' );
-	navElements.forEach( nav => new PriorityNav( nav ) );
+	// Support both wrapper mode and direct mode
+	// Wrapper mode: [data-priority-nav] containing .wp-block-navigation
+	// Direct mode: .wp-block-navigation[data-priority-nav]
+	const wrapperElements = document.querySelectorAll( '[data-priority-nav]:not(.wp-block-navigation)' );
+	const directNavElements = document.querySelectorAll( '.wp-block-navigation[data-priority-nav]' );
+	
+	// Initialize wrapper mode (backward compatibility)
+	wrapperElements.forEach( element => new PriorityNav( element ) );
+	
+	// Initialize direct mode (new variation approach)
+	directNavElements.forEach( element => new PriorityNav( element ) );
 } );

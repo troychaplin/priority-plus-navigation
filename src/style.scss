@@ -1,5 +1,7 @@
 
-.wp-block-lumen-priority-nav {
+// Support both wrapper mode (.wp-block-lumen-priority-nav) and direct mode (.wp-block-navigation[data-priority-nav])
+.wp-block-lumen-priority-nav,
+.wp-block-navigation[data-priority-nav] {
 	position: relative;
 
 	.priority-nav-container {
