@@ -8,9 +8,9 @@ Priority+ navigation is a responsive design pattern that keeps all navigation it
 
 ## Features
 
-- ✅ **Wraps Core Navigation** - Leverages the standard WordPress navigation block, no need to rebuild your menus
+- ✅ **Core Navigation Variation** - Extends the standard WordPress navigation block as a variation, no need to rebuild your menus
 - ✅ **Automatic Overflow Detection** - Intelligently calculates available space and moves items to dropdown
-- ✅ **Bidirectional Transforms** - Easy conversion between standard navigation and priority navigation
+- ✅ **Easy Conversion** - Transform any Navigation block to Priority+ Navigation via block variations
 - ✅ **Customizable "More" Button** - Choose label text and icon style
 - ✅ **Responsive by Design** - Uses ResizeObserver for smooth, performant resizing
 - ✅ **Core Navigation Integration** - Automatically detects and respects "Open submenus on click" setting
@@ -19,7 +19,7 @@ Priority+ navigation is a responsive design pattern that keeps all navigation it
 - ✅ **Accessible** - Proper ARIA attributes and keyboard support (Escape to close)
 - ✅ **Block Theme Ready** - Full support for block themes with alignment, spacing, and color controls
 - ✅ **Multiple Blocks** - Use multiple Priority+ Navigation blocks on the same page
-- ✅ **Future-Proof** - Since it wraps core navigation, it benefits from WordPress core updates
+- ✅ **Future-Proof** - Since it extends core navigation, it benefits from WordPress core updates
 
 ## Installation
 
@@ -46,29 +46,31 @@ npm run build
 
 ## Usage
 
-There are three ways to use the Priority+ Navigation block:
+The Priority+ Navigation is available as a variation of the core Navigation block. There are two ways to use it:
 
-### Option 1: Start Fresh
+### Option 1: Insert as Variation
 
 1. In the block editor, click the **+** button to add a block
-2. Search for **"Priority+ Navigation"**
-3. Insert the block
-4. Configure your navigation using the familiar WordPress navigation tools
-5. Customize the "More" button label and icon in the block sidebar
+2. Search for **"Priority+ Navigation"** or **"Navigation"**
+3. When you see the Navigation block, look for the **Priority+ Navigation** variation in the block variations panel
+4. Select the Priority+ Navigation variation
+5. Configure your navigation using the familiar WordPress navigation tools
+6. Customize the "More" button label and icon in the block sidebar (Priority+ Settings panel)
 
 ### Option 2: Convert Existing Navigation
 
 1. Select any existing **Navigation** block
-2. Click the **Transform** button (⇄) in the block toolbar
-3. Choose **"Priority+ Navigation"**
-4. Your navigation is now wrapped with priority behavior!
+2. In the block toolbar or block settings, look for the block variations switcher
+3. Choose **"Priority+ Navigation"** from the variations
+4. Your navigation now has Priority+ behavior enabled!
 
-### Option 3: Convert Back to Standard Navigation
+### Converting Back to Standard Navigation
 
 1. Select a **Priority+ Navigation** block
-2. Click the **Transform** button (⇄) in the block toolbar
-3. Choose **"Navigation"**
-4. The wrapper is removed, returning to standard WordPress navigation
+2. In the block variations switcher, choose the standard **"Navigation"** variation
+3. The Priority+ behavior is disabled, returning to standard WordPress navigation
+
+**Note:** Legacy wrapper blocks (from previous versions) will continue to work on the frontend, but are no longer available for insertion in the editor. If you have existing wrapper blocks, consider converting them to the variation approach.
 
 ## Configuration
 
@@ -86,7 +88,7 @@ There are three ways to use the Priority+ Navigation block:
 
 ### Core Navigation Settings
 
-The plugin automatically detects and respects settings from the wrapped Core Navigation block:
+The plugin automatically detects and respects settings from the Core Navigation block:
 
 - **Open submenus on click** - When enabled in Core Navigation, submenus in the "More" dropdown become clickable accordions. When disabled, the link remains functional with a separate arrow button to toggle the submenu.
 
@@ -102,19 +104,21 @@ The block supports all standard WordPress block features:
 
 ### Architecture
 
+The plugin extends the core Navigation block as a **block variation**:
+
 ```
-lumen/priority-nav (wrapper block)
-  └── core/navigation (standard WordPress navigation)
-        ├── core/navigation-link
-        ├── core/navigation-submenu
-        ├── core/page-list
-        └── etc.
+core/navigation (with Priority+ variation enabled)
+  ├── core/navigation-link
+  ├── core/navigation-submenu
+  ├── core/page-list
+  └── etc.
 ```
 
-The plugin creates a lightweight wrapper around the core navigation block:
-- The wrapper adds priority+ behavior via JavaScript
+The variation approach:
+- Extends `core/navigation` with Priority+ attributes and controls
+- Adds priority+ behavior via JavaScript on the frontend
 - The core navigation block handles all menu functionality
-- This separation keeps the code maintainable and future-proof
+- This approach is maintainable, future-proof, and integrates seamlessly with WordPress
 
 ### Frontend Behavior
 
@@ -168,10 +172,8 @@ npm run plugin-zip
 priority-nav/
 ├── build/                  # Compiled assets (generated)
 ├── src/
-│   ├── block.json         # Block configuration
-│   ├── index.js           # Block registration & transforms
-│   ├── edit.js            # Block editor component
-│   ├── save.js            # Block save function
+│   ├── index.js           # Editor extension entry point
+│   ├── extend-core-navigation.js  # Variation registration & block extension
 │   ├── view.js            # Frontend JavaScript
 │   ├── style.scss         # Frontend styles
 │   └── editor.scss        # Editor-only styles
@@ -205,12 +207,18 @@ priority-nav/
 
 - When using multiple Priority+ Navigation blocks on the same page with "Open submenus on click" enabled, ensure each block has unique navigation content to avoid potential ID conflicts
 - The plugin automatically disables on mobile/hamburger mode - this is intentional to work seamlessly with WordPress responsive navigation
+- Legacy wrapper blocks (from previous plugin versions) are no longer insertable in the editor, but will continue to function on the frontend for backward compatibility
 
 ## Changelog
 
+### 0.2.0 - Variation-Only Approach
+- Refactored to use block variation instead of wrapper block
+- Namespaced variation name (`lumen-priority-nav`) for better compatibility
+- Improved editor integration with `isActive` detection
+- Legacy wrapper blocks still supported on frontend for backward compatibility
+
 ### 0.1.0 - Initial Release
-- Priority+ navigation wrapper block
-- Bidirectional transforms (Navigation ↔ Priority+ Navigation)
+- Priority+ navigation as core/navigation variation
 - Customizable "More" button label and icon
 - Full block theme support
 - Responsive overflow detection

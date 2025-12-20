@@ -102,14 +102,18 @@ addFilter(
  * Register block variation for Priority+ Navigation
  */
 registerBlockVariation( 'core/navigation', {
-	name: 'priority-nav',
+	name: 'lumen-priority-nav',
 	title: __( 'Priority+ Navigation', 'priority-nav' ),
 	description: __( 'A responsive navigation that automatically moves overflow items to a "More" dropdown.', 'priority-nav' ),
+	icon: 'menu-alt',
 	attributes: {
 		priorityNavEnabled: true,
 		priorityNavMoreLabel: 'More',
 		priorityNavMoreIcon: 'dots'
 	},
-	scope: [ 'inserter' ]
+	scope: [ 'inserter', 'block' ],
+	isActive: ( blockAttributes ) => {
+		return !! blockAttributes.priorityNavEnabled;
+	}
 } );
 
