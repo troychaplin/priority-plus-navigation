@@ -2,6 +2,8 @@
 
 A WordPress block plugin that adds Priority+ pattern functionality to core WordPress navigation block. It automatically moves navigation items that don't fit into a responsive "More" dropdown menu as the viewport narrows.
 
+<img src="assets/informational.png" alt="About the priority+ navigation" style="width: 100%; height: auto;">
+
 ## What is Priority+?
 
 Priority+ navigation is a responsive design pattern that keeps all navigation items visible at wide screen sizes, but progressively moves overflow items into a "More" dropdown at smaller screen sizes. This ensures the navigation remains usable on all devices without requiring a hamburger menu or breaking the layout.
