@@ -11,19 +11,31 @@
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       priority-plus-nav
  *
- * @package PriorityPlusNavigationBlock
+ * @package PriorityPlusNav
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-/**
- * Registers the block using the metadata loaded from the `block.json` file.
- *
- * @see https://developer.wordpress.org/reference/functions/register_block_type/
- */
-function priority_plus_navigation_block_init() {
-	register_block_type( __DIR__ . '/build/' );
+// Include our bundled autoload if not loaded globally.
+if ( ! class_exists( PriorityPlusNav\Plugin_Paths::class ) && file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
+	require_once __DIR__ . '/vendor/autoload.php';
 }
-add_action( 'init', 'priority_plus_navigation_block_init' );
+
+if ( ! class_exists( PriorityPlusNav\Plugin_Paths::class ) ) {
+	wp_trigger_error( 'Multi Block Starter Plugin: Composer autoload file not found. Please run `composer install`.', E_USER_ERROR );
+	return;
+}
+
+// Instantiate our modules.
+$priority_plus_nav_modules = array(
+	new PriorityPlusNav\Enqueues( __DIR__ . '/build' ),
+);
+
+
+foreach ( $priority_plus_nav_modules as $priority_plus_nav_module ) {
+	if ( is_a( $priority_plus_nav_module, PriorityPlusNav\Plugin_Module::class ) ) {
+		$priority_plus_nav_module->init();
+	}
+}

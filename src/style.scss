@@ -1,5 +1,7 @@
 
-.wp-block-lumen-priority-nav {
+// Support both wrapper mode (.wp-block-lumen-priority-nav) and direct mode (.wp-block-navigation[data-priority-nav])
+.wp-block-lumen-priority-nav,
+.wp-block-navigation[data-priority-nav] {
 	position: relative;
 
 	.priority-nav-container {
@@ -36,7 +38,7 @@
 		gap: 0.5rem;
 		padding: 0.5rem 1rem;
 		background: transparent;
-		border: 1px solid currentColor;
+		border: 1px solid currentcolor;
 		border-radius: 4px;
 		cursor: pointer;
 		font-size: inherit;
@@ -102,9 +104,9 @@
 				}
 			}
 		}
-		
+
 		// Accordion styles - simplified, using only our custom classes
-		
+
 		// Accordion content - hidden by default, shown when .is-open
 		.priority-nav-accordion-content {
 			display: none;
@@ -112,11 +114,11 @@
 			margin: 0;
 			padding: 0;
 			background: transparent;
-			
+
 			&[aria-hidden="true"] {
 				display: none !important;
 			}
-			
+
 			&.is-open {
 				display: block !important;
 			}
@@ -160,6 +162,7 @@
 			}
 
 			&[aria-expanded="true"] {
+
 				.priority-nav-accordion-arrow {
 					transform: rotate(90deg);
 				}
@@ -188,6 +191,7 @@
 			}
 
 			&[aria-expanded="true"] {
+
 				.priority-nav-accordion-arrow {
 					transform: rotate(90deg);
 				}
@@ -196,6 +200,7 @@
 	}
 
 	&[data-more-hidden="true"] {
+
 		.priority-nav-more {
 			display: none;
 		}
