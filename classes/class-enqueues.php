@@ -142,9 +142,10 @@ class Enqueues extends Plugin_Module {
 		$more_icon             = $this->get_priority_attr( $block, 'priorityNavMoreIcon', 'none' );
 		$more_background_color = $this->get_priority_attr( $block, 'priorityNavMoreBackgroundColor', '' );
 		$more_text_color       = $this->get_priority_attr( $block, 'priorityNavMoreTextColor', '' );
+		$more_padding          = $this->get_priority_attr( $block, 'priorityNavMorePadding', array() );
 
 		// Inject data attributes into the navigation element.
-		return $this->inject_priority_attributes( $block_content, $more_label, $more_icon, $more_background_color, $more_text_color );
+		return $this->inject_priority_attributes( $block_content, $more_label, $more_icon, $more_background_color, $more_text_color, $more_padding );
 	}
 
 	/**
@@ -169,16 +170,106 @@ class Enqueues extends Plugin_Module {
 	/**
 	 * Get a Priority+ attribute value with a default fallback.
 	 *
-	 * @param array  $block         The full block array.
-	 * @param string $attr_name     The attribute name to retrieve.
-	 * @param string $default_value The default value if attribute is missing or empty.
-	 * @return string The attribute value or default.
+	 * @param array        $block         The full block array.
+	 * @param string       $attr_name     The attribute name to retrieve.
+	 * @param string|array $default_value The default value if attribute is missing or empty.
+	 * @return string|array The attribute value or default.
 	 */
-	private function get_priority_attr( array $block, string $attr_name, string $default_value ): string {
+	private function get_priority_attr( array $block, string $attr_name, $default_value = '' ) {
 		$attrs = $block['attrs'] ?? array();
-		$value = $attrs[ $attr_name ] ?? '';
+		$value = $attrs[ $attr_name ] ?? null;
 
-		return ( '' !== $value ) ? $value : $default_value;
+		if ( null === $value ) {
+			return $default_value;
+		}
+
+		// For strings, check if empty.
+		if ( is_string( $value ) && '' === $value ) {
+			return $default_value;
+		}
+
+		// For arrays, check if it's truly empty (no elements).
+		// Note: An array with keys but empty string values is NOT considered empty here,
+		// as it might contain valid empty values that should be processed.
+		if ( is_array( $value ) && 0 === count( $value ) ) {
+			return $default_value;
+		}
+
+		return $value;
+	}
+
+	/**
+	 * Convert WordPress preset value format to CSS custom property format.
+	 *
+	 * WordPress stores preset values as "var:preset|spacing|30" which needs to be
+	 * converted to "var(--wp--preset--spacing--30)" for CSS.
+	 *
+	 * @param string $value The preset value string.
+	 * @return string Converted CSS custom property or original value.
+	 */
+	private function convert_preset_value( string $value ): string {
+		// Check if value matches WordPress preset format: var:preset|spacing|30.
+		if ( preg_match( '/^var:preset\|([^|]+)\|(.+)$/', $value, $matches ) ) {
+			$preset_type = $matches[1];
+			$preset_slug = $matches[2];
+			return sprintf( 'var(--wp--preset--%s--%s)', $preset_type, $preset_slug );
+		}
+
+		// If it's already a CSS custom property, return as-is.
+		if ( strpos( $value, 'var(' ) === 0 ) {
+			return $value;
+		}
+
+		// Otherwise return the original value.
+		return $value;
+	}
+
+	/**
+	 * Convert padding object to CSS value string.
+	 *
+	 * @param array $padding Padding object with top, right, bottom, left keys.
+	 * @return string CSS padding value string.
+	 */
+	private function padding_to_css( array $padding ): string {
+		if ( empty( $padding ) ) {
+			return '';
+		}
+
+		$top    = isset( $padding['top'] ) ? (string) $padding['top'] : '';
+		$right  = isset( $padding['right'] ) ? (string) $padding['right'] : '';
+		$bottom = isset( $padding['bottom'] ) ? (string) $padding['bottom'] : '';
+		$left   = isset( $padding['left'] ) ? (string) $padding['left'] : '';
+
+		// If all values are empty, return empty string.
+		if ( '' === $top && '' === $right && '' === $bottom && '' === $left ) {
+			return '';
+		}
+
+		// Convert preset values to CSS custom property format.
+		$top    = '' !== $top ? $this->convert_preset_value( $top ) : '';
+		$right  = '' !== $right ? $this->convert_preset_value( $right ) : '';
+		$bottom = '' !== $bottom ? $this->convert_preset_value( $bottom ) : '';
+		$left   = '' !== $left ? $this->convert_preset_value( $left ) : '';
+
+		// If all values are the same and not empty, use single value shorthand.
+		if ( '' !== $top && $top === $right && $right === $bottom && $bottom === $left ) {
+			return $top;
+		}
+
+		// For partial padding or mixed values, we need all 4 values.
+		// Use '0' for empty sides to ensure proper CSS.
+		$top    = '' !== $top ? $top : '0';
+		$right  = '' !== $right ? $right : '0';
+		$bottom = '' !== $bottom ? $bottom : '0';
+		$left   = '' !== $left ? $left : '0';
+
+		// Use shorthand when top/bottom are same and left/right are same.
+		if ( $top === $bottom && $right === $left ) {
+			return $top . ' ' . $right;
+		}
+
+		// Otherwise, return all 4 values.
+		return $top . ' ' . $right . ' ' . $bottom . ' ' . $left;
 	}
 
 	/**
@@ -189,9 +280,10 @@ class Enqueues extends Plugin_Module {
 	 * @param string $more_icon            The "more" button icon.
 	 * @param string $more_background_color The "more" button background color.
 	 * @param string $more_text_color      The "more" button text color.
+	 * @param array  $more_padding         The "more" button padding values.
 	 * @return string Modified block content with data attributes.
 	 */
-	private function inject_priority_attributes( string $block_content, string $more_label, string $more_icon, string $more_background_color = '', string $more_text_color = '' ): string {
+	private function inject_priority_attributes( string $block_content, string $more_label, string $more_icon, string $more_background_color = '', string $more_text_color = '', array $more_padding = array() ): string {
 		if ( '' === $block_content ) {
 			return $block_content;
 		}
@@ -223,6 +315,19 @@ class Enqueues extends Plugin_Module {
 				'--priority-nav--color: %s',
 				esc_attr( $more_text_color )
 			);
+		}
+
+		// Convert padding object to CSS value and add as custom property.
+		// Check if padding is an array with at least one key (even if values are empty strings).
+		if ( is_array( $more_padding ) && ! empty( $more_padding ) ) {
+			$padding_css = $this->padding_to_css( $more_padding );
+			// Only add if we got a non-empty CSS value (empty string means no padding was set).
+			if ( '' !== $padding_css ) {
+				$style_parts[] = sprintf(
+					'--priority-nav--padding: %s',
+					esc_attr( $padding_css )
+				);
+			}
 		}
 
 		// Build attributes string.

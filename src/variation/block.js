@@ -67,6 +67,10 @@ addFilter(
 				priorityNavMoreTextColor: {
 					type: 'string',
 				},
+				priorityNavMorePadding: {
+					type: 'object',
+					default: undefined,
+				},
 			},
 		};
 	}

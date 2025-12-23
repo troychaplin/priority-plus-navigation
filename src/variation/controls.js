@@ -3,10 +3,16 @@
  */
 import { __ } from '@wordpress/i18n';
 import { addFilter } from '@wordpress/hooks';
-import { InspectorControls, PanelColorSettings } from '@wordpress/block-editor';
+import {
+	InspectorControls,
+	PanelColorSettings,
+	useSetting,
+	__experimentalSpacingSizesControl as SpacingSizesControl,
+} from '@wordpress/block-editor';
 import {
 	TextControl,
 	SelectControl,
+	BoxControl,
 	__experimentalToolsPanel as ToolsPanel,
 	__experimentalToolsPanelItem as ToolsPanelItem,
 } from '@wordpress/components';
@@ -29,7 +35,19 @@ const withPriorityNavControls = createHigherOrderComponent( ( BlockEdit ) => {
 			priorityNavMoreIcon,
 			priorityNavMoreBackgroundColor,
 			priorityNavMoreTextColor,
+			priorityNavMorePadding,
 		} = attributes;
+
+		// Get spacing sizes from theme.
+		const spacingSizes = useSetting( 'spacing.spacingSizes' ) || [];
+
+		// Helper to check if padding has values.
+		const hasPaddingValue = () => {
+			if ( ! priorityNavMorePadding ) {
+				return false;
+			}
+			return Object.keys( priorityNavMorePadding ).length > 0;
+		};
 
 		return (
 			<>
@@ -127,7 +145,7 @@ const withPriorityNavControls = createHigherOrderComponent( ( BlockEdit ) => {
 
 				<InspectorControls group="styles">
 					<PanelColorSettings
-						title={ __( 'Priority Plus Styles', 'priority-nav' ) }
+						title={ __( 'Priority Plus Colors', 'priority-nav' ) }
 						colorSettings={ [
 							{
 								label: __(
@@ -157,6 +175,68 @@ const withPriorityNavControls = createHigherOrderComponent( ( BlockEdit ) => {
 							},
 						] }
 					/>
+					<ToolsPanel
+						label={ __( 'Priority Plus Button', 'priority-nav' ) }
+						resetAll={ () =>
+							setAttributes( {
+								priorityNavMorePadding: undefined,
+							} )
+						}
+					>
+						<ToolsPanelItem
+							hasValue={ hasPaddingValue }
+							label={ __( 'Padding', 'priority-nav' ) }
+							onDeselect={ () =>
+								setAttributes( {
+									priorityNavMorePadding: undefined,
+								} )
+							}
+							isShownByDefault
+						>
+							{ spacingSizes.length > 0 ? (
+								<SpacingSizesControl
+									values={ priorityNavMorePadding }
+									onChange={ ( value ) =>
+										setAttributes( {
+											priorityNavMorePadding: value,
+										} )
+									}
+									label={ __(
+										'Button Padding',
+										'priority-nav'
+									) }
+									sides={ [
+										'top',
+										'right',
+										'bottom',
+										'left',
+									] }
+									units={ [ 'px', 'em', 'rem', 'vh', 'vw' ] }
+								/>
+							) : (
+								<BoxControl
+									label={ __(
+										'Button Padding',
+										'priority-nav'
+									) }
+									values={ priorityNavMorePadding }
+									onChange={ ( value ) =>
+										setAttributes( {
+											priorityNavMorePadding: value,
+										} )
+									}
+									sides={ [
+										'top',
+										'right',
+										'bottom',
+										'left',
+									] }
+									units={ [ 'px', 'em', 'rem', 'vh', 'vw' ] }
+									allowReset={ true }
+								/>
+							) }
+						</ToolsPanelItem>
+					</ToolsPanel>
 				</InspectorControls>
 			</>
 		);
