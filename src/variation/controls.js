@@ -132,16 +132,20 @@ const withPriorityNavControls = createHigherOrderComponent( ( BlockEdit ) => {
 								value: priorityNavMoreTextColor,
 								onChange: ( color ) =>
 									setAttributes( {
-										priorityNavMoreTextColor: color,
+										priorityNavMoreTextColor:
+											color || undefined,
 									} ),
+								clearable: true,
 							},
 							{
 								label: __( 'Background Color', 'priority-nav' ),
 								value: priorityNavMoreBackgroundColor,
 								onChange: ( color ) =>
 									setAttributes( {
-										priorityNavMoreBackgroundColor: color,
+										priorityNavMoreBackgroundColor:
+											color || undefined,
 									} ),
+								clearable: true,
 							},
 						] }
 					/>
