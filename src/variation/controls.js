@@ -29,6 +29,18 @@ const withPriorityNavControls = createHigherOrderComponent( ( BlockEdit ) => {
 			return <BlockEdit { ...props } />;
 		}
 
+		// Only show controls if the Priority+ variation is active.
+		// Check for the variation className or explicit priorityNavEnabled attribute.
+		const className = attributes.className || '';
+		const isPriorityNavVariation =
+			className.includes( 'is-style-priority-nav' ) ||
+			attributes.priorityNavEnabled === true;
+
+		// If not using the variation, return the block edit without our controls.
+		if ( ! isPriorityNavVariation ) {
+			return <BlockEdit { ...props } />;
+		}
+
 		const {
 			priorityNavEnabled,
 			priorityNavMoreLabel,
