@@ -3,13 +3,12 @@
  */
 import { __ } from '@wordpress/i18n';
 import { addFilter } from '@wordpress/hooks';
-import { InspectorControls, useSetting } from '@wordpress/block-editor';
+import { InspectorControls, PanelColorSettings } from '@wordpress/block-editor';
 import {
-	PanelBody,
 	TextControl,
 	SelectControl,
-	ColorPalette,
-	BaseControl,
+	__experimentalToolsPanel as ToolsPanel,
+	__experimentalToolsPanelItem as ToolsPanelItem,
 } from '@wordpress/components';
 import { createHigherOrderComponent } from '@wordpress/compose';
 
@@ -32,9 +31,6 @@ const withPriorityNavControls = createHigherOrderComponent( ( BlockEdit ) => {
 			priorityNavMoreTextColor,
 		} = attributes;
 
-		// Get color palette from theme
-		const colors = useSetting( 'color.palette' ) || [];
-
 		return (
 			<>
 				{ priorityNavEnabled ? (
@@ -46,93 +42,109 @@ const withPriorityNavControls = createHigherOrderComponent( ( BlockEdit ) => {
 				) }
 
 				<InspectorControls group="styles">
-					<PanelBody
-						title={ __( 'Priority Plus Nav', 'priority-nav' ) }
+					<ToolsPanel
+						label={ __( 'Priority Plus Nav', 'priority-nav' ) }
+						resetAll={ () =>
+							setAttributes( {
+								priorityNavMoreLabel: 'Browse',
+								priorityNavMoreIcon: 'none',
+								priorityNavMoreBackgroundColor: undefined,
+								priorityNavMoreTextColor: undefined,
+							} )
+						}
 					>
-						<TextControl
+						<ToolsPanelItem
+							hasValue={ () => !! priorityNavMoreLabel }
 							label={ __( 'More Button Label', 'priority-nav' ) }
-							value={ priorityNavMoreLabel }
-							onChange={ ( value ) =>
-								setAttributes( { priorityNavMoreLabel: value } )
+							onDeselect={ () =>
+								setAttributes( {
+									priorityNavMoreLabel: 'Browse',
+								} )
 							}
-							help={ __(
-								'Text displayed on the "More" button',
-								'priority-nav'
-							) }
-						/>
-						<SelectControl
-							label={ __( 'More Button Icon', 'priority-nav' ) }
-							value={ priorityNavMoreIcon }
-							options={ [
-								{
-									label: __( 'None', 'priority-nav' ),
-									value: 'none',
-								},
-								{
-									label: __(
-										'Chevron Down (▼)',
-										'priority-nav'
-									),
-									value: 'chevron',
-								},
-								{
-									label: __( 'Plus (+)', 'priority-nav' ),
-									value: 'plus',
-								},
-								{
-									label: __( 'Menu (≡)', 'priority-nav' ),
-									value: 'menu',
-								},
-							] }
-							onChange={ ( value ) =>
-								setAttributes( { priorityNavMoreIcon: value } )
-							}
-						/>
-						<BaseControl
-							id="priority-nav-background-color"
-							label={ __(
-								'More Button Background Color',
-								'priority-nav'
-							) }
-							help={ __(
-								'Background color for the "More" button',
-								'priority-nav'
-							) }
+							isShownByDefault
 						>
-							<ColorPalette
-								value={ priorityNavMoreBackgroundColor }
-								onChange={ ( color ) =>
+							<TextControl
+								label={ __(
+									'More Button Label',
+									'priority-nav'
+								) }
+								value={ priorityNavMoreLabel }
+								onChange={ ( value ) =>
 									setAttributes( {
-										priorityNavMoreBackgroundColor: color,
+										priorityNavMoreLabel: value,
 									} )
 								}
-								colors={ colors }
-								clearable={ true }
+								help={ __(
+									'Text displayed on the "More" button',
+									'priority-nav'
+								) }
 							/>
-						</BaseControl>
-						<BaseControl
-							id="priority-nav-text-color"
-							label={ __(
-								'More Button Text Color',
-								'priority-nav'
-							) }
-							help={ __(
-								'Text color for the "More" button',
-								'priority-nav'
-							) }
+						</ToolsPanelItem>
+						<ToolsPanelItem
+							hasValue={ () => !! priorityNavMoreIcon }
+							label={ __( 'More Button Icon', 'priority-nav' ) }
+							onDeselect={ () =>
+								setAttributes( { priorityNavMoreIcon: 'none' } )
+							}
+							isShownByDefault
 						>
-							<ColorPalette
-								value={ priorityNavMoreTextColor }
-								onChange={ ( color ) =>
+							<SelectControl
+								label={ __(
+									'More Button Icon',
+									'priority-nav'
+								) }
+								value={ priorityNavMoreIcon }
+								options={ [
+									{
+										label: __( 'None', 'priority-nav' ),
+										value: 'none',
+									},
+									{
+										label: __(
+											'Chevron Down (▼)',
+											'priority-nav'
+										),
+										value: 'chevron',
+									},
+									{
+										label: __( 'Plus (+)', 'priority-nav' ),
+										value: 'plus',
+									},
+									{
+										label: __( 'Menu (≡)', 'priority-nav' ),
+										value: 'menu',
+									},
+								] }
+								onChange={ ( value ) =>
+									setAttributes( {
+										priorityNavMoreIcon: value,
+									} )
+								}
+							/>
+						</ToolsPanelItem>
+					</ToolsPanel>
+
+					<PanelColorSettings
+						title={ __( 'Priority Plus Button', 'priority-nav' ) }
+						colorSettings={ [
+							{
+								label: __( 'Text Color', 'priority-nav' ),
+								value: priorityNavMoreTextColor,
+								onChange: ( color ) =>
 									setAttributes( {
 										priorityNavMoreTextColor: color,
-									} )
-								}
-								colors={ colors }
-								clearable={ true }
-							/>
-						</BaseControl>
-					</PanelBody>
+									} ),
+							},
+							{
+								label: __( 'Background Color', 'priority-nav' ),
+								value: priorityNavMoreBackgroundColor,
+								onChange: ( color ) =>
+									setAttributes( {
+										priorityNavMoreBackgroundColor: color,
+									} ),
+							},
+						] }
+					/>
 				</InspectorControls>
 			</>
 		);
