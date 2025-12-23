@@ -138,11 +138,13 @@ class Enqueues extends Plugin_Module {
 		$this->enqueue_frontend_assets_once();
 
 		// Get Priority+ configuration with defaults.
-		$more_label = $this->get_priority_attr( $block, 'priorityNavMoreLabel', 'Browse' );
-		$more_icon  = $this->get_priority_attr( $block, 'priorityNavMoreIcon', 'none' );
+		$more_label            = $this->get_priority_attr( $block, 'priorityNavMoreLabel', 'Browse' );
+		$more_icon             = $this->get_priority_attr( $block, 'priorityNavMoreIcon', 'none' );
+		$more_background_color = $this->get_priority_attr( $block, 'priorityNavMoreBackgroundColor', '' );
+		$more_text_color       = $this->get_priority_attr( $block, 'priorityNavMoreTextColor', '' );
 
 		// Inject data attributes into the navigation element.
-		return $this->inject_priority_attributes( $block_content, $more_label, $more_icon );
+		return $this->inject_priority_attributes( $block_content, $more_label, $more_icon, $more_background_color, $more_text_color );
 	}
 
 	/**
@@ -167,38 +169,51 @@ class Enqueues extends Plugin_Module {
 	/**
 	 * Get a Priority+ attribute value with a default fallback.
 	 *
-	 * @param array  $block     The full block array.
-	 * @param string $attr_name The attribute name to retrieve.
-	 * @param string $default   The default value if attribute is missing or empty.
+	 * @param array  $block         The full block array.
+	 * @param string $attr_name     The attribute name to retrieve.
+	 * @param string $default_value The default value if attribute is missing or empty.
 	 * @return string The attribute value or default.
 	 */
-	private function get_priority_attr( array $block, string $attr_name, string $default ): string {
+	private function get_priority_attr( array $block, string $attr_name, string $default_value ): string {
 		$attrs = $block['attrs'] ?? array();
 		$value = $attrs[ $attr_name ] ?? '';
 
-		return ( '' !== $value ) ? $value : $default;
+		return ( '' !== $value ) ? $value : $default_value;
 	}
 
 	/**
 	 * Inject Priority+ data attributes into the navigation element.
 	 *
-	 * @param string $block_content The block HTML content.
-	 * @param string $more_label    The "more" button label.
-	 * @param string $more_icon     The "more" button icon.
+	 * @param string $block_content        The block HTML content.
+	 * @param string $more_label           The "more" button label.
+	 * @param string $more_icon            The "more" button icon.
+	 * @param string $more_background_color The "more" button background color.
+	 * @param string $more_text_color      The "more" button text color.
 	 * @return string Modified block content with data attributes.
 	 */
-	private function inject_priority_attributes( string $block_content, string $more_label, string $more_icon ): string {
+	private function inject_priority_attributes( string $block_content, string $more_label, string $more_icon, string $more_background_color = '', string $more_text_color = '' ): string {
 		if ( '' === $block_content ) {
 			return $block_content;
 		}
 
 		// Match the opening <nav> tag with wp-block-navigation class.
-		$pattern     = '/(<nav[^>]*\bclass="[^"]*wp-block-navigation[^"]*")/i';
-		$replacement = sprintf(
+		$pattern = '/(<nav[^>]*\bclass="[^"]*wp-block-navigation[^"]*")/i';
+
+		$attributes = sprintf(
 			'$1 data-more-label="%s" data-more-icon="%s"',
 			esc_attr( $more_label ),
 			esc_attr( $more_icon )
 		);
+
+		if ( ! empty( $more_background_color ) ) {
+			$attributes .= sprintf( ' data-more-background-color="%s"', esc_attr( $more_background_color ) );
+		}
+
+		if ( ! empty( $more_text_color ) ) {
+			$attributes .= sprintf( ' data-more-text-color="%s"', esc_attr( $more_text_color ) );
+		}
+
+		$replacement = $attributes;
 
 		return preg_replace( $pattern, $replacement, $block_content, 1 );
 	}

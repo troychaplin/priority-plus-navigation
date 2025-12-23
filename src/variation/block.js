@@ -24,6 +24,8 @@ registerBlockVariation( 'core/navigation', {
 		priorityNavEnabled: true,
 		priorityNavMoreLabel: 'Browse',
 		priorityNavMoreIcon: 'none',
+		priorityNavMoreBackgroundColor: undefined,
+		priorityNavMoreTextColor: undefined,
 	},
 	isActive: ( blockAttributes, variationAttributes ) => {
 		return blockAttributes.className?.includes(
@@ -58,6 +60,12 @@ addFilter(
 				priorityNavMoreIcon: {
 					type: 'string',
 					default: 'none',
+				},
+				priorityNavMoreBackgroundColor: {
+					type: 'string',
+				},
+				priorityNavMoreTextColor: {
+					type: 'string',
 				},
 			},
 		};
