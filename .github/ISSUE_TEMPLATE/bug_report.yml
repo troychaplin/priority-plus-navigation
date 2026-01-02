@@ -1,0 +1,76 @@
+name: 🐛 Bug Report
+description: Report a bug or issue with Priority Plus Navigation
+title: '[Bug]: '
+labels: ['bug', 'needs-triage']
+assignees: ['troychaplin']
+body:
+    - type: markdown
+      attributes:
+          value: |
+              Thanks for reporting a bug! Please provide the key details to help us fix the issue.
+
+    - type: checkboxes
+      id: prerequisites
+      attributes:
+          label: Prerequisites
+          description: Please confirm before submitting
+          options:
+              - label: I have searched existing issues to ensure this hasn't been reported already
+                required: true
+              - label: I have tested with the latest version of the plugin
+                required: true
+
+    - type: textarea
+      id: bug-description
+      attributes:
+          label: What happened?
+          description: Describe the issue and what you expected to happen
+          placeholder: |
+              Example: The "More" button doesn't appear when the viewport is resized, or navigation items don't move to the dropdown as expected.
+      validations:
+          required: true
+
+    - type: textarea
+      id: steps-to-reproduce
+      attributes:
+          label: Steps to Reproduce
+          description: How can we reproduce this bug?
+          placeholder: |
+              1. Create a Priority Plus Navigation block with...
+              2. Resize the browser to...
+              3. Notice that...
+      validations:
+          required: true
+
+    - type: dropdown
+      id: issue-area
+      attributes:
+          label: What area is affected?
+          description: Select the area where you're experiencing the issue
+          options:
+              - More button display/behavior
+              - Dropdown menu functionality
+              - Item overflow detection
+              - Responsive resizing
+              - Submenu accordions
+              - Styling/appearance
+              - Editor controls
+              - Overlay menu compatibility
+              - Other
+      validations:
+          required: true
+
+    - type: textarea
+      id: additional-info
+      attributes:
+          label: Additional Information (optional)
+          description: Include anything else that might help
+          placeholder: |
+              - WordPress version, PHP version, browser
+              - Theme being used
+              - Overlay menu setting (Never/Mobile/Always)
+              - Number of navigation items
+              - "Open submenus on click" setting
+              - Error messages or console errors
+              - Screenshots or screen recordings
+              - Any other context

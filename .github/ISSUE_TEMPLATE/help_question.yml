@@ -1,0 +1,80 @@
+name: ❓ Help or Question
+description: Get help with setup, usage, or troubleshooting
+title: '[Help]: '
+labels: ['question']
+assignees: []
+body:
+    - type: markdown
+      attributes:
+          value: |
+              Need help? I'll do my best to assist, though response times may vary.
+
+    - type: checkboxes
+      id: prerequisites
+      attributes:
+          label: Prerequisites
+          description: Please confirm before requesting help
+          options:
+              - label: I have checked the documentation/README
+                required: true
+              - label: I have searched existing issues for similar questions
+                required: true
+
+    - type: dropdown
+      id: help-type
+      attributes:
+          label: What do you need help with?
+          description: Select the area you need assistance with
+          options:
+              - Getting Started - Installation/Setup
+              - Converting existing navigation to Priority Plus
+              - Customizing the More button
+              - Styling/Theme integration
+              - Responsive behavior not working as expected
+              - Overlay menu settings
+              - Submenu accordion configuration
+              - Documentation Question
+              - Troubleshooting an Issue
+              - Best Practices
+              - Other
+      validations:
+          required: true
+
+    - type: textarea
+      id: question
+      attributes:
+          label: Your Question
+          description: What do you need help with? Be as specific as possible
+          placeholder: |
+              Describe:
+              - What you're trying to accomplish
+              - What you're stuck on
+              - What you've already tried
+      validations:
+          required: true
+
+    - type: textarea
+      id: configuration-details
+      attributes:
+          label: Current Configuration (optional)
+          description: Share relevant settings or configuration
+          placeholder: |
+              Include:
+              - More button label/icon settings
+              - Overlay menu setting (Never/Mobile/Always)
+              - Open submenus on click setting
+              - Number of navigation items
+              - Theme being used
+              - Any custom CSS
+
+    - type: textarea
+      id: additional-context
+      attributes:
+          label: Additional Context (optional)
+          description: Any other information that might be helpful
+          placeholder: |
+              - WordPress version, PHP version, browser
+              - Screenshots or screen recordings
+              - Error messages from browser console
+              - Links to your site (if public)
+              - Any other relevant details
