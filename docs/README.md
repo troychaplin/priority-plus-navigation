@@ -1,8 +1,8 @@
-# Priority+ Navigation - Documentation
+# Priority Plus Navigation - Documentation
 
 ## What is Priority+?
 
-Priority+ navigation is a responsive design pattern that solves a common problem: fitting many navigation items into limited horizontal space without immediately hiding everything behind a hamburger menu.
+Priority Plus Navigation is a responsive design pattern that solves a common problem: fitting many navigation items into limited horizontal space without immediately hiding everything behind a hamburger menu.
 
 ### The Problem
 
@@ -37,7 +37,7 @@ For detailed technical information, see [how-it-works.md](how-it-works.md).
 1. **Block Variation Approach**
    - Extends WordPress core navigation block
    - No need to rebuild menus
-   - Easy to convert between standard and Priority+ navigation
+   - Easy to convert between standard and Priority Plus Navigation
 
 2. **Automatic Width Calculation**
    - Measures navigation items on page load

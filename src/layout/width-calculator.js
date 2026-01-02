@@ -10,10 +10,10 @@ import { isMeasurable, getElementWidth } from '../utils/dom-utils.js';
  * @param {number}        itemsLength - Number of items
  * @return {boolean} True if cache is valid
  */
-export function hasValidWidthCache( itemWidths, itemsLength ) {
+export function hasValidWidthCache(itemWidths, itemsLength) {
 	return (
 		itemWidths.length === itemsLength &&
-		! itemWidths.some( ( width ) => width === 0 )
+		!itemWidths.some((width) => width === 0)
 	);
 }
 
@@ -25,28 +25,28 @@ export function hasValidWidthCache( itemWidths, itemsLength ) {
  * @param {Function}           scheduleRetry - Function to call if measurement fails
  * @return {Array<number>} Array of item widths
  */
-export function cacheItemWidths( list, items, scheduleRetry ) {
+export function cacheItemWidths(list, items, scheduleRetry) {
 	// Only cache if measurable
-	if ( ! isMeasurable( list ) ) {
+	if (!isMeasurable(list)) {
 		return [];
 	}
 
 	// Show all items for accurate measurement
-	items.forEach( ( item ) => {
+	items.forEach((item) => {
 		item.style.display = '';
-	} );
+	});
 
 	// Force a reflow to ensure accurate measurements
 	void list.offsetHeight;
 
 	// Measure all items
-	const itemWidths = items.map( ( item ) => {
-		const width = getElementWidth( item );
+	const itemWidths = items.map((item) => {
+		const width = getElementWidth(item);
 		return width > 0 ? width : 0;
-	} );
+	});
 
 	// If we got zero widths, schedule a retry (but don't retry indefinitely)
-	if ( itemWidths.some( ( width ) => width === 0 ) && scheduleRetry ) {
+	if (itemWidths.some((width) => width === 0) && scheduleRetry) {
 		scheduleRetry();
 	}
 
@@ -60,23 +60,23 @@ export function cacheItemWidths( list, items, scheduleRetry ) {
  * @param {number|null} cachedWidth   - Previously cached width (null if not cached)
  * @return {number} Width of more button in pixels
  */
-export function cacheMoreButtonWidth( moreButton, moreContainer, cachedWidth ) {
-	if ( cachedWidth !== null ) {
+export function cacheMoreButtonWidth(moreButton, moreContainer, cachedWidth) {
+	if (cachedWidth !== null) {
 		return cachedWidth;
 	}
 
 	// Temporarily show more button to measure it
 	const wasHidden = moreContainer.style.display === 'none';
-	if ( wasHidden ) {
+	if (wasHidden) {
 		moreContainer.style.display = '';
 	}
 
 	// Force a reflow for accurate measurement
 	void moreButton.offsetHeight;
-	const width = getElementWidth( moreButton );
+	const width = getElementWidth(moreButton);
 
 	// Restore previous state
-	if ( wasHidden ) {
+	if (wasHidden) {
 		moreContainer.style.display = 'none';
 	}
 
@@ -89,12 +89,10 @@ export function cacheMoreButtonWidth( moreButton, moreContainer, cachedWidth ) {
  * @param {HTMLElement} nav  - Navigation element
  * @return {number} Gap in pixels
  */
-export function getGap( list, nav ) {
-	const listStyles = window.getComputedStyle( list );
-	const navStyles = window.getComputedStyle( nav );
+export function getGap(list, nav) {
+	const listStyles = window.getComputedStyle(list);
+	const navStyles = window.getComputedStyle(nav);
 	return (
-		parseFloat( listStyles.gap ) ||
-		parseFloat( navStyles.gap ) ||
-		DEFAULT_GAP
+		parseFloat(listStyles.gap) || parseFloat(navStyles.gap) || DEFAULT_GAP
 	);
 }

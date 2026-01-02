@@ -2,10 +2,14 @@
 /**
  * Base class for plugin modules which can be initialized.
  *
- * @package PriorityPlusNav
+ * @package PriorityPlusNavigation
  */
 
-namespace PriorityPlusNav;
+namespace PriorityPlusNavigation;
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
  * Plugin module extended by other classes.

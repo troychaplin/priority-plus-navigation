@@ -1,5 +1,5 @@
 module.exports = {
-	extends: [ 'plugin:@wordpress/eslint-plugin/recommended' ],
+	extends: ['plugin:@wordpress/eslint-plugin/recommended'],
 	rules: {
 		'@wordpress/no-unsafe-wp-apis': 'off',
 	},

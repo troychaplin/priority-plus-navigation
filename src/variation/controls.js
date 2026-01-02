@@ -23,23 +23,23 @@ import { useEffect, useRef } from '@wordpress/element';
 /**
  * Add DOM manipulation to disable 'always' overlay option when Priority+ is active
  */
-const addDisableAlwaysOption = createHigherOrderComponent( ( BlockEdit ) => {
-	return ( props ) => {
+const addDisableAlwaysOption = createHigherOrderComponent((BlockEdit) => {
+	return (props) => {
 		const { name, attributes } = props;
 
-		if ( name !== 'core/navigation' ) {
-			return <BlockEdit { ...props } />;
+		if (name !== 'core/navigation') {
+			return <BlockEdit {...props} />;
 		}
 
 		// Check if Priority+ variation is active
 		const className = attributes.className || '';
 		const isPriorityNavVariation =
-			className.includes( 'is-style-priority-nav' ) ||
+			className.includes('is-style-priority-plus-navigation') ||
 			attributes.priorityNavEnabled === true;
 
 		// Use effect to modify the DOM after render
-		useEffect( () => {
-			if ( ! isPriorityNavVariation ) {
+		useEffect(() => {
+			if (!isPriorityNavVariation) {
 				return;
 			}
 
@@ -47,7 +47,7 @@ const addDisableAlwaysOption = createHigherOrderComponent( ( BlockEdit ) => {
 			const inspector = document.querySelector(
 				'.block-editor-block-inspector'
 			);
-			if ( ! inspector ) {
+			if (!inspector) {
 				return;
 			}
 
@@ -56,39 +56,39 @@ const addDisableAlwaysOption = createHigherOrderComponent( ( BlockEdit ) => {
 				'.components-toggle-group-control-option-base[data-value="always"]'
 			);
 
-			if ( alwaysButton ) {
+			if (alwaysButton) {
 				alwaysButton.style.opacity = '0.4';
 				alwaysButton.style.pointerEvents = 'none';
 				alwaysButton.style.textDecoration = 'line-through';
 				alwaysButton.style.cursor = 'not-allowed';
 			}
-		}, [ isPriorityNavVariation, attributes.overlayMenu ] );
+		}, [isPriorityNavVariation, attributes.overlayMenu]);
 
-		return <BlockEdit { ...props } />;
+		return <BlockEdit {...props} />;
 	};
-}, 'addDisableAlwaysOption' );
+}, 'addDisableAlwaysOption');
 
 /**
  * Add Inspector Controls to core/navigation block
  */
-const withPriorityNavControls = createHigherOrderComponent( ( BlockEdit ) => {
-	return ( props ) => {
+const withPriorityNavControls = createHigherOrderComponent((BlockEdit) => {
+	return (props) => {
 		const { name, attributes, setAttributes } = props;
 
-		if ( name !== 'core/navigation' ) {
-			return <BlockEdit { ...props } />;
+		if (name !== 'core/navigation') {
+			return <BlockEdit {...props} />;
 		}
 
 		// Only show controls if the Priority+ variation is active.
 		// Check for the variation className or explicit priorityNavEnabled attribute.
 		const className = attributes.className || '';
 		const isPriorityNavVariation =
-			className.includes( 'is-style-priority-nav' ) ||
+			className.includes('is-style-priority-plus-navigation') ||
 			attributes.priorityNavEnabled === true;
 
 		// If not using the variation, return the block edit without our controls.
-		if ( ! isPriorityNavVariation ) {
-			return <BlockEdit { ...props } />;
+		if (!isPriorityNavVariation) {
+			return <BlockEdit {...props} />;
 		}
 
 		const {
@@ -103,209 +103,187 @@ const withPriorityNavControls = createHigherOrderComponent( ( BlockEdit ) => {
 		} = attributes;
 
 		// Automatically change overlayMenu from 'always' to 'mobile' when Priority+ is active
-		useEffect( () => {
-			if ( isPriorityNavVariation && overlayMenu === 'always' ) {
-				setAttributes( { overlayMenu: 'mobile' } );
+		useEffect(() => {
+			if (isPriorityNavVariation && overlayMenu === 'always') {
+				setAttributes({ overlayMenu: 'mobile' });
 			}
-		}, [ isPriorityNavVariation, overlayMenu, setAttributes ] );
+		}, [isPriorityNavVariation, overlayMenu, setAttributes]);
 
 		// Get spacing sizes from theme.
-		const spacingSizes = useSetting( 'spacing.spacingSizes' ) || [];
+		const spacingSizes = useSetting('spacing.spacingSizes') || [];
 
 		// Helper to check if padding has values.
 		const hasPaddingValue = () => {
-			if ( ! priorityNavMorePadding ) {
+			if (!priorityNavMorePadding) {
 				return false;
 			}
-			return Object.keys( priorityNavMorePadding ).length > 0;
+			return Object.keys(priorityNavMorePadding).length > 0;
 		};
 
 		return (
 			<>
-				<BlockEdit { ...props } />
+				<BlockEdit {...props} />
 
 				<InspectorControls group="settings">
-					<Notice status="info" isDismissible={ false }>
-						{ __(
-							'Priority+ Navigation is not compatible with "Always" overlay menu. The overlay menu is set to "Mobile" to allow Priority+ to work on desktop.',
-							'priority-nav'
-						) }
+					<Notice status="info" isDismissible={false}>
+						{__(
+							'Priority Plus Navigation is not compatible with "Always" overlay menu. The overlay menu is set to "Mobile" to allow Priority+ to work on desktop.',
+							'priority-plus-navigation'
+						)}
 					</Notice>
 				</InspectorControls>
 
 				<InspectorControls group="styles">
 					<ToolsPanel
-						label={ __( 'Priority Plus Settings', 'priority-nav' ) }
-						resetAll={ () =>
-							setAttributes( {
+						label={__('Priority Plus Settings', 'priority-plus-navigation')}
+						resetAll={() =>
+							setAttributes({
 								priorityNavMoreLabel: 'More',
-							} )
+							})
 						}
 					>
 						<ToolsPanelItem
-							hasValue={ () => !! priorityNavMoreLabel }
-							label={ __( 'More Button Label', 'priority-nav' ) }
-							onDeselect={ () =>
-								setAttributes( {
+							hasValue={() => !!priorityNavMoreLabel}
+							label={__('More Button Label', 'priority-plus-navigation')}
+							onDeselect={() =>
+								setAttributes({
 									priorityNavMoreLabel: 'More',
-								} )
+								})
 							}
 							isShownByDefault
 						>
 							<TextControl
-								label={ __(
-									'More Button Label',
-									'priority-nav'
-								) }
-								value={ priorityNavMoreLabel }
-								onChange={ ( value ) =>
-									setAttributes( {
+								label={__('More Button Label', 'priority-plus-navigation')}
+								value={priorityNavMoreLabel}
+								onChange={(value) =>
+									setAttributes({
 										priorityNavMoreLabel: value,
-									} )
+									})
 								}
-								help={ __(
+								help={__(
 									'Text displayed on the "More" button',
-									'priority-nav'
-								) }
+									'priority-plus-navigation'
+								)}
 							/>
 						</ToolsPanelItem>
 					</ToolsPanel>
 					<PanelColorSettings
-						title={ __( 'Priority Plus Colors', 'priority-nav' ) }
-						colorSettings={ [
+						title={__('Priority Plus Colors', 'priority-plus-navigation')}
+						colorSettings={[
 							{
-								label: __(
-									'Button Text Color',
-									'priority-nav'
-								),
+								label: __('Button Text Color', 'priority-plus-navigation'),
 								value: priorityNavMoreTextColor,
-								onChange: ( color ) =>
-									setAttributes( {
+								onChange: (color) =>
+									setAttributes({
 										priorityNavMoreTextColor:
 											color || undefined,
-									} ),
+									}),
 								clearable: true,
 							},
 							{
 								label: __(
 									'Button Text Hover Color',
-									'priority-nav'
+									'priority-plus-navigation'
 								),
 								value: priorityNavMoreTextColorHover,
-								onChange: ( color ) =>
-									setAttributes( {
+								onChange: (color) =>
+									setAttributes({
 										priorityNavMoreTextColorHover:
 											color || undefined,
-									} ),
+									}),
 								clearable: true,
 							},
 							{
 								label: __(
 									'Button Background Color',
-									'priority-nav'
+									'priority-plus-navigation'
 								),
 								value: priorityNavMoreBackgroundColor,
-								onChange: ( color ) =>
-									setAttributes( {
+								onChange: (color) =>
+									setAttributes({
 										priorityNavMoreBackgroundColor:
 											color || undefined,
-									} ),
+									}),
 								clearable: true,
 							},
 							{
 								label: __(
 									'Button Background Hover Color',
-									'priority-nav'
+									'priority-plus-navigation'
 								),
 								value: priorityNavMoreBackgroundColorHover,
-								onChange: ( color ) =>
-									setAttributes( {
+								onChange: (color) =>
+									setAttributes({
 										priorityNavMoreBackgroundColorHover:
 											color || undefined,
-									} ),
+									}),
 								clearable: true,
 							},
-						] }
+						]}
 					/>
 					<ToolsPanel
-						label={ __( 'Priority Plus Button', 'priority-nav' ) }
-						resetAll={ () =>
-							setAttributes( {
+						label={__('Priority Plus Button', 'priority-plus-navigation')}
+						resetAll={() =>
+							setAttributes({
 								priorityNavMorePadding: undefined,
-							} )
+							})
 						}
 					>
 						<ToolsPanelItem
-							hasValue={ hasPaddingValue }
-							label={ __( 'Padding', 'priority-nav' ) }
-							onDeselect={ () =>
-								setAttributes( {
+							hasValue={hasPaddingValue}
+							label={__('Padding', 'priority-plus-navigation')}
+							onDeselect={() =>
+								setAttributes({
 									priorityNavMorePadding: undefined,
-								} )
+								})
 							}
 							isShownByDefault
 						>
-							{ spacingSizes.length > 0 ? (
+							{spacingSizes.length > 0 ? (
 								<SpacingSizesControl
-									values={ priorityNavMorePadding }
-									onChange={ ( value ) =>
-										setAttributes( {
+									values={priorityNavMorePadding}
+									onChange={(value) =>
+										setAttributes({
 											priorityNavMorePadding: value,
-										} )
+										})
 									}
-									label={ __(
-										'Button Padding',
-										'priority-nav'
-									) }
-									sides={ [
-										'top',
-										'right',
-										'bottom',
-										'left',
-									] }
-									units={ [ 'px', 'em', 'rem', 'vh', 'vw' ] }
+									label={__('Button Padding', 'priority-plus-navigation')}
+									sides={['top', 'right', 'bottom', 'left']}
+									units={['px', 'em', 'rem', 'vh', 'vw']}
 								/>
 							) : (
 								<BoxControl
-									label={ __(
-										'Button Padding',
-										'priority-nav'
-									) }
-									values={ priorityNavMorePadding }
-									onChange={ ( value ) =>
-										setAttributes( {
+									label={__('Button Padding', 'priority-plus-navigation')}
+									values={priorityNavMorePadding}
+									onChange={(value) =>
+										setAttributes({
 											priorityNavMorePadding: value,
-										} )
+										})
 									}
-									sides={ [
-										'top',
-										'right',
-										'bottom',
-										'left',
-									] }
-									units={ [ 'px', 'em', 'rem', 'vh', 'vw' ] }
-									allowReset={ true }
+									sides={['top', 'right', 'bottom', 'left']}
+									units={['px', 'em', 'rem', 'vh', 'vw']}
+									allowReset={true}
 								/>
-							) }
+							)}
 						</ToolsPanelItem>
 					</ToolsPanel>
 				</InspectorControls>
 			</>
 		);
 	};
-}, 'withPriorityNavControls' );
+}, 'withPriorityNavControls');
 
 // Apply filters in order: first add DOM manipulation for styling, then our controls
 addFilter(
 	'editor.BlockEdit',
-	'priority-nav/add-disable-always-option',
+	'priority-plus-navigation/add-disable-always-option',
 	addDisableAlwaysOption,
 	5
 );
 
 addFilter(
 	'editor.BlockEdit',
-	'priority-nav/add-priority-nav-controls',
+	'priority-plus-navigation/add-priority-plus-navigation-controls',
 	withPriorityNavControls,
 	10
 );

@@ -1,10 +1,7 @@
 /**
  * DOM building utilities for PriorityNav
  */
-import {
-	DEFAULT_MORE_LABEL,
-	CHEVRON_ICON_SVG,
-} from '../utils/constants.js';
+import { DEFAULT_MORE_LABEL, CHEVRON_ICON_SVG } from '../utils/constants.js';
 import { escapeHtml } from '../utils/html-utils.js';
 import { extractNavItemData } from './dom-extractor.js';
 
@@ -14,35 +11,35 @@ import { extractNavItemData } from './dom-extractor.js';
  * @param {string}      moreLabel - Label for the More button
  * @return {Object} Object containing moreContainer, moreButton, and dropdown elements
  */
-export function createMoreButton( list, moreLabel = DEFAULT_MORE_LABEL ) {
+export function createMoreButton(list, moreLabel = DEFAULT_MORE_LABEL) {
 	// Create the more container
-	const moreContainer = document.createElement( 'div' );
-	moreContainer.className = 'priority-nav-more';
+	const moreContainer = document.createElement('div');
+	moreContainer.className = 'priority-plus-navigation-more';
 
 	// Create button
-	const moreButton = document.createElement( 'button' );
+	const moreButton = document.createElement('button');
 	moreButton.type = 'button';
-	moreButton.className = 'priority-nav-more-button wp-block-navigation-item';
-	moreButton.setAttribute( 'aria-expanded', 'false' );
-	moreButton.setAttribute( 'aria-haspopup', 'true' );
-	moreButton.setAttribute( 'aria-label', moreLabel );
+	moreButton.className = 'priority-plus-navigation-more-button wp-block-navigation-item';
+	moreButton.setAttribute('aria-expanded', 'false');
+	moreButton.setAttribute('aria-haspopup', 'true');
+	moreButton.setAttribute('aria-label', moreLabel);
 
 	moreButton.innerHTML = `
-		<span class="wp-block-navigation-item__label">${ moreLabel }</span>
-		<span class="priority-nav-icon">${ CHEVRON_ICON_SVG }</span>
+		<span class="wp-block-navigation-item__label">${moreLabel}</span>
+		<span class="priority-plus-navigation-icon">${CHEVRON_ICON_SVG}</span>
 	`;
 
 	// Create dropdown
-	const dropdown = document.createElement( 'ul' );
+	const dropdown = document.createElement('ul');
 	dropdown.className =
-		'priority-nav-dropdown wp-block-navigation__submenu-container';
-	dropdown.setAttribute( 'role', 'menu' );
+		'priority-plus-navigation-dropdown wp-block-navigation__submenu-container';
+	dropdown.setAttribute('role', 'menu');
 
-	moreContainer.appendChild( moreButton );
-	moreContainer.appendChild( dropdown );
+	moreContainer.appendChild(moreButton);
+	moreContainer.appendChild(dropdown);
 
 	// Insert after the navigation list
-	list.parentNode.appendChild( moreContainer );
+	list.parentNode.appendChild(moreContainer);
 	moreContainer.style.display = 'none';
 
 	return {
@@ -68,56 +65,54 @@ export function buildAccordionHTML(
 	submenuCounter,
 	openSubmenusOnClick
 ) {
-	const submenuId = `${ instanceId }-submenu-${ submenuCounter.value++ }`;
+	const submenuId = `${instanceId}-submenu-${submenuCounter.value++}`;
 	let html = '';
 
-	if ( data.hasSubmenu ) {
+	if (data.hasSubmenu) {
 		// Item has children - build accordion
-		if ( openSubmenusOnClick ) {
+		if (openSubmenusOnClick) {
 			// Click mode: entire item is clickable
 			html = `
-				<button type="button" class="priority-nav-accordion-toggle priority-nav-accordion-toggle-full" 
-				        aria-expanded="false" aria-controls="${ submenuId }">
-					<span class="priority-nav-accordion-text">${ escapeHtml( data.text ) }</span>
-					<span class="priority-nav-accordion-arrow" aria-hidden="true">›</span>
+				<button type="button" class="priority-plus-navigation-accordion-toggle priority-plus-navigation-accordion-toggle-full" 
+				        aria-expanded="false" aria-controls="${submenuId}">
+					<span class="priority-plus-navigation-accordion-text">${escapeHtml(data.text)}</span>
+					<span class="priority-plus-navigation-accordion-arrow" aria-hidden="true">›</span>
 				</button>
-				<ul class="priority-nav-accordion-content" id="${ submenuId }" aria-hidden="true">
+				<ul class="priority-plus-navigation-accordion-content" id="${submenuId}" aria-hidden="true">
 			`;
 		} else {
 			// Arrow mode: link stays functional, separate arrow button
 			html = `
-				<span class="priority-nav-accordion-wrapper">
-					<a href="${ escapeHtml(
+				<span class="priority-plus-navigation-accordion-wrapper">
+					<a href="${escapeHtml(
 						data.url
-					) }" class="priority-nav-accordion-link">${ escapeHtml(
+					)}" class="priority-plus-navigation-accordion-link">${escapeHtml(
 						data.text
-					) }</a>
-					<button type="button" class="priority-nav-accordion-toggle priority-nav-accordion-toggle-arrow" 
-					        aria-expanded="false" aria-controls="${ submenuId }" aria-label="Toggle submenu">
-						<span class="priority-nav-accordion-arrow" aria-hidden="true">›</span>
+					)}</a>
+					<button type="button" class="priority-plus-navigation-accordion-toggle priority-plus-navigation-accordion-toggle-arrow" 
+					        aria-expanded="false" aria-controls="${submenuId}" aria-label="Toggle submenu">
+						<span class="priority-plus-navigation-accordion-arrow" aria-hidden="true">›</span>
 					</button>
 				</span>
-				<ul class="priority-nav-accordion-content" id="${ submenuId }" aria-hidden="true">
+				<ul class="priority-plus-navigation-accordion-content" id="${submenuId}" aria-hidden="true">
 			`;
 		}
 
 		// Build children
-		data.children.forEach( ( child ) => {
-			html += `<li>${ buildAccordionHTML(
+		data.children.forEach((child) => {
+			html += `<li>${buildAccordionHTML(
 				child,
 				level + 1,
 				instanceId,
 				submenuCounter,
 				openSubmenusOnClick
-			) }</li>`;
-		} );
+			)}</li>`;
+		});
 
 		html += '</ul>';
 	} else {
 		// No submenu - just a link
-		html = `<a href="${ escapeHtml( data.url ) }">${ escapeHtml(
-			data.text
-		) }</a>`;
+		html = `<a href="${escapeHtml(data.url)}">${escapeHtml(data.text)}</a>`;
 	}
 
 	return html;
@@ -143,9 +138,9 @@ export function buildDropdownFromOverflow(
 	dropdown.innerHTML = '';
 	submenuCounter.value = 0; // Reset counter
 
-	for ( let i = visibleCount; i < items.length; i++ ) {
+	for (let i = visibleCount; i < items.length; i++) {
 		// Extract data from the item
-		const itemData = extractNavItemData( items[ i ] );
+		const itemData = extractNavItemData(items[i]);
 
 		// Build fresh accordion HTML
 		const accordionHTML = buildAccordionHTML(
@@ -157,9 +152,9 @@ export function buildDropdownFromOverflow(
 		);
 
 		// Create container and insert HTML
-		const container = document.createElement( 'li' );
+		const container = document.createElement('li');
 		container.innerHTML = accordionHTML;
 
-		dropdown.appendChild( container );
+		dropdown.appendChild(container);
 	}
 }

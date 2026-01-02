@@ -2,17 +2,21 @@
 /**
  * Resolve paths and URLs relative to plugin directories.
  *
- * @package PriorityPlusNav
+ * @package PriorityPlusNavigation
  */
 
-namespace PriorityPlusNav;
+namespace PriorityPlusNavigation;
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
  * Class Plugin_Paths
  *
  * This class provides methods to handle and retrieve various paths related to the plugin.
  *
- * @package PriorityPlusNav
+ * @package PriorityPlusNavigation
  */
 class Plugin_Paths {
 

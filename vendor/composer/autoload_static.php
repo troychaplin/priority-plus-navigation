@@ -74,9 +74,9 @@ class ComposerStaticInit3fb49ec95f3ab6f9118a0dc6b40e7666
         'PHPCSUtils\\Utils\\TypeString' => __DIR__ . '/..' . '/phpcsstandards/phpcsutils/PHPCSUtils/Utils/TypeString.php',
         'PHPCSUtils\\Utils\\UseStatements' => __DIR__ . '/..' . '/phpcsstandards/phpcsutils/PHPCSUtils/Utils/UseStatements.php',
         'PHPCSUtils\\Utils\\Variables' => __DIR__ . '/..' . '/phpcsstandards/phpcsutils/PHPCSUtils/Utils/Variables.php',
-        'PriorityPlusNav\\Enqueues' => __DIR__ . '/../..' . '/classes/class-enqueues.php',
-        'PriorityPlusNav\\Plugin_Module' => __DIR__ . '/../..' . '/classes/class-plugin-module.php',
-        'PriorityPlusNav\\Plugin_Paths' => __DIR__ . '/../..' . '/classes/class-plugin-paths.php',
+        'PriorityPlusNavigation\\Enqueues' => __DIR__ . '/../..' . '/classes/class-enqueues.php',
+        'PriorityPlusNavigation\\Plugin_Module' => __DIR__ . '/../..' . '/classes/class-plugin-module.php',
+        'PriorityPlusNavigation\\Plugin_Paths' => __DIR__ . '/../..' . '/classes/class-plugin-paths.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

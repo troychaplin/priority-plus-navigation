@@ -1,12 +1,12 @@
-# How Priority+ Navigation Works
+# How Priority Plus Navigation Works
 
-This document explains how the Priority+ Navigation plugin implements the Priority+ design pattern in WordPress.
+This document explains how the Priority Plus Navigation plugin implements the Priority+ design pattern in WordPress.
 
 ## The Priority+ Pattern
 
 ### Concept
 
-Priority+ navigation prioritizes the most important navigation items by keeping them visible. As horizontal space decreases, less important items progressively move into a "More" dropdown menu.
+Priority Plus Navigation prioritizes the most important navigation items by keeping them visible. As horizontal space decreases, less important items progressively move into a "More" dropdown menu.
 
 ### Visual Example
 
@@ -67,7 +67,7 @@ Priority+ Variation
 When the page loads, the Priority+ script:
 
 ```javascript
-// Find all Priority+ navigation blocks
+// Find all Priority Plus Navigation blocks
 const navs = document.querySelectorAll('.is-style-priority-nav');
 
 // Initialize each one
@@ -345,7 +345,7 @@ if (widths.some(w => w === 0)) {
 
 ## Summary
 
-The Priority+ Navigation plugin implements a sophisticated responsive pattern that:
+The Priority Plus Navigation plugin implements a sophisticated responsive pattern that:
 
 1. **Measures** navigation items accurately
 2. **Calculates** how many fit in available space

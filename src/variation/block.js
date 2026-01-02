@@ -7,19 +7,19 @@ import { plusCircle } from '@wordpress/icons';
 import { addFilter } from '@wordpress/hooks';
 
 /**
- * Register Priority+ Nav block variation
+ * Register Priority Plus Navigation block variation
  */
-registerBlockVariation( 'core/navigation', {
-	name: 'priority-nav',
-	title: __( 'Priority Plus Nav', 'priority-nav' ),
+registerBlockVariation('core/navigation', {
+	name: 'priority-plus-navigation',
+	title: __('Priority Plus Navigation', 'priority-plus-navigation'),
 	description: __(
 		'A responsive navigation that automatically moves overflow items to a "More" dropdown.',
-		'priority-nav'
+		'priority-plus-navigation'
 	),
 	icon: plusCircle,
-	scope: [ 'inserter', 'transform' ],
+	scope: ['inserter', 'transform'],
 	attributes: {
-		className: 'is-style-priority-nav',
+		className: 'is-style-priority-plus-navigation',
 		overlayMenu: 'never',
 		priorityNavEnabled: true,
 		priorityNavMoreLabel: 'More',
@@ -28,21 +28,21 @@ registerBlockVariation( 'core/navigation', {
 		priorityNavMoreTextColor: undefined,
 		priorityNavMoreTextColorHover: undefined,
 	},
-	isActive: ( blockAttributes, variationAttributes ) => {
+	isActive: (blockAttributes, variationAttributes) => {
 		return blockAttributes.className?.includes(
 			variationAttributes.className
 		);
 	},
-} );
+});
 
 /**
  * Add Priority+ attributes to core/navigation block
  */
 addFilter(
 	'blocks.registerBlockType',
-	'priority-nav/extend-core-navigation',
-	( settings, name ) => {
-		if ( name !== 'core/navigation' ) {
+	'priority-plus-navigation/extend-core-navigation',
+	(settings, name) => {
+		if (name !== 'core/navigation') {
 			return settings;
 		}
 

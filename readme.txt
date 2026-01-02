@@ -1,5 +1,5 @@
 
-=== Priority+ Nav ===
+=== Priority Plus Navigation ===
 
 Contributors:      areziaal
 Tags:              block, navigation, responsive, priority-plus
@@ -8,7 +8,7 @@ Stable tag:        1.0.0
 License:           GPLv2 or later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
-A WordPress block plugin that adds Priority+ pattern functionality to core WordPress navigation block. It automatically moves navigation items that don't fit into a responsive "More" dropdown menu (default label: "Browse") as the viewport narrows.
+Adds Priority+ pattern to core Navigation block. Moves overflow items into responsive "More" dropdown as the users viewport narrows.
 
 == Description ==
 
@@ -29,7 +29,7 @@ Perfect for sites with many navigation items that need to work across all device
 
 1. Upload the plugin files to the `/wp-content/plugins/priority-nav` directory, or install the plugin through the WordPress plugins screen directly.
 2. Activate the plugin through the 'Plugins' screen in WordPress
-3. Add a Navigation block and select the "Priority+ Nav" variation, or search for "Priority+ Nav" in the block inserter
+3. Add a Navigation block and select the "Priority Plus Navigation" variation, or search for "Priority Plus Navigation" in the block inserter
 4. Configure your navigation using the familiar WordPress navigation tools
 
 == Frequently Asked Questions ==
@@ -48,7 +48,7 @@ Yes! Items with submenus in the dropdown are converted to accessible accordions 
 
 = How does it work with WordPress's responsive overlay menu? =
 
-Priority+ Nav intelligently integrates with WordPress core navigation overlay menu settings:
+Priority Plus Navigation intelligently integrates with WordPress core navigation overlay menu settings:
 
 * **Never**: Priority+ is always active across all screen sizes
 * **Mobile**: Priority+ works on desktop and automatically disables when the hamburger menu activates
@@ -80,7 +80,7 @@ Yes, the block is built with accessibility in mind, supporting keyboard navigati
 
 = 0.1.0 =
 * Initial release
-* Implements Priority+ navigation pattern
+* Implements Priority Plus Navigation pattern
 * Automatic overflow detection and management
 * Customizable "More" button
 * Full keyboard and screen reader support

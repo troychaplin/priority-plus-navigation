@@ -25,19 +25,19 @@ class PriorityNav {
 	// Static counter for generating unique instance IDs
 	static instanceCounter = 0;
 
-	constructor( element ) {
+	constructor(element) {
 		// Prevent double initialization
-		if ( element.dataset.priorityNavInitialized === 'true' ) {
+		if (element.dataset.priorityNavInitialized === 'true') {
 			return;
 		}
 
 		// Generate unique instance ID for this PriorityNav instance
-		this.instanceId = `priority-nav-${ PriorityNav.instanceCounter++ }`;
+		this.instanceId = `priority-plus-navigation-${PriorityNav.instanceCounter++}`;
 
-		// Element should be .wp-block-navigation.is-style-priority-nav
+		// Element should be .wp-block-navigation.is-style-priority-plus-navigation
 		if (
-			! element.classList.contains( 'wp-block-navigation' ) ||
-			! element.classList.contains( 'is-style-priority-nav' )
+			!element.classList.contains('wp-block-navigation') ||
+			!element.classList.contains('is-style-priority-plus-navigation')
 		) {
 			return;
 		}
@@ -48,19 +48,19 @@ class PriorityNav {
 		this.nav = element;
 
 		// Get list container
-		this.list = this.nav.querySelector( '.wp-block-navigation__container' );
-		if ( ! this.list ) {
+		this.list = this.nav.querySelector('.wp-block-navigation__container');
+		if (!this.list) {
 			return;
 		}
 
 		// Get attributes from nav element
 		this.moreLabel =
-			this.nav.getAttribute( 'data-more-label' ) || DEFAULT_MORE_LABEL;
+			this.nav.getAttribute('data-more-label') || DEFAULT_MORE_LABEL;
 		this.overlayMenu =
-			this.nav.getAttribute( 'data-overlay-menu' ) || 'never';
+			this.nav.getAttribute('data-overlay-menu') || 'never';
 
 		// If overlayMenu is 'always', Priority+ should never run
-		if ( this.overlayMenu === 'always' ) {
+		if (this.overlayMenu === 'always') {
 			return;
 		}
 
@@ -77,7 +77,7 @@ class PriorityNav {
 		this.dropdown = dropdown;
 
 		// Initialize state
-		this.items = Array.from( this.list.children );
+		this.items = Array.from(this.list.children);
 		this.itemWidths = [];
 		this.isOpen = false;
 		this.isCalculating = false;
@@ -107,23 +107,23 @@ class PriorityNav {
 	detectOpenSubmenusOnClick() {
 		// Check data attributes on nav element
 		const dataAttr =
-			this.nav.getAttribute( 'data-opensubmenusonclick' ) ||
-			this.nav.getAttribute( 'data-open-submenus-on-click' );
+			this.nav.getAttribute('data-opensubmenusonclick') ||
+			this.nav.getAttribute('data-open-submenus-on-click');
 
-		if ( dataAttr ) {
+		if (dataAttr) {
 			return dataAttr === 'true' || dataAttr === '1' || dataAttr === '';
 		}
 
 		// Check for generic data attributes containing the keywords
-		if ( this.nav.attributes ) {
-			for ( let i = 0; i < this.nav.attributes.length; i++ ) {
-				const attr = this.nav.attributes[ i ];
+		if (this.nav.attributes) {
+			for (let i = 0; i < this.nav.attributes.length; i++) {
+				const attr = this.nav.attributes[i];
 				const name = attr.name.toLowerCase();
 				// WordPress may use various formats
 				if (
-					name.includes( 'open' ) &&
-					name.includes( 'submenu' ) &&
-					name.includes( 'click' )
+					name.includes('open') &&
+					name.includes('submenu') &&
+					name.includes('click')
 				) {
 					const value = attr.value;
 					return value === 'true' || value === '1' || value === '';
@@ -133,22 +133,22 @@ class PriorityNav {
 
 		// Check for class-based indicators on nav element
 		if (
-			this.nav.classList.contains( 'open-on-click' ) ||
-			this.nav.classList.contains( 'open-submenus-on-click' ) ||
-			this.nav.classList.contains( 'has-open-submenus-on-click' )
+			this.nav.classList.contains('open-on-click') ||
+			this.nav.classList.contains('open-submenus-on-click') ||
+			this.nav.classList.contains('has-open-submenus-on-click')
 		) {
 			return true;
 		}
 
 		// Check list items for the class (WordPress might set it on individual items)
-		if ( this.list ) {
+		if (this.list) {
 			const firstItem = this.list.querySelector(
 				'li.has-child, li.open-on-click'
 			);
 			if (
 				firstItem &&
-				( firstItem.classList.contains( 'open-on-click' ) ||
-					firstItem.classList.contains( 'open-submenus-on-click' ) )
+				(firstItem.classList.contains('open-on-click') ||
+					firstItem.classList.contains('open-submenus-on-click'))
 			) {
 				return true;
 			}
@@ -160,7 +160,7 @@ class PriorityNav {
 
 	init() {
 		// Guard against missing elements
-		if ( ! this.nav || ! document.body.contains( this.nav ) ) {
+		if (!this.nav || !document.body.contains(this.nav)) {
 			return;
 		}
 
@@ -176,44 +176,44 @@ class PriorityNav {
 				toggleDropdown: () => this.toggleDropdown(),
 				closeDropdown: () => this.closeDropdown(),
 				closeAllAccordions: () => this.closeAllAccordions(),
-				toggleAccordionItem: ( button, submenu ) =>
-					this.toggleAccordionItem( button, submenu ),
+				toggleAccordionItem: (button, submenu) =>
+					this.toggleAccordionItem(button, submenu),
 			}
 		);
 
 		this.setupResponsiveObserver();
 
 		// Check if we should enable Priority Nav
-		if ( this.isInHamburgerMode() ) {
+		if (this.isInHamburgerMode()) {
 			this.disablePriorityNav();
 		} else {
 			this.enablePriorityNav();
 		}
 
 		// Set up resize observer with error handling
-		if ( typeof ResizeObserver !== 'undefined' ) {
-			this.resizeObserver = new ResizeObserver( () => {
+		if (typeof ResizeObserver !== 'undefined') {
+			this.resizeObserver = new ResizeObserver(() => {
 				// Guard against detached elements
-				if ( ! document.body.contains( this.nav ) ) {
+				if (!document.body.contains(this.nav)) {
 					return;
 				}
 
-				if ( ! this.isCalculating ) {
+				if (!this.isCalculating) {
 					// Check if we've transitioned between hamburger and desktop mode
 					const wasEnabled = this.isEnabled;
 					const inHamburger = this.isInHamburgerMode();
 
-					if ( inHamburger && wasEnabled ) {
+					if (inHamburger && wasEnabled) {
 						this.disablePriorityNav();
-					} else if ( ! inHamburger && ! wasEnabled ) {
+					} else if (!inHamburger && !wasEnabled) {
 						this.enablePriorityNav();
-					} else if ( ! inHamburger && wasEnabled ) {
+					} else if (!inHamburger && wasEnabled) {
 						// Still in desktop mode, just recalculate
-						requestAnimationFrame( () => this.checkOverflow() );
+						requestAnimationFrame(() => this.checkOverflow());
 					}
 				}
-			} );
-			this.resizeObserver.observe( this.nav );
+			});
+			this.resizeObserver.observe(this.nav);
 		}
 	}
 
@@ -222,28 +222,28 @@ class PriorityNav {
 	 * @return {boolean} True if in hamburger mode
 	 */
 	isInHamburgerMode() {
-		return isInHamburgerMode( this.responsiveContainer, this.list );
+		return isInHamburgerMode(this.responsiveContainer, this.list);
 	}
 
 	/**
 	 * Disable Priority Nav when in hamburger mode
 	 */
 	disablePriorityNav() {
-		if ( ! this.items || ! Array.isArray( this.items ) ) {
+		if (!this.items || !Array.isArray(this.items)) {
 			return;
 		}
 
 		this.isEnabled = false;
 
 		// Show all items
-		this.items.forEach( ( item ) => {
-			if ( item && item.style ) {
+		this.items.forEach((item) => {
+			if (item && item.style) {
 				item.style.display = '';
 			}
-		} );
+		});
 
 		// Hide the More button
-		if ( this.moreContainer && this.moreContainer.style ) {
+		if (this.moreContainer && this.moreContainer.style) {
 			this.moreContainer.style.display = 'none';
 		}
 
@@ -258,7 +258,7 @@ class PriorityNav {
 		this.isEnabled = true;
 
 		// Only proceed if measurable
-		if ( ! isMeasurable( this.list ) ) {
+		if (!isMeasurable(this.list)) {
 			// Schedule retry
 			this.scheduleRetry();
 			return;
@@ -267,101 +267,101 @@ class PriorityNav {
 		// Cache widths if needed (or if they contain zeros from previous hidden state)
 		const needsRecache =
 			this.itemWidths.length === 0 ||
-			this.itemWidths.some( ( width ) => width === 0 );
+			this.itemWidths.some((width) => width === 0);
 
-		if ( needsRecache ) {
-			this.itemWidths = cacheItemWidths( this.list, this.items, () =>
+		if (needsRecache) {
+			this.itemWidths = cacheItemWidths(this.list, this.items, () =>
 				this.scheduleRetry()
 			);
 		}
 
 		// Recalculate overflow
-		requestAnimationFrame( () => {
+		requestAnimationFrame(() => {
 			this.checkOverflow();
-		} );
+		});
 	}
 
 	/**
 	 * Schedule a retry when menu becomes visible
 	 * @param {number} maxAttempts - Maximum number of retry attempts
 	 */
-	scheduleRetry( maxAttempts = 20 ) {
-		if ( this.retryTimeout ) {
-			clearTimeout( this.retryTimeout );
+	scheduleRetry(maxAttempts = 20) {
+		if (this.retryTimeout) {
+			clearTimeout(this.retryTimeout);
 		}
 
 		let attempts = 0;
 		const tryEnable = () => {
 			attempts++;
 
-			if ( isMeasurable( this.list ) && ! this.isInHamburgerMode() ) {
+			if (isMeasurable(this.list) && !this.isInHamburgerMode()) {
 				this.enablePriorityNav();
 				this.retryTimeout = null;
-			} else if ( attempts < maxAttempts ) {
-				this.retryTimeout = setTimeout( tryEnable, 100 );
+			} else if (attempts < maxAttempts) {
+				this.retryTimeout = setTimeout(tryEnable, 100);
 			} else {
 				// Give up after max attempts
 				this.retryTimeout = null;
 			}
 		};
 
-		this.retryTimeout = setTimeout( tryEnable, 100 );
+		this.retryTimeout = setTimeout(tryEnable, 100);
 	}
 
 	/**
 	 * Set up observer for responsive container changes
 	 */
 	setupResponsiveObserver() {
-		if ( typeof MutationObserver === 'undefined' ) {
+		if (typeof MutationObserver === 'undefined') {
 			return;
 		}
 
-		if ( ! this.responsiveContainer ) {
+		if (!this.responsiveContainer) {
 			return;
 		}
 
 		// Watch for attribute and class changes on responsive container
-		this.mutationObserver = new MutationObserver( ( mutations ) => {
+		this.mutationObserver = new MutationObserver((mutations) => {
 			// Guard against detached elements
-			if ( ! document.body.contains( this.nav ) ) {
+			if (!document.body.contains(this.nav)) {
 				return;
 			}
 
 			let shouldCheck = false;
 
-			mutations.forEach( ( mutation ) => {
+			mutations.forEach((mutation) => {
 				if (
 					mutation.type === 'attributes' &&
-					( mutation.attributeName === 'aria-hidden' ||
-						mutation.attributeName === 'class' )
+					(mutation.attributeName === 'aria-hidden' ||
+						mutation.attributeName === 'class')
 				) {
 					shouldCheck = true;
 				}
-			} );
+			});
 
-			if ( shouldCheck ) {
+			if (shouldCheck) {
 				const inHamburger = this.isInHamburgerMode();
 
-				if ( inHamburger && this.isEnabled ) {
+				if (inHamburger && this.isEnabled) {
 					this.disablePriorityNav();
-				} else if ( ! inHamburger && ! this.isEnabled ) {
+				} else if (!inHamburger && !this.isEnabled) {
 					this.enablePriorityNav();
 				}
 			}
-		} );
+		});
 
-		this.mutationObserver.observe( this.responsiveContainer, {
+		this.mutationObserver.observe(this.responsiveContainer, {
 			attributes: true,
-			attributeFilter: [ 'aria-hidden', 'class' ],
-		} );
+			attributeFilter: ['aria-hidden', 'class'],
+		});
 
 		// Also observe the list container for visibility changes
-		if ( this.list && document.body.contains( this.list ) ) {
-			this.mutationObserver.observe( this.list, {
+		if (this.list && document.body.contains(this.list)) {
+			this.mutationObserver.observe(this.list, {
 				attributes: true,
-				attributeFilter: [ 'style', 'class' ],
+				attributeFilter: ['style', 'class'],
 				attributeOldValue: false,
-			} );
+			});
 		}
 	}
 
@@ -370,13 +370,13 @@ class PriorityNav {
 	 */
 	checkOverflow() {
 		// Don't run if disabled (hamburger mode) or not measurable
-		if ( ! this.isEnabled || ! isMeasurable( this.list ) ) {
+		if (!this.isEnabled || !isMeasurable(this.list)) {
 			this.isCalculating = false;
 			return;
 		}
 
 		// Guard against detached DOM elements
-		if ( ! document.body.contains( this.nav ) ) {
+		if (!document.body.contains(this.nav)) {
 			this.isCalculating = false;
 			return;
 		}
@@ -384,12 +384,12 @@ class PriorityNav {
 		this.isCalculating = true;
 
 		// Ensure we have valid item widths
-		if ( ! hasValidWidthCache( this.itemWidths, this.items.length ) ) {
-			this.itemWidths = cacheItemWidths( this.list, this.items, () =>
+		if (!hasValidWidthCache(this.itemWidths, this.items.length)) {
+			this.itemWidths = cacheItemWidths(this.list, this.items, () =>
 				this.scheduleRetry()
 			);
 			// If still invalid, abort
-			if ( ! hasValidWidthCache( this.itemWidths, this.items.length ) ) {
+			if (!hasValidWidthCache(this.itemWidths, this.items.length)) {
 				this.isCalculating = false;
 				return;
 			}
@@ -404,15 +404,15 @@ class PriorityNav {
 		);
 
 		// Handle edge case where more button is larger than available width
-		if ( this.moreButtonWidth >= availableWidth ) {
-			this.items.forEach( ( item ) => ( item.style.display = 'none' ) );
+		if (this.moreButtonWidth >= availableWidth) {
+			this.items.forEach((item) => (item.style.display = 'none'));
 			this.moreContainer.style.display = '';
 			this.isCalculating = false;
 			return;
 		}
 
 		// Get gap after early return check
-		const gap = getGap( this.list, this.nav );
+		const gap = getGap(this.list, this.nav);
 
 		// Calculate visible items
 		const visibleCount = this.calculateVisibleItems(
@@ -422,9 +422,9 @@ class PriorityNav {
 		);
 
 		// Update display
-		if ( visibleCount === this.items.length ) {
+		if (visibleCount === this.items.length) {
 			// All items fit
-			this.items.forEach( ( item ) => ( item.style.display = '' ) );
+			this.items.forEach((item) => (item.style.display = ''));
 			this.moreContainer.style.display = 'none';
 			this.closeDropdown();
 		} else {
@@ -432,13 +432,13 @@ class PriorityNav {
 			this.moreContainer.style.display = 'none';
 
 			// Hide overflow items FIRST to prevent button from wrapping
-			for ( let i = visibleCount; i < this.items.length; i++ ) {
-				this.items[ i ].style.display = 'none';
+			for (let i = visibleCount; i < this.items.length; i++) {
+				this.items[i].style.display = 'none';
 			}
 
 			// Show visible items
-			for ( let i = 0; i < visibleCount; i++ ) {
-				this.items[ i ].style.display = '';
+			for (let i = 0; i < visibleCount; i++) {
+				this.items[i].style.display = '';
 			}
 
 			// Force a reflow to ensure layout updates before showing button
@@ -469,10 +469,10 @@ class PriorityNav {
 	calculateAvailableWidth() {
 		// Get actual visible container width - prefer the nav element itself
 		const navRect = this.nav.getBoundingClientRect();
-		const navStyles = window.getComputedStyle( this.nav );
+		const navStyles = window.getComputedStyle(this.nav);
 		const padding =
-			parseFloat( navStyles.paddingLeft ) +
-			parseFloat( navStyles.paddingRight );
+			parseFloat(navStyles.paddingLeft) +
+			parseFloat(navStyles.paddingRight);
 
 		// Use nav width
 		const containerWidth = navRect.width > 0 ? navRect.width : 0;
@@ -487,17 +487,17 @@ class PriorityNav {
 	 * @param {number} gap             - Gap between items in pixels
 	 * @return {number} Number of visible items
 	 */
-	calculateVisibleItems( availableWidth, moreButtonWidth, gap ) {
+	calculateVisibleItems(availableWidth, moreButtonWidth, gap) {
 		// Calculate total width needed for all items
 		let totalWidth = 0;
-		for ( let i = 0; i < this.items.length; i++ ) {
-			const itemWidth = this.itemWidths[ i ];
+		for (let i = 0; i < this.items.length; i++) {
+			const itemWidth = this.itemWidths[i];
 			const gapWidth = i > 0 ? gap : 0;
 			totalWidth += gapWidth + itemWidth;
 		}
 
 		// If everything fits, show all items
-		if ( totalWidth <= availableWidth ) {
+		if (totalWidth <= availableWidth) {
 			return this.items.length;
 		}
 
@@ -505,8 +505,8 @@ class PriorityNav {
 		let usedWidth = 0;
 		let visibleCount = 0;
 
-		for ( let i = 0; i < this.items.length; i++ ) {
-			const itemWidth = this.itemWidths[ i ];
+		for (let i = 0; i < this.items.length; i++) {
+			const itemWidth = this.itemWidths[i];
 			const gapWidth = i > 0 ? gap : 0;
 			const moreButtonGap = gap;
 			const itemTotalWidth = gapWidth + itemWidth;
@@ -517,7 +517,7 @@ class PriorityNav {
 				availableWidth;
 
 			// Always show at least one item
-			if ( wouldFit || i === 0 ) {
+			if (wouldFit || i === 0) {
 				usedWidth += itemTotalWidth;
 				visibleCount++;
 			} else {
@@ -529,7 +529,7 @@ class PriorityNav {
 	}
 
 	toggleDropdown() {
-		if ( this.isOpen ) {
+		if (this.isOpen) {
 			this.closeDropdown();
 		} else {
 			this.openDropdown();
@@ -537,23 +537,23 @@ class PriorityNav {
 	}
 
 	openDropdown() {
-		if ( ! this.dropdown || ! this.moreButton ) {
+		if (!this.dropdown || !this.moreButton) {
 			return;
 		}
 
 		this.isOpen = true;
-		this.dropdown.classList.add( 'is-open' );
-		this.moreButton.setAttribute( 'aria-expanded', 'true' );
+		this.dropdown.classList.add('is-open');
+		this.moreButton.setAttribute('aria-expanded', 'true');
 	}
 
 	closeDropdown() {
-		if ( ! this.dropdown || ! this.moreButton ) {
+		if (!this.dropdown || !this.moreButton) {
 			return;
 		}
 
 		this.isOpen = false;
-		this.dropdown.classList.remove( 'is-open' );
-		this.moreButton.setAttribute( 'aria-expanded', 'false' );
+		this.dropdown.classList.remove('is-open');
+		this.moreButton.setAttribute('aria-expanded', 'false');
 		// Close all open accordions
 		this.closeAllAccordions();
 	}
@@ -563,15 +563,15 @@ class PriorityNav {
 	 * @param {HTMLElement} button  - Accordion toggle button
 	 * @param {HTMLElement} submenu - Submenu element
 	 */
-	toggleAccordionItem( button, submenu ) {
-		toggleAccordionItem( button, submenu, this, this.dropdown );
+	toggleAccordionItem(button, submenu) {
+		toggleAccordionItem(button, submenu, this, this.dropdown);
 	}
 
 	/**
 	 * Close all open accordions
 	 */
 	closeAllAccordions() {
-		closeAllAccordions( this );
+		closeAllAccordions(this);
 	}
 
 	/**
@@ -579,25 +579,25 @@ class PriorityNav {
 	 */
 	destroy() {
 		// Cleanup resize observer
-		if ( this.resizeObserver ) {
+		if (this.resizeObserver) {
 			this.resizeObserver.disconnect();
 			this.resizeObserver = null;
 		}
 
 		// Cleanup mutation observer
-		if ( this.mutationObserver ) {
+		if (this.mutationObserver) {
 			this.mutationObserver.disconnect();
 			this.mutationObserver = null;
 		}
 
 		// Cleanup retry timeout
-		if ( this.retryTimeout ) {
-			clearTimeout( this.retryTimeout );
+		if (this.retryTimeout) {
+			clearTimeout(this.retryTimeout);
 			this.retryTimeout = null;
 		}
 
 		// Cleanup event listeners
-		if ( this.eventHandlers ) {
+		if (this.eventHandlers) {
 			const {
 				moreButtonClickHandler,
 				documentClickHandler,
@@ -605,14 +605,14 @@ class PriorityNav {
 				dropdownClickHandler,
 			} = this.eventHandlers;
 
-			if ( this.moreButton && moreButtonClickHandler ) {
+			if (this.moreButton && moreButtonClickHandler) {
 				this.moreButton.removeEventListener(
 					'click',
 					moreButtonClickHandler
 				);
 			}
 
-			if ( documentClickHandler ) {
+			if (documentClickHandler) {
 				document.removeEventListener(
 					'click',
 					documentClickHandler,
@@ -620,14 +620,11 @@ class PriorityNav {
 				);
 			}
 
-			if ( documentKeydownHandler ) {
-				document.removeEventListener(
-					'keydown',
-					documentKeydownHandler
-				);
+			if (documentKeydownHandler) {
+				document.removeEventListener('keydown', documentKeydownHandler);
 			}
 
-			if ( this.dropdown && dropdownClickHandler ) {
+			if (this.dropdown && dropdownClickHandler) {
 				this.dropdown.removeEventListener(
 					'click',
 					dropdownClickHandler

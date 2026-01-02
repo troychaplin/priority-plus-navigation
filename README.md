@@ -1,4 +1,4 @@
-# Priority+ Navigation Block
+# Priority Plus Navigation Block
 
 A WordPress block plugin that adds Priority+ pattern functionality to core WordPress navigation block. It automatically moves navigation items that don't fit into a responsive "More" dropdown menu as the viewport narrows.
 
@@ -6,13 +6,13 @@ A WordPress block plugin that adds Priority+ pattern functionality to core WordP
 
 ## What is Priority+?
 
-Priority+ navigation is a responsive design pattern that keeps all navigation items visible at wide screen sizes, but progressively moves overflow items into a "More" dropdown at smaller screen sizes. This ensures the navigation remains usable on all devices without requiring a hamburger menu or breaking the layout.
+Priority Plus Navigation is a responsive design pattern that keeps all navigation items visible at wide screen sizes, but progressively moves overflow items into a "More" dropdown at smaller screen sizes. This ensures the navigation remains usable on all devices without requiring a hamburger menu or breaking the layout.
 
 ## Features
 
 - **Core Navigation Variation** - Extends the standard WordPress navigation block as a variation, no need to rebuild your menus
 - **Automatic Overflow Detection** - Intelligently calculates available space and moves items to dropdown
-- **Easy Conversion** - Transform any Navigation block to Priority+ Navigation via block variations
+- **Easy Conversion** - Transform any Navigation block to Priority Plus Navigation via block variations
 - **Customizable "More" Button** - Choose label text and icon style
 - **Responsive by Design** - Uses ResizeObserver for smooth, performant resizing
 - **Core Navigation Integration** - Automatically detects and respects "Open submenus on click" setting
@@ -20,7 +20,7 @@ Priority+ navigation is a responsive design pattern that keeps all navigation it
 - **Submenu Accordions** - Items with submenus in the dropdown become accessible accordions
 - **Accessible** - Proper ARIA attributes and keyboard support (Escape to close)
 - **Block Theme Ready** - Full support for block themes with alignment, spacing, and color controls
-- **Multiple Blocks** - Use multiple Priority+ Navigation blocks on the same page
+- **Multiple Blocks** - Use multiple Priority Plus Navigation blocks on the same page
 - **Future-Proof** - Since it extends core navigation, it benefits from WordPress core updates
 
 ## Installation
@@ -48,14 +48,14 @@ npm run build
 
 ## Usage
 
-The Priority+ Navigation is available as a variation of the core Navigation block. There are two ways to use it:
+The Priority Plus Navigation is available as a variation of the core Navigation block. There are two ways to use it:
 
 ### Option 1: Insert as Variation
 
 1. In the block editor, click the **+** button to add a block
-2. Search for **"Priority+ Navigation"** or **"Navigation"**
-3. When you see the Navigation block, look for the **Priority+ Navigation** variation in the block variations panel
-4. Select the Priority+ Navigation variation
+2. Search for **"Priority Plus Navigation"** or **"Navigation"**
+3. When you see the Navigation block, look for the **Priority Plus Navigation** variation in the block variations panel
+4. Select the Priority Plus Navigation variation
 5. Configure your navigation using the familiar WordPress navigation tools
 6. Customize the "More" button label and icon in the block sidebar (Priority+ Settings panel)
 
@@ -63,12 +63,12 @@ The Priority+ Navigation is available as a variation of the core Navigation bloc
 
 1. Select any existing **Navigation** block
 2. In the block toolbar or block settings, look for the block variations switcher
-3. Choose **"Priority+ Navigation"** from the variations
+3. Choose **"Priority Plus Navigation"** from the variations
 4. Your navigation now has Priority+ behavior enabled!
 
 ### Converting Back to Standard Navigation
 
-1. Select a **Priority+ Navigation** block
+1. Select a **Priority Plus Navigation** block
 2. In the block variations switcher, choose the standard **"Navigation"** variation
 3. The Priority+ behavior is disabled, returning to standard WordPress navigation
 
@@ -212,7 +212,7 @@ priority-nav/
 
 ## Overlay Menu Compatibility
 
-Priority+ Navigation intelligently works with WordPress core navigation overlay menu settings:
+Priority Plus Navigation intelligently works with WordPress core navigation overlay menu settings:
 
 ### How It Works
 
@@ -226,8 +226,8 @@ The plugin detects when WordPress's overlay/hamburger menu is active by checking
 
 ## Known Limitations
 
-- When using multiple Priority+ Navigation blocks on the same page with "Open submenus on click" enabled, ensure each block has unique navigation content to avoid potential ID conflicts
-- Priority+ Navigation is not compatible with the "Always" overlay menu setting - it will automatically prevent usage and switch to "Mobile" mode
+- When using multiple Priority Plus Navigation blocks on the same page with "Open submenus on click" enabled, ensure each block has unique navigation content to avoid potential ID conflicts
+- Priority Plus Navigation is not compatible with the "Always" overlay menu setting - it will automatically prevent usage and switch to "Mobile" mode
 - Legacy wrapper blocks (from previous plugin versions) are no longer insertable in the editor, but will continue to function on the frontend for backward compatibility
 
 ## Changelog
@@ -247,7 +247,7 @@ The plugin detects when WordPress's overlay/hamburger menu is active by checking
 - Legacy wrapper blocks still supported on frontend for backward compatibility
 
 ### 0.1.0 - Initial Release
-- Priority+ navigation as core/navigation variation
+- Priority Plus Navigation as core/navigation variation
 - Customizable "More" button label and icon
 - Full block theme support
 - Responsive overflow detection
@@ -257,7 +257,7 @@ The plugin detects when WordPress's overlay/hamburger menu is active by checking
 
 ## Credits
 
-Built with WordPress block development tools and inspired by the Priority+ navigation pattern.
+Built with WordPress block development tools and inspired by the Priority Plus Navigation pattern.
 
 ## License
 
