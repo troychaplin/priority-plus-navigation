@@ -10,18 +10,18 @@ Priority+ navigation is a responsive design pattern that keeps all navigation it
 
 ## Features
 
-- ✅ **Core Navigation Variation** - Extends the standard WordPress navigation block as a variation, no need to rebuild your menus
-- ✅ **Automatic Overflow Detection** - Intelligently calculates available space and moves items to dropdown
-- ✅ **Easy Conversion** - Transform any Navigation block to Priority+ Navigation via block variations
-- ✅ **Customizable "More" Button** - Choose label text and icon style
-- ✅ **Responsive by Design** - Uses ResizeObserver for smooth, performant resizing
-- ✅ **Core Navigation Integration** - Automatically detects and respects "Open submenus on click" setting
-- ✅ **Smart Mobile Detection** - Automatically disables on mobile/hamburger mode to avoid conflicts
-- ✅ **Submenu Accordions** - Items with submenus in the dropdown become accessible accordions
-- ✅ **Accessible** - Proper ARIA attributes and keyboard support (Escape to close)
-- ✅ **Block Theme Ready** - Full support for block themes with alignment, spacing, and color controls
-- ✅ **Multiple Blocks** - Use multiple Priority+ Navigation blocks on the same page
-- ✅ **Future-Proof** - Since it extends core navigation, it benefits from WordPress core updates
+- **Core Navigation Variation** - Extends the standard WordPress navigation block as a variation, no need to rebuild your menus
+- **Automatic Overflow Detection** - Intelligently calculates available space and moves items to dropdown
+- **Easy Conversion** - Transform any Navigation block to Priority+ Navigation via block variations
+- **Customizable "More" Button** - Choose label text and icon style
+- **Responsive by Design** - Uses ResizeObserver for smooth, performant resizing
+- **Core Navigation Integration** - Automatically detects and respects "Open submenus on click" setting
+- **Smart Mobile Detection** - Automatically disables on mobile/hamburger mode to avoid conflicts
+- **Submenu Accordions** - Items with submenus in the dropdown become accessible accordions
+- **Accessible** - Proper ARIA attributes and keyboard support (Escape to close)
+- **Block Theme Ready** - Full support for block themes with alignment, spacing, and color controls
+- **Multiple Blocks** - Use multiple Priority+ Navigation blocks on the same page
+- **Future-Proof** - Since it extends core navigation, it benefits from WordPress core updates
 
 ## Installation
 
