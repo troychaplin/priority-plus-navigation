@@ -63,6 +63,14 @@ See the main [README.md](../README.md) for:
 - How to use the block
 - Configuration options
 
+### For Theme Builders
+
+See [styling.md](styling.md) for:
+- Complete theme.json styling guide
+- Available CSS custom properties
+- Common customization examples
+- Troubleshooting styling issues
+
 ### For Developers
 
 See [how-it-works.md](how-it-works.md) for:

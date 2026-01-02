@@ -1,0 +1,21 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/theme.json",
+	"version": 3,
+	"settings": {
+		"custom": {
+			"priorityPlusNavigation": {
+				"dropdown": {
+					"backgroundColor": "#f0f0f0",
+					"borderColor": "#999999",
+					"borderWidth": "2px",
+					"borderRadius": "8px",
+					"boxShadow": "0 8px 16px rgba(0, 0, 0, 0.2)",
+					"itemSpacing": "1rem 1.5rem",
+					"itemHoverBackgroundColor": "rgba(0, 0, 0, 0.08)",
+					"itemHoverTextColor": "#007cba",
+					"multiLevelIndent": "1.5rem"
+				}
+			}
+		}
+	}
+}

@@ -1,4 +1,22 @@
-// CSS custom properties for Priority Nav
+// CSS custom properties for Priority Plus Navigation
+// Set on :root so WordPress theme.json (which uses body selector) can override them
+// Dropdown menu styles (can be overridden via theme.json)
+// WordPress generates: body { --wp--custom--priority-plus-navigation--dropdown--* }
+// Since body has higher specificity than :root, theme.json values will override these defaults
+
+:root {
+	--wp--custom--priority-plus-navigation--dropdown--background-color: #fff;
+	--wp--custom--priority-plus-navigation--dropdown--border-color: #ddd;
+	--wp--custom--priority-plus-navigation--dropdown--border-width: 1px;
+	--wp--custom--priority-plus-navigation--dropdown--border-radius: 4px;
+	--wp--custom--priority-plus-navigation--dropdown--box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+	--wp--custom--priority-plus-navigation--dropdown--item-spacing: 0.75rem 1.25rem;
+	--wp--custom--priority-plus-navigation--dropdown--item-hover-background-color: rgba(0, 0, 0, 0.05);
+	--wp--custom--priority-plus-navigation--dropdown--item-hover-text-color: inherit;
+	--wp--custom--priority-plus-navigation--dropdown--multi-level-indent: 1.25rem;
+}
+
+// More button styles (controlled via block attributes, not theme.json)
 .is-style-priority-plus-navigation {
 	--priority-plus-navigation--background: transparent;
 	--priority-plus-navigation--background-hover: transparent;
@@ -13,9 +31,3 @@
 	--priority-plus-navigation--font-weight: inherit;
 	--priority-plus-navigation--padding: 0;
 }
-
-// These can be easily overridden in theme stylesheets by targeting .is-style-priority-plus-navigation, for example:
-// .is-style-priority-plus-navigation {
-//   --priority-plus-navigation--background: #ff0000;
-//   --priority-plus-navigation--color: #ffffff;
-// }

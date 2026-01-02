@@ -107,6 +107,33 @@ The block supports all standard WordPress block features:
 - **Spacing**: Margin, Padding
 - **Colors**: Background, Text
 
+### Theme.json Styling
+
+The Priority Plus Navigation dropdown menu can be customized via your theme's `theme.json`. The plugin provides sensible defaults, and you can override any property you want to customize.
+
+**Quick Example:**
+
+```json
+{
+  "version": 3,
+  "settings": {
+    "custom": {
+      "priorityPlusNavigation": {
+        "dropdown": {
+          "backgroundColor": "#f0f0f0",
+          "borderColor": "#999999",
+          "itemHoverBackgroundColor": "rgba(0, 0, 0, 0.08)"
+        }
+      }
+    }
+  }
+}
+```
+
+**Available Properties:** `backgroundColor`, `borderColor`, `borderWidth`, `borderRadius`, `boxShadow`, `itemSpacing`, `itemHoverBackgroundColor`, `itemHoverTextColor`, `multiLevelIndent`
+
+**📖 For complete styling documentation, examples, and troubleshooting, see [docs/styling.md](docs/styling.md)**
+
 ## How It Works
 
 ### Architecture

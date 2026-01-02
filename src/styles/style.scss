@@ -5,7 +5,6 @@
 
 	.priority-plus-navigation-more-button {
 		display: flex;
-		gap: 0.1rem;
 		align-items: center;
 		font-family: var(--priority-plus-navigation--font-family);
 		font-size: var(--priority-plus-navigation--font-size);
@@ -17,7 +16,7 @@
 		border-style: var(--priority-plus-navigation--border-style);
 		border-width: var(--priority-plus-navigation--border-width);
 		border-radius: var(--priority-plus-navigation--border-radius);
-		transition: all 0.2s ease;
+		transition: background 0.2s ease, color 0.2s ease;
 		cursor: pointer;
 
 		&:hover {
@@ -29,10 +28,9 @@
 			display: inline-flex;
 			align-items: center;
 			line-height: 1;
-            margin-right: -5px;
 
 			svg {
-				fill: currentColor;
+				fill: currentcolor;
 				width: 1.25em;
 				height: 1.25em;
 			}
@@ -47,21 +45,24 @@
 
 	.priority-plus-navigation-dropdown {
 		position: absolute;
-		top: calc(100% + 0.5rem);
+        overflow: hidden;
+		top: 100%;
 		right: 0;
 		min-width: 200px;
-		background: #fff;
-		border: 1px solid #ddd;
-		border-radius: 4px;
-		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+		background: var(--wp--custom--priority-plus-navigation--dropdown--background-color);
+		border-width: var(--wp--custom--priority-plus-navigation--dropdown--border-width);
+		border-style: solid;
+		border-color: var(--wp--custom--priority-plus-navigation--dropdown--border-color);
+		border-radius: var(--wp--custom--priority-plus-navigation--dropdown--border-radius);
+		box-shadow: var(--wp--custom--priority-plus-navigation--dropdown--box-shadow);
 		list-style: none;
 		margin: 0;
-		padding: 0.5rem 0;
+		padding: 0;
 		z-index: 1000;
 		opacity: 0;
 		visibility: hidden;
 		transform: translateY(-10px);
-		transition: all 0.2s ease;
+		transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
 
 		&.is-open {
 			opacity: 1;
@@ -75,13 +76,14 @@
 
 			a {
 				display: block;
-				padding: 0.75rem 1rem;
+				padding: var(--wp--custom--priority-plus-navigation--dropdown--item-spacing);
 				color: inherit;
 				text-decoration: none;
-				transition: background 0.2s ease;
+				transition: background 0.2s ease, color 0.2s ease;
 
 				&:hover {
-					background: rgba(0, 0, 0, 0.05);
+					background: var(--wp--custom--priority-plus-navigation--dropdown--item-hover-background-color);
+					color: var(--wp--custom--priority-plus-navigation--dropdown--item-hover-text-color);
 				}
 			}
 		}
@@ -102,9 +104,40 @@
 				display: block !important;
 			}
 
-			// Nested level indentation
+			// Multi-level indentation - each nested level adds indent
+			// Applied to links and accordion toggle buttons
+			// First level - add 1x indent to the left padding
+			> li > a,
+			> li > .priority-plus-navigation-accordion-wrapper > a,
+			> li > .priority-plus-navigation-accordion-toggle-full {
+				padding-left: calc(1rem + var(--wp--custom--priority-plus-navigation--dropdown--multi-level-indent));
+			}
+
+			// Second level - add 2x indent to the left padding
 			.priority-plus-navigation-accordion-content {
-				padding-left: 1rem;
+				> li > a,
+				> li > .priority-plus-navigation-accordion-wrapper > a,
+				> li > .priority-plus-navigation-accordion-toggle-full {
+					padding-left: calc(1rem + (var(--wp--custom--priority-plus-navigation--dropdown--multi-level-indent) * 2));
+				}
+
+				// Third level - add 3x indent to the left padding
+				.priority-plus-navigation-accordion-content {
+					> li > a,
+					> li > .priority-plus-navigation-accordion-wrapper > a,
+					> li > .priority-plus-navigation-accordion-toggle-full {
+						padding-left: calc(1rem + (var(--wp--custom--priority-plus-navigation--dropdown--multi-level-indent) * 3));
+					}
+
+					// Fourth level - add 4x indent to the left padding
+					.priority-plus-navigation-accordion-content {
+						> li > a,
+						> li > .priority-plus-navigation-accordion-wrapper > a,
+						> li > .priority-plus-navigation-accordion-toggle-full {
+							padding-left: calc(1rem + (var(--wp--custom--priority-plus-navigation--dropdown--multi-level-indent) * 4));
+						}
+					}
+				}
 			}
 		}
 
@@ -122,7 +155,7 @@
 			align-items: center;
 			justify-content: space-between;
 			width: 100%;
-			padding: 0.75rem 1rem;
+			padding: var(--wp--custom--priority-plus-navigation--dropdown--item-spacing);
 			background: transparent;
 			border: none;
 			cursor: pointer;
@@ -130,6 +163,7 @@
 			font-family: inherit;
 			color: inherit;
 			text-align: left;
+			transition: background 0.2s ease, color 0.2s ease;
 
 			.priority-plus-navigation-accordion-text {
 				flex: 1;
@@ -138,6 +172,11 @@
 			.priority-plus-navigation-accordion-arrow {
 				margin-left: 0.5rem;
 				transition: transform 0.2s ease;
+			}
+
+			&:hover {
+				background: var(--wp--custom--priority-plus-navigation--dropdown--item-hover-background-color);
+				color: var(--wp--custom--priority-plus-navigation--dropdown--item-hover-text-color);
 			}
 
 			&[aria-expanded="true"] {
@@ -151,11 +190,17 @@
 		// Arrow mode: link stays functional, separate arrow button
 		.priority-plus-navigation-accordion-link {
 			flex: 1;
-			padding: 0.75rem 1rem;
+			padding: var(--wp--custom--priority-plus-navigation--dropdown--item-spacing);
+			transition: background 0.2s ease, color 0.2s ease;
+
+			&:hover {
+				background: var(--wp--custom--priority-plus-navigation--dropdown--item-hover-background-color);
+				color: var(--wp--custom--priority-plus-navigation--dropdown--item-hover-text-color);
+			}
 		}
 
 		.priority-plus-navigation-accordion-toggle-arrow {
-			padding: 0.75rem;
+			padding: var(--wp--custom--priority-plus-navigation--dropdown--item-spacing);
 			background: transparent;
 			border: none;
 			cursor: pointer;
@@ -163,10 +208,16 @@
 			font-family: inherit;
 			color: inherit;
 			flex-shrink: 0;
+			transition: background 0.2s ease, color 0.2s ease;
 
 			.priority-plus-navigation-accordion-arrow {
 				transition: transform 0.2s ease;
 				display: inline-block;
+			}
+
+			&:hover {
+				background: var(--wp--custom--priority-plus-navigation--dropdown--item-hover-background-color);
+				color: var(--wp--custom--priority-plus-navigation--dropdown--item-hover-text-color);
 			}
 
 			&[aria-expanded="true"] {
