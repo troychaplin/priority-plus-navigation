@@ -1,0 +1,75 @@
+name: 💡 Feature Request or Enhancement
+description: Suggest a new feature, enhancement, or provide feedback
+title: '[Feature]: '
+labels: ['enhancement']
+assignees: ['troychaplin']
+body:
+    - type: markdown
+      attributes:
+          value: |
+              Thanks for your suggestion! Your ideas and feedback help make Priority Plus Navigation better.
+
+    - type: checkboxes
+      id: prerequisites
+      attributes:
+          label: Prerequisites
+          description: Please confirm before submitting
+          options:
+              - label: I have searched existing issues to ensure this hasn't been suggested already
+                required: true
+
+    - type: dropdown
+      id: request-type
+      attributes:
+          label: What type of request is this?
+          description: Select the category that best fits your request
+          options:
+              - More Button Customization
+              - Dropdown Behavior/Styling
+              - Editor Controls/Settings
+              - Responsive Behavior
+              - Accessibility Enhancement
+              - Performance Improvement
+              - Submenu/Accordion Functionality
+              - Theme Compatibility
+              - Developer Experience/Feedback
+              - Other
+      validations:
+          required: true
+
+    - type: textarea
+      id: description
+      attributes:
+          label: Description
+          description: Describe your feature request, enhancement, or feedback
+          placeholder: |
+              Be as specific as possible:
+              - What would you like to see added or improved?
+              - What problem does this solve?
+              - How would this help you or other users?
+      validations:
+          required: true
+
+    - type: textarea
+      id: use-case
+      attributes:
+          label: Use Case or Example (optional)
+          description: Provide a specific example of when this would be useful
+          placeholder: |
+              Example scenario:
+              - When building a navigation with many items...
+              - When using a specific theme...
+              - When working with mobile viewports...
+              - When customizing the More button appearance...
+
+    - type: textarea
+      id: additional-context
+      attributes:
+          label: Additional Context (optional)
+          description: Add any other information that might help
+          placeholder: |
+              - Examples from other websites/tools
+              - Mockups or design ideas
+              - Alternative approaches considered
+              - Links or screenshots
+              - Technical details or implementation suggestions

@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+    - name: 📖 Plugin Documentation
+      url: https://github.com/troychaplin/priority-plus-navigation/blob/main/README.md
+      about: Complete usage guide, setup instructions, and configuration options
