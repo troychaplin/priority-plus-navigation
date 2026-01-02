@@ -8,11 +8,11 @@ Stable tag:        1.0.0
 License:           GPLv2 or later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
-Adds Priority+ pattern to core Navigation block. Moves overflow items into responsive "More" dropdown as the users viewport narrows.
+Adds Priority Plus pattern to core Navigation block. Moves overflow items into responsive "More" dropdown as the users viewport narrows.
 
 == Description ==
 
-Priority Nav extends the core WordPress Navigation block as a variation, implementing the Priority+ design pattern. It displays the most important navigation items in the main menu bar and automatically moves overflow items into a "More" dropdown menu (default label: "Browse") when horizontal space is limited.
+Priority Nav extends the core WordPress Navigation block as a variation, implementing the Priority Plus design pattern. It displays the most important navigation items in the main menu bar and automatically moves overflow items into a "More" dropdown menu (default label: "Browse") when horizontal space is limited.
 
 Key Features:
 
@@ -28,16 +28,16 @@ Perfect for sites with many navigation items that need to work across all device
 
 == Installation ==
 
-1. Upload the plugin files to the `/wp-content/plugins/priority-nav` directory, or install the plugin through the WordPress plugins screen directly.
+1. Upload the plugin files to the `/wp-content/plugins/priority-plus-navigation` directory, or install the plugin through the WordPress plugins screen directly.
 2. Activate the plugin through the 'Plugins' screen in WordPress
 3. Add a Navigation block and select the "Priority Plus Navigation" variation, or search for "Priority Plus Navigation" in the block inserter
 4. Configure your navigation using the familiar WordPress navigation tools
 
 == Frequently Asked Questions ==
 
-= How does the Priority+ pattern work? =
+= How does the Priority Plus pattern work? =
 
-The Priority+ pattern prioritizes the most important navigation items by keeping them visible in the main navigation bar. When there isn't enough horizontal space for all items, less important items are automatically moved into a "More" dropdown menu. As the viewport width changes, items dynamically move in and out of the dropdown.
+The Priority Plus pattern prioritizes the most important navigation items by keeping them visible in the main navigation bar. When there isn't enough horizontal space for all items, less important items are automatically moved into a "More" dropdown menu. As the viewport width changes, items dynamically move in and out of the dropdown.
 
 = Can I customize the "More" button text? =
 
@@ -51,9 +51,9 @@ Yes! Items with submenus in the dropdown are converted to accessible accordions 
 
 Priority Plus Navigation intelligently integrates with WordPress core navigation overlay menu settings:
 
-* **Never**: Priority+ is always active across all screen sizes
-* **Mobile**: Priority+ works on desktop and automatically disables when the hamburger menu activates
-* **Always**: Not compatible - Priority+ is automatically disabled and the "Always" option appears greyed out in the editor
+* **Never**: Priority Plus is always active across all screen sizes
+* **Mobile**: Priority Plus works on desktop and automatically disables when the hamburger menu activates
+* **Always**: Not compatible - Priority Plus is automatically disabled and the "Always" option appears greyed out in the editor
 
 = Is it accessible? =
 
@@ -97,7 +97,7 @@ The plugin provides sensible defaults, and you only need to specify the properti
 
 = 0.3.0 =
 * Added intelligent overlay menu detection and compatibility
-* Priority+ now properly disables when hamburger menu is active (overlayMenu: 'mobile')
+* Priority Plus now properly disables when hamburger menu is active (overlayMenu: 'mobile')
 * "Always" overlay option is automatically prevented and visually disabled in editor
 * Improved hamburger mode detection using `is-menu-open` class
 * Enhanced documentation with overlay menu compatibility details
