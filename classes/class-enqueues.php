@@ -142,7 +142,7 @@ class Enqueues extends Plugin_Module {
 		$this->enqueue_frontend_assets_once();
 
 		// Get Priority+ configuration with defaults.
-		$more_label                  = $this->get_priority_attr( $block, 'priorityNavMoreLabel', 'Browse' );
+		$more_label                  = $this->get_priority_attr( $block, 'priorityNavMoreLabel', 'More' );
 		$more_icon                   = $this->get_priority_attr( $block, 'priorityNavMoreIcon', 'none' );
 		$more_background_color       = $this->get_priority_attr( $block, 'priorityNavMoreBackgroundColor', '' );
 		$more_background_color_hover = $this->get_priority_attr( $block, 'priorityNavMoreBackgroundColorHover', '' );

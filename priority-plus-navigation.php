@@ -28,14 +28,15 @@ if ( ! class_exists( PriorityPlusNavigation\Plugin_Paths::class ) ) {
 	return;
 }
 
-// Instantiate our modules.
-$priority_plus_navigation_modules = array(
-	new PriorityPlusNavigation\Enqueues( __DIR__ . '/build' ),
-);
+// Initialize plugin modules.
+( function () {
+	$modules = array(
+		new PriorityPlusNavigation\Enqueues( __DIR__ . '/build' ),
+	);
 
-
-foreach ( $priority_plus_navigation_modules as $priority_plus_navigation_module ) {
-	if ( is_a( $priority_plus_navigation_module, PriorityPlusNavigation\Plugin_Module::class ) ) {
-		$priority_plus_navigation_module->init();
+	foreach ( $modules as $module ) {
+		if ( is_a( $module, PriorityPlusNavigation\Plugin_Module::class ) ) {
+			$module->init();
+		}
 	}
-}
+} )();

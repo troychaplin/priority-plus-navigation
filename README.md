@@ -79,7 +79,7 @@ The Priority Plus Navigation is available as a variation of the core Navigation 
 ### Block Settings (Inspector Sidebar)
 
 **More Button Label**
-- Default: "Browse"
+- Default: "More"
 - Customize the text displayed on the overflow button
 
 **More Button Icon**

@@ -3,7 +3,7 @@
         'name' => 'troychaplin/priority-plus-nav-block',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '562b2fe7e4eb18d9fd8ada0e47c3d97227dddded',
+        'reference' => 'd29f3e057c663ed6f30328f9a6996a344a71cebc',
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -49,7 +49,7 @@
         'troychaplin/priority-plus-nav-block' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '562b2fe7e4eb18d9fd8ada0e47c3d97227dddded',
+            'reference' => 'd29f3e057c663ed6f30328f9a6996a344a71cebc',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
