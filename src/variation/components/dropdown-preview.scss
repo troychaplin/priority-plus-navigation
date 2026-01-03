@@ -20,10 +20,26 @@
 		max-width: 320px;
 		width: 100%;
 
-		// Ensure buttons inherit font family and size from the dropdown
+		// Inherit typography from WordPress navigation block CSS variables
+		// These are set by WordPress on the parent .editor-styles-wrapper or navigation block
+		font-family: inherit;
+		font-size: inherit;
+		font-weight: inherit;
+		font-style: inherit;
+
+		// Ensure links and buttons inherit typography from the dropdown
+		a {
+			font-family: inherit;
+			font-size: inherit;
+			font-weight: inherit;
+			font-style: inherit;
+		}
+
 		button {
 			font-family: inherit;
 			font-size: inherit;
+			font-weight: inherit;
+			font-style: inherit;
 		}
 	}
 

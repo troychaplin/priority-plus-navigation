@@ -12,6 +12,7 @@
 		font-family: var(--priority-plus-navigation--font-family);
 		font-size: var(--priority-plus-navigation--font-size);
 		font-weight: var(--priority-plus-navigation--font-weight);
+		font-style: var(--priority-plus-navigation--font-style);
 		color: var(--priority-plus-navigation--color);
 		padding: var(--priority-plus-navigation--padding);
 		background: var(--priority-plus-navigation--background);
@@ -93,6 +94,7 @@
 				padding: var(--wp--custom--priority-plus-navigation--dropdown--item-spacing);
 				color: inherit;
 				font-weight: inherit;
+				font-style: inherit;
 				text-decoration: none;
 				transition: background 0.2s ease, color 0.2s ease;
 
@@ -177,6 +179,7 @@
 			font-size: inherit;
 			font-family: inherit;
 			font-weight: inherit;
+			font-style: inherit;
 			color: inherit;
 			text-align: left;
 			transition: background 0.2s ease, color 0.2s ease;
