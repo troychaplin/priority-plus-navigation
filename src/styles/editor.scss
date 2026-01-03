@@ -49,59 +49,6 @@
 			}
 		}
 
-		// Accordion content - hidden by default, shown when .is-open
-		.priority-plus-navigation-accordion-content {
-			display: none;
-			list-style: none;
-			margin: 0;
-			padding: 0;
-			background: transparent;
-
-			&[aria-hidden="true"] {
-				display: none !important;
-			}
-
-			&.is-open {
-				display: block !important;
-			}
-
-			// Multi-level indentation - each nested level adds indent
-			// Applied to links and accordion toggle buttons
-			// First level - add 1x indent to the left padding
-			> li > a,
-			> li > .priority-plus-navigation-accordion-wrapper > a,
-			> li > .priority-plus-navigation-accordion-toggle-full {
-				padding-left: calc(1rem + var(--wp--custom--priority-plus-navigation--dropdown--multi-level-indent));
-			}
-
-			// Second level - add 2x indent to the left padding
-			.priority-plus-navigation-accordion-content {
-				> li > a,
-				> li > .priority-plus-navigation-accordion-wrapper > a,
-				> li > .priority-plus-navigation-accordion-toggle-full {
-					padding-left: calc(1rem + (var(--wp--custom--priority-plus-navigation--dropdown--multi-level-indent) * 2));
-				}
-
-				// Third level - add 3x indent to the left padding
-				.priority-plus-navigation-accordion-content {
-					> li > a,
-					> li > .priority-plus-navigation-accordion-wrapper > a,
-					> li > .priority-plus-navigation-accordion-toggle-full {
-						padding-left: calc(1rem + (var(--wp--custom--priority-plus-navigation--dropdown--multi-level-indent) * 3));
-					}
-
-					// Fourth level - add 4x indent to the left padding
-					.priority-plus-navigation-accordion-content {
-						> li > a,
-						> li > .priority-plus-navigation-accordion-wrapper > a,
-						> li > .priority-plus-navigation-accordion-toggle-full {
-							padding-left: calc(1rem + (var(--wp--custom--priority-plus-navigation--dropdown--multi-level-indent) * 4));
-						}
-					}
-				}
-			}
-		}
-
 		// Wrapper for link + arrow mode
 		.priority-plus-navigation-accordion-wrapper {
 			display: flex;
@@ -158,6 +105,59 @@
 			}
 		}
 
+		// Accordion content - hidden by default, shown when .is-open
+		.priority-plus-navigation-accordion-content {
+			display: none;
+			list-style: none;
+			margin: 0;
+			padding: 0;
+			background: transparent;
+
+			&[aria-hidden="true"] {
+				display: none !important;
+			}
+
+			&.is-open {
+				display: block !important;
+			}
+
+			// Multi-level indentation - each nested level adds indent
+			// Applied to links and accordion toggle buttons
+			// First level - add 1x indent to the left padding
+			> li > a,
+			> li > .priority-plus-navigation-accordion-wrapper > a,
+			> li > .priority-plus-navigation-accordion-toggle-full {
+				padding-left: calc(1rem + var(--wp--custom--priority-plus-navigation--dropdown--multi-level-indent));
+			}
+
+			// Second level - add 2x indent to the left padding
+			.priority-plus-navigation-accordion-content {
+				> li > a,
+				> li > .priority-plus-navigation-accordion-wrapper > a,
+				> li > .priority-plus-navigation-accordion-toggle-full {
+					padding-left: calc(1rem + (var(--wp--custom--priority-plus-navigation--dropdown--multi-level-indent) * 2));
+				}
+
+				// Third level - add 3x indent to the left padding
+				.priority-plus-navigation-accordion-content {
+					> li > a,
+					> li > .priority-plus-navigation-accordion-wrapper > a,
+					> li > .priority-plus-navigation-accordion-toggle-full {
+						padding-left: calc(1rem + (var(--wp--custom--priority-plus-navigation--dropdown--multi-level-indent) * 3));
+					}
+
+					// Fourth level - add 4x indent to the left padding
+					.priority-plus-navigation-accordion-content {
+						> li > a,
+						> li > .priority-plus-navigation-accordion-wrapper > a,
+						> li > .priority-plus-navigation-accordion-toggle-full {
+							padding-left: calc(1rem + (var(--wp--custom--priority-plus-navigation--dropdown--multi-level-indent) * 4));
+						}
+					}
+				}
+			}
+		}
+
 		// Arrow mode: link stays functional, separate arrow button
 		.priority-plus-navigation-accordion-link {
 			flex: 1;
@@ -182,11 +182,6 @@
 			transition: background 0.2s ease, color 0.2s ease;
 			outline: none;
 
-			.priority-plus-navigation-accordion-arrow {
-				transition: transform 0.2s ease;
-				display: inline-block;
-			}
-
 			&:hover {
 				background: var(--wp--custom--priority-plus-navigation--dropdown--item-hover-background-color);
 				color: var(--wp--custom--priority-plus-navigation--dropdown--item-hover-text-color);
@@ -200,6 +195,11 @@
 			&:focus-visible {
 				outline: 2px solid currentcolor;
 				outline-offset: -2px;
+			}
+
+			.priority-plus-navigation-accordion-arrow {
+				transition: transform 0.2s ease;
+				display: inline-block;
 			}
 
 			&[aria-expanded="true"] {
@@ -216,7 +216,7 @@
     flex-wrap: nowrap;
     align-items: center;
     width: 100%;
-    border: 2px solid green !important;
+    border: 2px solid #008000 !important;
 }
 
 // Disable the "Always" option in overlay menu settings for Priority+ nav

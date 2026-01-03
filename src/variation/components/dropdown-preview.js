@@ -144,12 +144,12 @@ export function DropdownPreview({ dropdownStyles, navigationAttributes }) {
 	const navStyles = navigationAttributes?.style || {};
 	const navFontSizePreset = navigationAttributes?.fontSize; // Preset slug like "x-large"
 	const navFontFamilyPreset = navigationAttributes?.fontFamily; // Preset slug like "fira-code"
-	const navTextColorPreset = navigationAttributes?.textColor; // Preset slug like "accent-3"
-	const navCustomTextColor = navStyles?.color?.text;
 	const navFontStyle = navStyles?.typography?.fontStyle; // "normal" or "italic"
 	const navFontWeight = navStyles?.typography?.fontWeight;
 	const navLineHeight = navStyles?.typography?.lineHeight;
 	const navLetterSpacing = navStyles?.typography?.letterSpacing;
+	const navTextDecoration = navStyles?.typography?.textDecoration; // "none", "underline", etc.
+	const navTextTransform = navStyles?.typography?.textTransform; // "none", "uppercase", "lowercase", "capitalize"
 	const navCustomFontSize = navStyles?.typography?.fontSize; // Custom size like "20px"
 
 	// Memoize the inline styles using the same CSS custom property names as the frontend
@@ -188,7 +188,7 @@ export function DropdownPreview({ dropdownStyles, navigationAttributes }) {
 			styles.fontSize = `var(--wp--preset--font-size--${navFontSizePreset})`;
 		}
 
-		// Font style, weight, line height, letter spacing
+		// Typography styles from navigation
 		if (navFontStyle) {
 			styles.fontStyle = navFontStyle;
 		}
@@ -201,13 +201,15 @@ export function DropdownPreview({ dropdownStyles, navigationAttributes }) {
 		if (navLetterSpacing) {
 			styles.letterSpacing = navLetterSpacing;
 		}
-
-		// Text color - use custom first, then preset
-		if (navCustomTextColor) {
-			styles.color = navCustomTextColor;
-		} else if (navTextColorPreset) {
-			styles.color = `var(--wp--preset--color--${navTextColorPreset})`;
+		if (navTextDecoration) {
+			styles.textDecoration = navTextDecoration;
 		}
+		if (navTextTransform) {
+			styles.textTransform = navTextTransform;
+		}
+
+		// NOTE: Text color is NOT inherited from navigation
+		// User will add separate dropdown text color option in modal later
 
 		return styles;
 	}, [
@@ -227,8 +229,8 @@ export function DropdownPreview({ dropdownStyles, navigationAttributes }) {
 		navFontWeight,
 		navLineHeight,
 		navLetterSpacing,
-		navTextColorPreset,
-		navCustomTextColor,
+		navTextDecoration,
+		navTextTransform,
 	]);
 
 	// Build class names - just use base classes, styles applied via inline styles

@@ -424,7 +424,7 @@ class Enqueues extends Plugin_Module {
 
 		// Add style attribute if we have any styles.
 		if ( ! empty( $style_parts ) ) {
-			$attributes .= ' style="' . esc_attr( implode( '; ', $style_parts ) ) . '"';
+			$attributes .= ' style="' . implode( '; ', $style_parts ) . '"';
 		}
 
 		// Remove existing style attribute from the nav tag if it exists, since we're adding it back.
