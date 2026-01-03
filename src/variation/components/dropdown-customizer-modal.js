@@ -2,8 +2,17 @@
  * WordPress dependencies
  */
 import { __ } from '@wordpress/i18n';
-import { Modal, Button } from '@wordpress/components';
-import { useState, useEffect } from '@wordpress/element';
+import { PanelColorSettings } from '@wordpress/block-editor';
+import {
+	Modal,
+	Button,
+	Panel,
+	PanelBody,
+	PanelRow,
+	TextControl,
+	__experimentalUnitControl as UnitControl,
+} from '@wordpress/components';
+import { useState } from '@wordpress/element';
 
 /**
  * Internal dependencies
@@ -40,6 +49,14 @@ const DropdownCustomizerModal = ({ dropdownStyles, onClose, onSave }) => {
 		...(dropdownStyles || {}),
 	}));
 
+	// Update a specific style property
+	const updateStyle = (key, value) => {
+		setLocalStyles((prev) => ({
+			...prev,
+			[key]: value,
+		}));
+	};
+
 	// Handle save
 	const handleSave = () => {
 		onSave(localStyles);
@@ -57,43 +74,129 @@ const DropdownCustomizerModal = ({ dropdownStyles, onClose, onSave }) => {
 			className="priority-plus-dropdown-customizer-modal"
 			style={{ maxWidth: '1200px' }}
 		>
-			<div className="priority-plus-dropdown-customizer-modal__content">
+			<div className="priority-plus-dropdown-customizer-modal__wrapper">
+				<div className="priority-plus-dropdown-customizer-modal__content">
 				<div className="priority-plus-dropdown-customizer-modal__column priority-plus-dropdown-customizer-modal__column--controls">
-					<h3>
-						{__('Dropdown Style Settings', 'priority-plus-navigation')}
-					</h3>
-					<p className="description">
-						{__(
-							'Customize the appearance of the dropdown menu.',
-							'priority-plus-navigation'
-						)}
-					</p>
-					{/* Controls will be added in Phase 3 */}
-					<div className="priority-plus-dropdown-customizer-modal__placeholder">
-						<p>
-							{__(
-								'Style controls will be added here.',
-								'priority-plus-navigation'
-							)}
-						</p>
-						<ul>
-							<li>Background Color: {localStyles.backgroundColor}</li>
-							<li>Border Color: {localStyles.borderColor}</li>
-							<li>Border Width: {localStyles.borderWidth}</li>
-							<li>Border Radius: {localStyles.borderRadius}</li>
-							<li>Box Shadow: {localStyles.boxShadow}</li>
-							<li>Item Spacing: {localStyles.itemSpacing}</li>
-							<li>
-								Item Hover Background:{' '}
-								{localStyles.itemHoverBackgroundColor}
-							</li>
-							<li>
-								Item Hover Text Color:{' '}
-								{localStyles.itemHoverTextColor}
-							</li>
-							<li>Multi-Level Indent: {localStyles.multiLevelIndent}</li>
-						</ul>
-					</div>
+					<Panel>
+						<PanelColorSettings
+							title={__('Colors', 'priority-plus-navigation')}
+							colorSettings={[
+								{
+									label: __('Background Color', 'priority-plus-navigation'),
+									value: localStyles.backgroundColor,
+									onChange: (color) =>
+										updateStyle('backgroundColor', color || DEFAULT_STYLES.backgroundColor),
+									clearable: true,
+								},
+								{
+									label: __('Border Color', 'priority-plus-navigation'),
+									value: localStyles.borderColor,
+									onChange: (color) =>
+										updateStyle('borderColor', color || DEFAULT_STYLES.borderColor),
+									clearable: true,
+								},
+								{
+									label: __('Item Hover Background', 'priority-plus-navigation'),
+									value: localStyles.itemHoverBackgroundColor,
+									onChange: (color) =>
+										updateStyle('itemHoverBackgroundColor', color || DEFAULT_STYLES.itemHoverBackgroundColor),
+									clearable: true,
+								},
+								{
+									label: __('Item Hover Text Color', 'priority-plus-navigation'),
+									value: localStyles.itemHoverTextColor,
+									onChange: (color) =>
+										updateStyle('itemHoverTextColor', color || DEFAULT_STYLES.itemHoverTextColor),
+									clearable: true,
+								},
+							]}
+						/>
+
+						<PanelBody
+							title={__('Border & Shadow', 'priority-plus-navigation')}
+							initialOpen={true}
+						>
+							<PanelRow>
+								<UnitControl
+									label={__('Border Width', 'priority-plus-navigation')}
+									value={localStyles.borderWidth}
+									onChange={(value) =>
+										updateStyle('borderWidth', value || DEFAULT_STYLES.borderWidth)
+									}
+									units={[
+										{ value: 'px', label: 'px' },
+										{ value: 'em', label: 'em' },
+										{ value: 'rem', label: 'rem' },
+									]}
+								/>
+							</PanelRow>
+
+							<PanelRow>
+								<UnitControl
+									label={__('Border Radius', 'priority-plus-navigation')}
+									value={localStyles.borderRadius}
+									onChange={(value) =>
+										updateStyle('borderRadius', value || DEFAULT_STYLES.borderRadius)
+									}
+									units={[
+										{ value: 'px', label: 'px' },
+										{ value: 'em', label: 'em' },
+										{ value: 'rem', label: 'rem' },
+										{ value: '%', label: '%' },
+									]}
+								/>
+							</PanelRow>
+
+							<PanelRow>
+								<TextControl
+									label={__('Box Shadow', 'priority-plus-navigation')}
+									value={localStyles.boxShadow}
+									onChange={(value) =>
+										updateStyle('boxShadow', value || DEFAULT_STYLES.boxShadow)
+									}
+									help={__(
+										'CSS box-shadow value',
+										'priority-plus-navigation'
+									)}
+								/>
+							</PanelRow>
+						</PanelBody>
+
+						<PanelBody
+							title={__('Spacing', 'priority-plus-navigation')}
+							initialOpen={true}
+						>
+							<PanelRow>
+								<TextControl
+									label={__('Item Padding', 'priority-plus-navigation')}
+									value={localStyles.itemSpacing}
+									onChange={(value) =>
+										updateStyle('itemSpacing', value || DEFAULT_STYLES.itemSpacing)
+									}
+									help={__(
+										'CSS padding (e.g., "0.75rem 1.25rem")',
+										'priority-plus-navigation'
+									)}
+								/>
+							</PanelRow>
+
+							<PanelRow>
+								<UnitControl
+									label={__('Multi-Level Indent', 'priority-plus-navigation')}
+									value={localStyles.multiLevelIndent}
+									onChange={(value) =>
+										updateStyle('multiLevelIndent', value || DEFAULT_STYLES.multiLevelIndent)
+									}
+									help={__('Indentation for each submenu level', 'priority-plus-navigation')}
+									units={[
+										{ value: 'px', label: 'px' },
+										{ value: 'em', label: 'em' },
+										{ value: 'rem', label: 'rem' },
+									]}
+								/>
+							</PanelRow>
+						</PanelBody>
+					</Panel>
 				</div>
 
 				<div className="priority-plus-dropdown-customizer-modal__column priority-plus-dropdown-customizer-modal__column--preview">
@@ -114,19 +217,20 @@ const DropdownCustomizerModal = ({ dropdownStyles, onClose, onSave }) => {
 						</p>
 					</div>
 				</div>
-			</div>
+				</div>
 
-			<div className="priority-plus-dropdown-customizer-modal__footer">
-				<Button variant="tertiary" onClick={handleReset}>
-					{__('Reset to Defaults', 'priority-plus-navigation')}
-				</Button>
-				<div className="priority-plus-dropdown-customizer-modal__footer-actions">
-					<Button variant="secondary" onClick={onClose}>
-						{__('Cancel', 'priority-plus-navigation')}
+				<div className="priority-plus-dropdown-customizer-modal__footer">
+					<Button variant="tertiary" onClick={handleReset}>
+						{__('Reset to Defaults', 'priority-plus-navigation')}
 					</Button>
-					<Button variant="primary" onClick={handleSave}>
-						{__('Save', 'priority-plus-navigation')}
-					</Button>
+					<div className="priority-plus-dropdown-customizer-modal__footer-actions">
+						<Button variant="secondary" onClick={onClose}>
+							{__('Cancel', 'priority-plus-navigation')}
+						</Button>
+						<Button variant="primary" onClick={handleSave}>
+							{__('Save', 'priority-plus-navigation')}
+						</Button>
+					</div>
 				</div>
 			</div>
 		</Modal>

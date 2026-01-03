@@ -3,10 +3,11 @@
  */
 
 .priority-plus-dropdown-customizer-modal {
-	// Override default modal width to accommodate two-column layout
+	// Override default modal styles
 	.components-modal__content {
 		padding: 0;
 		margin: 0;
+		overflow: hidden; // Prevent modal itself from scrolling
 	}
 
 	.components-modal__header {
@@ -14,28 +15,40 @@
 		border-bottom: 1px solid #ddd;
 	}
 
+	// Wrapper to handle flexbox layout
+	&__wrapper {
+		display: flex;
+		flex-direction: column;
+		height: 80vh; // Larger height
+		max-height: 900px; // Maximum height
+		min-height: 600px; // Minimum height
+	}
+
 	// Main content area with two columns
 	&__content {
 		display: grid;
 		grid-template-columns: 1fr 1fr;
 		gap: 0;
-		min-height: 500px;
-		max-height: 70vh;
+		flex: 1; // Take remaining space
+		overflow: hidden; // Prevent content wrapper from scrolling
+		min-height: 0; // Important for overflow to work in flex
 	}
 
 	// Column base styles
 	&__column {
-		padding: 1.5rem;
-		overflow-y: auto;
+		overflow-y: auto; // Each column scrolls independently
+		overflow-x: hidden;
 
 		h3 {
 			margin: 0 0 0.5rem;
+			padding: 1.5rem 1.5rem 0;
 			font-size: 1rem;
 			font-weight: 600;
 		}
 
 		.description {
 			margin: 0 0 1.5rem;
+			padding: 0 1.5rem;
 			color: #757575;
 			font-size: 0.875rem;
 		}
@@ -43,7 +56,66 @@
 		// Left column - controls
 		&--controls {
 			border-right: 1px solid #ddd;
-			background: #f9f9f9;
+			background: #fff;
+
+			// Panel adjustments
+			.components-panel {
+				border: none;
+				background: transparent;
+
+				// PanelBody styling
+				.components-panel__body {
+					border-top: 1px solid #ddd;
+					margin: 0;
+
+					&:first-child {
+						border-top: none;
+					}
+
+					// Panel title button
+					.components-panel__body-title {
+						margin: 0;
+
+						button {
+							padding: 1rem 1.5rem;
+						}
+					}
+				}
+
+				// PanelColorSettings specific
+				.components-panel-color-settings {
+					// Color indicator and label
+					.components-base-control {
+						margin-bottom: 1rem;
+					}
+				}
+
+				// PanelRow for controls
+				.components-panel__row {
+					padding: 0 1.5rem 1rem;
+					margin: 0;
+					display: block;
+
+					&:last-child {
+						padding-bottom: 1.5rem;
+					}
+
+					// Full-width controls
+					.components-base-control,
+					.components-unit-control-wrapper,
+					.components-text-control__input {
+						width: 100%;
+					}
+
+					.components-base-control {
+						margin-bottom: 1rem;
+
+						&:last-child {
+							margin-bottom: 0;
+						}
+					}
+				}
+			}
 		}
 
 		// Right column - preview
@@ -52,7 +124,7 @@
 		}
 	}
 
-	// Placeholder for controls (Phase 3)
+	// Placeholder for controls (removed - Phase 3 complete)
 	&__placeholder {
 		padding: 1rem;
 		background: #fff;
@@ -103,6 +175,7 @@
 		padding: 1rem 1.5rem;
 		border-top: 1px solid #ddd;
 		background: #f9f9f9;
+		flex-shrink: 0; // Fixed footer, don't allow it to shrink
 
 		// Right-aligned action buttons
 		&-actions {
