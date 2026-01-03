@@ -1,10 +1,10 @@
 # Priority Plus Navigation Block
 
-A WordPress block plugin that adds Priority+ pattern functionality to core WordPress navigation block. It automatically moves navigation items that don't fit into a responsive "More" dropdown menu as the viewport narrows.
+A WordPress block plugin that adds Priority Plus pattern functionality to core WordPress navigation block. It automatically moves navigation items that don't fit into a responsive "More" dropdown menu as the viewport narrows.
 
 <img src="assets/informational.png" alt="A graphical representation of a navigation before and after enabling the priority plus navigation functionality" style="width: 100%; height: auto;">
 
-## What is Priority+?
+## What is Priority Plus?
 
 Priority Plus Navigation is a responsive design pattern that keeps all navigation items visible at wide screen sizes, but progressively moves overflow items into a "More" dropdown at smaller screen sizes. This ensures the navigation remains usable on all devices without requiring a hamburger menu or breaking the layout.
 
@@ -13,7 +13,7 @@ Priority Plus Navigation is a responsive design pattern that keeps all navigatio
 - **Core Navigation Variation** - Extends the standard WordPress navigation block as a variation, no need to rebuild your menus
 - **Automatic Overflow Detection** - Intelligently calculates available space and moves items to dropdown
 - **Easy Conversion** - Transform any Navigation block to Priority Plus Navigation via block variations
-- **Customizable "More" Button** - Choose label text and icon style
+- **Customizable "More" Button** - Choose label text and button styles
 - **Responsive by Design** - Uses ResizeObserver for smooth, performant resizing
 - **Core Navigation Integration** - Automatically detects and respects "Open submenus on click" setting
 - **Smart Mobile Detection** - Automatically disables on mobile/hamburger mode to avoid conflicts
@@ -30,12 +30,12 @@ Priority Plus Navigation is a responsive design pattern that keeps all navigatio
 1. Clone or download this repository into your WordPress plugins directory:
 ```bash
 cd wp-content/plugins/
-git clone [repository-url] priority-nav
+git clone [repository-url] priority-plus-navigation
 ```
 
 2. Install dependencies:
 ```bash
-cd priority-nav
+cd priority-plus-navigation
 npm install
 ```
 
@@ -57,20 +57,20 @@ The Priority Plus Navigation is available as a variation of the core Navigation 
 3. When you see the Navigation block, look for the **Priority Plus Navigation** variation in the block variations panel
 4. Select the Priority Plus Navigation variation
 5. Configure your navigation using the familiar WordPress navigation tools
-6. Customize the "More" button label and icon in the block sidebar (Priority+ Settings panel)
+6. Customize the "More" button label and icon in the block sidebar (Priority Plus Settings panel)
 
 ### Option 2: Convert Existing Navigation
 
 1. Select any existing **Navigation** block
 2. In the block toolbar or block settings, look for the block variations switcher
 3. Choose **"Priority Plus Navigation"** from the variations
-4. Your navigation now has Priority+ behavior enabled!
+4. Your navigation now has Priority Plus behavior enabled!
 
 ### Converting Back to Standard Navigation
 
 1. Select a **Priority Plus Navigation** block
 2. In the block variations switcher, choose the standard **"Navigation"** variation
-3. The Priority+ behavior is disabled, returning to standard WordPress navigation
+3. The Priority Plus behavior is disabled, returning to standard WordPress navigation
 
 **Note:** Legacy wrapper blocks (from previous versions) will continue to work on the frontend, but are no longer available for insertion in the editor. If you have existing wrapper blocks, consider converting them to the variation approach.
 
@@ -82,12 +82,6 @@ The Priority Plus Navigation is available as a variation of the core Navigation 
 - Default: "More"
 - Customize the text displayed on the overflow button
 
-**More Button Icon**
-- None (no icon) - Default
-- Chevron Down (▼)
-- Plus (+)
-- Menu (≡)
-
 ### Core Navigation Settings
 
 The plugin automatically detects and respects settings from the Core Navigation block:
@@ -95,9 +89,9 @@ The plugin automatically detects and respects settings from the Core Navigation 
 - **Open submenus on click** - When enabled in Core Navigation, submenus in the "More" dropdown become clickable accordions. When disabled, the link remains functional with a separate arrow button to toggle the submenu.
 
 - **Overlay Menu** - Controls when the responsive overlay/hamburger menu appears:
-  - **Never**: No overlay menu (Priority+ works at all screen sizes)
-  - **Mobile**: Overlay menu appears at mobile breakpoints (Priority+ works on desktop, disables when hamburger menu activates)
-  - **Always**: Always shows overlay menu (Priority+ is automatically disabled and the "Always" option is visually disabled in the editor)
+  - **Never**: No overlay menu (Priority Plus works at all screen sizes)
+  - **Mobile**: Overlay menu appears at mobile breakpoints (Priority Plus works on desktop, disables when hamburger menu activates)
+  - **Always**: Always shows overlay menu (Priority Plus is automatically disabled and the "Always" option is visually disabled in the editor)
 
 ### Block Supports
 
@@ -111,26 +105,30 @@ The block supports all standard WordPress block features:
 
 The Priority Plus Navigation dropdown menu can be customized via your theme's `theme.json`. The plugin provides sensible defaults, and you can override any property you want to customize.
 
-**Quick Example:**
+**Style Examples:**
 
 ```json
 {
   "version": 3,
   "settings": {
     "custom": {
-      "priorityPlusNavigation": {
-        "dropdown": {
-          "backgroundColor": "#f0f0f0",
-          "borderColor": "#999999",
-          "itemHoverBackgroundColor": "rgba(0, 0, 0, 0.08)"
+        "priorityPlusNavigation": {
+            "dropdown": {
+                "backgroundColor": "#f0f0f0",
+                "borderColor": "#999999",
+                "borderWidth": "2px",
+                "borderRadius": "8px",
+                "boxShadow": "0 8px 16px rgba(0, 0, 0, 0.2)",
+                "itemSpacing": "1rem 1.5rem",
+                "itemHoverBackgroundColor": "rgba(0, 0, 0, 0.08)",
+                "itemHoverTextColor": "#007cba",
+                "multiLevelIndent": "3.5rem"
+            }
         }
-      }
-    }
+    },
   }
 }
 ```
-
-**Available Properties:** `backgroundColor`, `borderColor`, `borderWidth`, `borderRadius`, `boxShadow`, `itemSpacing`, `itemHoverBackgroundColor`, `itemHoverTextColor`, `multiLevelIndent`
 
 **📖 For complete styling documentation, examples, and troubleshooting, see [docs/styling.md](docs/styling.md)**
 
@@ -141,7 +139,7 @@ The Priority Plus Navigation dropdown menu can be customized via your theme's `t
 The plugin extends the core Navigation block as a **block variation**:
 
 ```
-core/navigation (with Priority+ variation enabled)
+core/navigation (with Priority Plus variation enabled)
   ├── core/navigation-link
   ├── core/navigation-submenu
   ├── core/page-list
@@ -149,8 +147,8 @@ core/navigation (with Priority+ variation enabled)
 ```
 
 The variation approach:
-- Extends `core/navigation` with Priority+ attributes and controls
-- Adds priority+ behavior via JavaScript on the frontend
+- Extends `core/navigation` with Priority Plus attributes and controls
+- Adds priority plus behavior via JavaScript on the frontend
 - The core navigation block handles all menu functionality
 - This approach is maintainable, future-proof, and integrates seamlessly with WordPress
 
@@ -203,7 +201,7 @@ npm run plugin-zip
 ### Project Structure
 
 ```
-priority-nav/
+priority-plus-navigation/
 ├── build/                  # Compiled assets (generated)
 ├── src/
 │   ├── index.js           # Editor extension entry point
@@ -211,7 +209,7 @@ priority-nav/
 │   ├── view.js            # Frontend JavaScript
 │   ├── style.scss         # Frontend styles
 │   └── block.json         # Block configuration
-├── priority-nav.php       # Main plugin file
+├── priority-plus-navigation.php       # Main plugin file
 ├── package.json           # Node dependencies & scripts
 └── README.md             # Documentation
 ```
@@ -243,13 +241,13 @@ Priority Plus Navigation intelligently works with WordPress core navigation over
 
 ### How It Works
 
-- **Never**: Priority+ is always active, providing responsive navigation through the "More" dropdown
-- **Mobile**: Priority+ works on desktop viewports and automatically disables when the hamburger menu becomes active
-- **Always**: Priority+ is completely disabled (not compatible), and the "Always" option appears greyed out and crossed out in the editor
+- **Never**: Priority Plus is always active, providing responsive navigation through the "More" dropdown
+- **Mobile**: Priority Plus works on desktop viewports and automatically disables when the hamburger menu becomes active
+- **Always**: Priority Plus is completely disabled (not compatible), and the "Always" option appears greyed out and crossed out in the editor
 
 ### Technical Details
 
-The plugin detects when WordPress's overlay/hamburger menu is active by checking for the `is-menu-open` class on the responsive container. When this class is present, Priority+ temporarily disables itself to avoid conflicts with the native hamburger menu.
+The plugin detects when WordPress's overlay/hamburger menu is active by checking for the `is-menu-open` class on the responsive container. When this class is present, Priority Plus temporarily disables itself to avoid conflicts with the native hamburger menu.
 
 ## Known Limitations
 
@@ -261,7 +259,7 @@ The plugin detects when WordPress's overlay/hamburger menu is active by checking
 
 ### 0.3.0 - Overlay Menu Compatibility
 - Added intelligent overlay menu detection and compatibility
-- Priority+ now properly disables when hamburger menu is active (overlayMenu: 'mobile')
+- Priority Plus now properly disables when hamburger menu is active (overlayMenu: 'mobile')
 - "Always" overlay option is automatically prevented and visually disabled in editor
 - Improved hamburger mode detection using `is-menu-open` class
 - Added overlay menu data attribute for frontend detection
@@ -269,7 +267,7 @@ The plugin detects when WordPress's overlay/hamburger menu is active by checking
 
 ### 0.2.0 - Variation-Only Approach
 - Refactored to use block variation instead of wrapper block
-- Namespaced variation name (`lumen-priority-nav`) for better compatibility
+- Namespaced variation name (`lumen-priority-plus-navigation`) for better compatibility
 - Improved editor integration with `isActive` detection
 - Legacy wrapper blocks still supported on frontend for backward compatibility
 
