@@ -3,6 +3,11 @@
  */
 import { __ } from '@wordpress/i18n';
 import { addFilter } from '@wordpress/hooks';
+
+/**
+ * Internal dependencies
+ */
+import { DEFAULT_DROPDOWN_STYLES } from './constants';
 import {
 	InspectorControls,
 	PanelColorSettings,
@@ -308,23 +313,7 @@ const withPriorityNavControls = createHigherOrderComponent((BlockEdit) => {
 						)}
 						resetAll={() => {
 							setAttributes({
-								priorityNavDropdownStyles: {
-									backgroundColor: '#ffffff',
-									borderColor: '#dddddd',
-									borderWidth: '1px',
-									borderRadius: '4px',
-									boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-									itemSpacing: {
-									top: '0.75rem',
-									right: '1rem',
-									bottom: '0.75rem',
-									left: '1rem',
-								},
-									itemHoverBackgroundColor:
-										'rgba(0, 0, 0, 0.05)',
-									itemHoverTextColor: 'inherit',
-									multiLevelIndent: '1.25rem',
-								},
+								priorityNavDropdownStyles: DEFAULT_DROPDOWN_STYLES,
 							});
 						}}
 					>

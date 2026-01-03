@@ -7,6 +7,11 @@ import { plusCircle } from '@wordpress/icons';
 import { addFilter } from '@wordpress/hooks';
 
 /**
+ * Internal dependencies
+ */
+import { DEFAULT_DROPDOWN_STYLES } from './constants';
+
+/**
  * Register Priority Plus Navigation block variation
  */
 registerBlockVariation('core/navigation', {
@@ -27,22 +32,7 @@ registerBlockVariation('core/navigation', {
 		priorityNavMoreBackgroundColorHover: undefined,
 		priorityNavMoreTextColor: undefined,
 		priorityNavMoreTextColorHover: undefined,
-		priorityNavDropdownStyles: {
-			backgroundColor: '#ffffff',
-			borderColor: '#dddddd',
-			borderWidth: '1px',
-			borderRadius: '4px',
-			boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-			itemSpacing: {
-				top: '0.75rem',
-				right: '1rem',
-				bottom: '0.75rem',
-				left: '1rem',
-			},
-			itemHoverBackgroundColor: 'rgba(0, 0, 0, 0.05)',
-			itemHoverTextColor: 'inherit',
-			multiLevelIndent: '1.25rem',
-		},
+		priorityNavDropdownStyles: DEFAULT_DROPDOWN_STYLES,
 	},
 	isActive: (blockAttributes, variationAttributes) => {
 		return blockAttributes.className?.includes(
@@ -96,22 +86,7 @@ addFilter(
 				},
 				priorityNavDropdownStyles: {
 					type: 'object',
-					default: {
-						backgroundColor: '#ffffff',
-						borderColor: '#dddddd',
-						borderWidth: '1px',
-						borderRadius: '4px',
-						boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-						itemSpacing: {
-							top: '0.75rem',
-							right: '1rem',
-							bottom: '0.75rem',
-							left: '1rem',
-						},
-						itemHoverBackgroundColor: 'rgba(0, 0, 0, 0.05)',
-						itemHoverTextColor: 'inherit',
-						multiLevelIndent: '1.25rem',
-					},
+					default: DEFAULT_DROPDOWN_STYLES,
 				},
 			},
 		};

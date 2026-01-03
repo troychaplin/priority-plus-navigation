@@ -23,37 +23,21 @@ import { useEffect } from '@wordpress/element';
  */
 import './dropdown-customizer-modal.scss';
 import { DropdownPreview } from './dropdown-preview';
+import { DEFAULT_DROPDOWN_STYLES } from '../constants';
 
 export function DropdownCustomizerModal({
 	attributes,
 	setAttributes,
 	onClose,
 }) {
-	// Default dropdown styles
-	const defaultDropdownStyles = {
-		backgroundColor: '#ffffff',
-		borderColor: '#dddddd',
-		borderWidth: '1px',
-		borderRadius: '4px',
-		boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-		itemSpacing: {
-			top: '0.75rem',
-			right: '1rem',
-			bottom: '0.75rem',
-			left: '1rem',
-		},
-		itemHoverBackgroundColor: 'rgba(0, 0, 0, 0.05)',
-		itemHoverTextColor: 'inherit',
-		multiLevelIndent: '1.25rem',
-	};
-
 	// Merge defaults with existing attributes (deep merge for nested objects)
 	const existingStyles = attributes.priorityNavDropdownStyles || {};
 	const priorityNavDropdownStyles = {
-		...defaultDropdownStyles,
+		...DEFAULT_DROPDOWN_STYLES,
 		...existingStyles,
 		// If itemSpacing exists but is empty/undefined, use default
-		itemSpacing: existingStyles.itemSpacing || defaultDropdownStyles.itemSpacing,
+		itemSpacing:
+			existingStyles.itemSpacing || DEFAULT_DROPDOWN_STYLES.itemSpacing,
 	};
 
 	// Get spacing sizes from theme
@@ -67,7 +51,7 @@ export function DropdownCustomizerModal({
 		if (!existingStyles.itemSpacing) {
 			setAttributes({
 				priorityNavDropdownStyles: {
-					...defaultDropdownStyles,
+					...DEFAULT_DROPDOWN_STYLES,
 					...existingStyles,
 				},
 			});
@@ -271,18 +255,22 @@ export function DropdownCustomizerModal({
 					<ToolsPanel
 						label={__('Dropdown Items', 'priority-plus-navigation')}
 						resetAll={() => {
-							updateStyle('itemSpacing', {
-							top: '0.75rem',
-							right: '1rem',
-							bottom: '0.75rem',
-							left: '1rem',
-						});
+							updateStyle(
+							'itemSpacing',
+							DEFAULT_DROPDOWN_STYLES.itemSpacing
+						);
 							updateStyle(
 								'itemHoverBackgroundColor',
-								'rgba(0, 0, 0, 0.05)'
+								DEFAULT_DROPDOWN_STYLES.itemHoverBackgroundColor
 							);
-							updateStyle('itemHoverTextColor', 'inherit');
-							updateStyle('multiLevelIndent', '1.25rem');
+							updateStyle(
+								'itemHoverTextColor',
+								DEFAULT_DROPDOWN_STYLES.itemHoverTextColor
+							);
+							updateStyle(
+								'multiLevelIndent',
+								DEFAULT_DROPDOWN_STYLES.multiLevelIndent
+							);
 						}}
 					>
 						{/* Item Spacing */}
@@ -293,12 +281,10 @@ export function DropdownCustomizerModal({
 								'priority-plus-navigation'
 							)}
 							onDeselect={() =>
-								updateStyle('itemSpacing', {
-									top: '0.75rem',
-									right: '1rem',
-									bottom: '0.75rem',
-									left: '1rem',
-								})
+								updateStyle(
+									'itemSpacing',
+									DEFAULT_DROPDOWN_STYLES.itemSpacing
+								)
 							}
 							isShownByDefault
 						>
@@ -423,17 +409,7 @@ export function DropdownCustomizerModal({
 					isDestructive
 					onClick={() => {
 						setAttributes({
-							priorityNavDropdownStyles: {
-								backgroundColor: '#ffffff',
-								borderColor: '#dddddd',
-								borderWidth: '1px',
-								borderRadius: '4px',
-								boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-								itemSpacing: undefined,
-								itemHoverBackgroundColor: 'rgba(0, 0, 0, 0.05)',
-								itemHoverTextColor: 'inherit',
-								multiLevelIndent: '1.25rem',
-							},
+							priorityNavDropdownStyles: DEFAULT_DROPDOWN_STYLES,
 						});
 					}}
 				>
