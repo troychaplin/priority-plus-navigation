@@ -14,11 +14,17 @@ import {
 	SelectControl,
 	BoxControl,
 	Notice,
+	Button,
 	__experimentalToolsPanel as ToolsPanel,
 	__experimentalToolsPanelItem as ToolsPanelItem,
 } from '@wordpress/components';
 import { createHigherOrderComponent } from '@wordpress/compose';
-import { useEffect, useRef } from '@wordpress/element';
+import { useEffect, useRef, useState } from '@wordpress/element';
+
+/**
+ * Internal dependencies
+ */
+import DropdownCustomizerModal from './components/dropdown-customizer-modal';
 
 /**
  * Add DOM manipulation to disable 'always' overlay option when Priority+ is active
@@ -100,7 +106,11 @@ const withPriorityNavControls = createHigherOrderComponent((BlockEdit) => {
 			priorityNavMoreTextColorHover,
 			priorityNavMorePadding,
 			overlayMenu,
+			dropdownStyles,
 		} = attributes;
+
+		// Modal state for dropdown customizer
+		const [isModalOpen, setIsModalOpen] = useState(false);
 
 		// Automatically change overlayMenu from 'always' to 'mobile' when Priority+ is active
 		useEffect(() => {
@@ -267,7 +277,35 @@ const withPriorityNavControls = createHigherOrderComponent((BlockEdit) => {
 							)}
 						</ToolsPanelItem>
 					</ToolsPanel>
+					<ToolsPanel
+						label={__('Dropdown Styles', 'priority-plus-navigation')}
+					>
+						<ToolsPanelItem
+							hasValue={() => true}
+							label={__('Customize Dropdown', 'priority-plus-navigation')}
+							isShownByDefault
+						>
+							<Button
+								variant="secondary"
+								onClick={() => setIsModalOpen(true)}
+								style={{ width: '100%' }}
+							>
+								{__('Customize Dropdown', 'priority-plus-navigation')}
+							</Button>
+						</ToolsPanelItem>
+					</ToolsPanel>
 				</InspectorControls>
+
+				{isModalOpen && (
+					<DropdownCustomizerModal
+						dropdownStyles={dropdownStyles}
+						onClose={() => setIsModalOpen(false)}
+						onSave={(newStyles) => {
+							setAttributes({ dropdownStyles: newStyles });
+							setIsModalOpen(false);
+						}}
+					/>
+				)}
 			</>
 		);
 	};

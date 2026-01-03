@@ -78,6 +78,20 @@ addFilter(
 					type: 'object',
 					default: undefined,
 				},
+				dropdownStyles: {
+					type: 'object',
+					default: {
+						backgroundColor: '#ffffff',
+						borderColor: '#dddddd',
+						borderWidth: '1px',
+						borderRadius: '4px',
+						boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+						itemSpacing: '0.75rem 1.25rem',
+						itemHoverBackgroundColor: 'rgba(0, 0, 0, 0.05)',
+						itemHoverTextColor: 'inherit',
+						multiLevelIndent: '1.25rem',
+					},
+				},
 			},
 		};
 	}

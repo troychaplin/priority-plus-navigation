@@ -150,6 +150,7 @@ class Enqueues extends Plugin_Module {
 		$more_text_color_hover       = $this->get_priority_attr( $block, 'priorityNavMoreTextColorHover', '' );
 		$more_padding                = $this->get_priority_attr( $block, 'priorityNavMorePadding', array() );
 		$overlay_menu                = $this->get_priority_attr( $block, 'overlayMenu', 'never' );
+		$dropdown_styles             = $this->get_priority_attr( $block, 'dropdownStyles', array() );
 
 		// Inject data attributes into the navigation element.
 		return $this->inject_priority_attributes(
@@ -161,7 +162,8 @@ class Enqueues extends Plugin_Module {
 			$more_text_color,
 			$more_text_color_hover,
 			$more_padding,
-			$overlay_menu
+			$overlay_menu,
+			$dropdown_styles
 		);
 	}
 
@@ -296,6 +298,55 @@ class Enqueues extends Plugin_Module {
 	}
 
 	/**
+	 * Generate CSS custom properties from dropdownStyles block attribute.
+	 *
+	 * Converts the dropdownStyles object to inline CSS custom properties that override
+	 * the default values set in SCSS and theme.json.
+	 *
+	 * @param array $dropdown_styles The dropdownStyles attribute object.
+	 * @return string CSS custom properties string for inline style attribute.
+	 */
+	private function generate_dropdown_styles( array $dropdown_styles ): string {
+		if ( empty( $dropdown_styles ) ) {
+			return '';
+		}
+
+		// Map camelCase attribute keys to kebab-case CSS custom property names.
+		$property_map = array(
+			'backgroundColor'             => '--wp--custom--priority-plus-navigation--dropdown--background-color',
+			'borderColor'                 => '--wp--custom--priority-plus-navigation--dropdown--border-color',
+			'borderWidth'                 => '--wp--custom--priority-plus-navigation--dropdown--border-width',
+			'borderRadius'                => '--wp--custom--priority-plus-navigation--dropdown--border-radius',
+			'boxShadow'                   => '--wp--custom--priority-plus-navigation--dropdown--box-shadow',
+			'itemSpacing'                 => '--wp--custom--priority-plus-navigation--dropdown--item-spacing',
+			'itemHoverBackgroundColor'    => '--wp--custom--priority-plus-navigation--dropdown--item-hover-background-color',
+			'itemHoverTextColor'          => '--wp--custom--priority-plus-navigation--dropdown--item-hover-text-color',
+			'multiLevelIndent'            => '--wp--custom--priority-plus-navigation--dropdown--multi-level-indent',
+		);
+
+		$style_parts = array();
+
+		foreach ( $property_map as $attr_key => $css_var ) {
+			if ( isset( $dropdown_styles[ $attr_key ] ) && '' !== $dropdown_styles[ $attr_key ] ) {
+				$value = $dropdown_styles[ $attr_key ];
+
+				// Ensure the value is a string for esc_attr.
+				if ( ! is_string( $value ) ) {
+					continue;
+				}
+
+				$style_parts[] = sprintf(
+					'%s: %s',
+					$css_var,
+					esc_attr( $value )
+				);
+			}
+		}
+
+		return implode( '; ', $style_parts );
+	}
+
+	/**
 	 * Inject Priority+ data attributes into the navigation element.
 	 *
 	 * @param string $block_content              The block HTML content.
@@ -307,9 +358,10 @@ class Enqueues extends Plugin_Module {
 	 * @param string $more_text_color_hover      The "more" button text hover color.
 	 * @param array  $more_padding               The "more" button padding values.
 	 * @param string $overlay_menu               The overlay menu setting (never, mobile, always).
+	 * @param array  $dropdown_styles            The dropdown styles object.
 	 * @return string Modified block content with data attributes.
 	 */
-	private function inject_priority_attributes( string $block_content, string $more_label, string $more_icon, string $more_background_color = '', string $more_background_color_hover = '', string $more_text_color = '', string $more_text_color_hover = '', array $more_padding = array(), string $overlay_menu = 'never' ): string {
+	private function inject_priority_attributes( string $block_content, string $more_label, string $more_icon, string $more_background_color = '', string $more_background_color_hover = '', string $more_text_color = '', string $more_text_color_hover = '', array $more_padding = array(), string $overlay_menu = 'never', array $dropdown_styles = array() ): string {
 		if ( '' === $block_content ) {
 			return $block_content;
 		}
@@ -365,6 +417,14 @@ class Enqueues extends Plugin_Module {
 					'--priority-plus-navigation--padding: %s',
 					esc_attr( $padding_css )
 				);
+			}
+		}
+
+		// Add dropdown styles as CSS custom properties.
+		if ( ! empty( $dropdown_styles ) ) {
+			$dropdown_css = $this->generate_dropdown_styles( $dropdown_styles );
+			if ( '' !== $dropdown_css ) {
+				$style_parts[] = $dropdown_css;
 			}
 		}
 
