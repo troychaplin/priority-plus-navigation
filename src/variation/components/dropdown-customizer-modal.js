@@ -97,7 +97,7 @@ export function DropdownCustomizerModal({
 			title={__('Customize Dropdown Styles', 'priority-plus-navigation')}
 			onRequestClose={onClose}
 			className="priority-plus-dropdown-customizer"
-			size="fill"
+			size="large"
 			isDismissible={true}
 		>
 			<div className="dropdown-customizer-layout">

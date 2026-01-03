@@ -320,8 +320,25 @@ class Enqueues extends Plugin_Module {
 		// Match the opening <nav> tag with wp-block-navigation class.
 		$pattern = '/(<nav[^>]*\bclass="[^"]*wp-block-navigation[^"]*")/i';
 
+		// Extract existing style attribute if present (WordPress adds typography styles here).
+		$existing_style = '';
+		if ( preg_match( '/<nav[^>]*\bclass="[^"]*wp-block-navigation[^"]*"[^>]*style="([^"]*)"/i', $block_content, $style_matches ) ) {
+			$existing_style = $style_matches[1];
+		}
+
 		// Build style attribute with CSS custom properties.
 		$style_parts = array();
+
+		// First, preserve WordPress's existing inline styles (typography, etc.)
+		if ( ! empty( $existing_style ) ) {
+			$style_declarations = explode( ';', $existing_style );
+			foreach ( $style_declarations as $declaration ) {
+				$declaration = trim( $declaration );
+				if ( ! empty( $declaration ) ) {
+					$style_parts[] = $declaration;
+				}
+			}
+		}
 
 		// Add our CSS custom properties.
 		if ( ! empty( $more_background_color ) ) {
@@ -425,7 +442,8 @@ class Enqueues extends Plugin_Module {
 		}
 
 		// Remove existing style attribute from the nav tag if it exists, since we're adding it back.
-		$block_content = preg_replace( '/(<nav[^>]*\bclass="[^"]*wp-block-navigation[^"]*"[^>]*)\s*style="[^"]*"/i', '$1', $block_content, 1 );
+		// This pattern handles both attribute orders: style before class and class before style
+		$block_content = preg_replace( '/(<nav[^>]*?)\s+style="[^"]*"([^>]*?>)/i', '$1$2', $block_content, 1 );
 
 		$replacement = $attributes;
 
