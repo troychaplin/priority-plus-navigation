@@ -15,6 +15,8 @@ import './dropdown-preview.scss';
  * Displays a live preview of the dropdown menu with all applied styles.
  * Updates in real-time as users modify controls in the customizer.
  * Matches the frontend dropdown structure with accordion buttons.
+ * @param root0
+ * @param root0.dropdownStyles
  */
 export function DropdownPreview({ dropdownStyles }) {
 	const {
@@ -45,7 +47,12 @@ export function DropdownPreview({ dropdownStyles }) {
 
 		// If it's an object (SpacingSizesControl format), convert to CSS
 		if (typeof spacing === 'object') {
-			const { top = '0', right = '0', bottom = '0', left = '0' } = spacing;
+			const {
+				top = '0',
+				right = '0',
+				bottom = '0',
+				left = '0',
+			} = spacing;
 
 			// All same
 			if (top === right && right === bottom && bottom === left) {
@@ -120,13 +127,25 @@ export function DropdownPreview({ dropdownStyles }) {
 						{isAccordionOpen && (
 							<ul className="dropdown-preview-accordion-content">
 								<li className="dropdown-preview-item">
-									<a href="#" onClick={(e) => e.preventDefault()}>
-										{__('Web Design', 'priority-plus-navigation')}
+									<a
+										href="#"
+										onClick={(e) => e.preventDefault()}
+									>
+										{__(
+											'Web Design',
+											'priority-plus-navigation'
+										)}
 									</a>
 								</li>
 								<li className="dropdown-preview-item">
-									<a href="#" onClick={(e) => e.preventDefault()}>
-										{__('Development', 'priority-plus-navigation')}
+									<a
+										href="#"
+										onClick={(e) => e.preventDefault()}
+									>
+										{__(
+											'Development',
+											'priority-plus-navigation'
+										)}
 									</a>
 								</li>
 							</ul>
@@ -140,7 +159,10 @@ export function DropdownPreview({ dropdownStyles }) {
 				</ul>
 			</div>
 			<p className="dropdown-preview-help">
-				{__('Live preview - Click "Services" to toggle accordion', 'priority-plus-navigation')}
+				{__(
+					'Live preview - Click "Services" to toggle accordion',
+					'priority-plus-navigation'
+				)}
 			</p>
 		</div>
 	);

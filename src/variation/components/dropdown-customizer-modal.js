@@ -60,7 +60,9 @@ export function DropdownCustomizerModal({
 		}
 		// Check if it's an object (SpacingSizesControl format) or string (legacy format)
 		if (typeof priorityNavDropdownStyles.itemSpacing === 'object') {
-			return Object.keys(priorityNavDropdownStyles.itemSpacing).length > 0;
+			return (
+				Object.keys(priorityNavDropdownStyles.itemSpacing).length > 0
+			);
 		}
 		return !!priorityNavDropdownStyles.itemSpacing;
 	};
@@ -215,7 +217,10 @@ export function DropdownCustomizerModal({
 								),
 								value: priorityNavDropdownStyles.borderColor,
 								onChange: (color) =>
-									updateStyle('borderColor', color || '#dddddd'),
+									updateStyle(
+										'borderColor',
+										color || '#dddddd'
+									),
 								clearable: true,
 							},
 						]}
@@ -237,7 +242,10 @@ export function DropdownCustomizerModal({
 						{/* Item Spacing */}
 						<ToolsPanelItem
 							hasValue={hasItemSpacingValue}
-							label={__('Item Spacing', 'priority-plus-navigation')}
+							label={__(
+								'Item Spacing',
+								'priority-plus-navigation'
+							)}
 							onDeselect={() =>
 								updateStyle('itemSpacing', undefined)
 							}
@@ -245,7 +253,9 @@ export function DropdownCustomizerModal({
 						>
 							{spacingSizes.length > 0 ? (
 								<SpacingSizesControl
-									values={priorityNavDropdownStyles.itemSpacing}
+									values={
+										priorityNavDropdownStyles.itemSpacing
+									}
 									onChange={(value) =>
 										updateStyle('itemSpacing', value)
 									}
@@ -262,7 +272,9 @@ export function DropdownCustomizerModal({
 										'Item Spacing (Padding)',
 										'priority-plus-navigation'
 									)}
-									values={priorityNavDropdownStyles.itemSpacing}
+									values={
+										priorityNavDropdownStyles.itemSpacing
+									}
 									onChange={(value) =>
 										updateStyle('itemSpacing', value)
 									}
@@ -322,8 +334,7 @@ export function DropdownCustomizerModal({
 									'Hover Background Color',
 									'priority-plus-navigation'
 								),
-								value:
-									priorityNavDropdownStyles.itemHoverBackgroundColor,
+								value: priorityNavDropdownStyles.itemHoverBackgroundColor,
 								onChange: (color) =>
 									updateStyle(
 										'itemHoverBackgroundColor',
@@ -349,7 +360,9 @@ export function DropdownCustomizerModal({
 				</div>
 
 				<div className="dropdown-customizer-preview">
-					<DropdownPreview dropdownStyles={priorityNavDropdownStyles} />
+					<DropdownPreview
+						dropdownStyles={priorityNavDropdownStyles}
+					/>
 				</div>
 			</div>
 
@@ -366,8 +379,7 @@ export function DropdownCustomizerModal({
 								borderRadius: '4px',
 								boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
 								itemSpacing: undefined,
-								itemHoverBackgroundColor:
-									'rgba(0, 0, 0, 0.05)',
+								itemHoverBackgroundColor: 'rgba(0, 0, 0, 0.05)',
 								itemHoverTextColor: 'inherit',
 								multiLevelIndent: '1.25rem',
 							},
