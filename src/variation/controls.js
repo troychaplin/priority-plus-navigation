@@ -384,10 +384,9 @@ const withPriorityNavControls = createHigherOrderComponent((BlockEdit) => {
 								onClick={() =>
 									setIsDropdownCustomizerOpen(true)
 								}
-								style={{ width: '100%' }}
 							>
 								{__(
-									'Customize Dropdown Styles',
+									'Customize Dropdown',
 									'priority-plus-navigation'
 								)}
 							</Button>

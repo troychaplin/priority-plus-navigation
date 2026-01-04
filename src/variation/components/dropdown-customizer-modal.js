@@ -352,7 +352,7 @@ export function DropdownCustomizerModal({
 					</ToolsPanel>
 
 					{/* DROPDOWN ITEM STYLES */}
-					{/* <ToolsPanel
+					<ToolsPanel
 						label={__(
 							'Navigation Items Styles',
 							'priority-plus-navigation'
@@ -457,7 +457,7 @@ export function DropdownCustomizerModal({
 								]}
 							/>
 						</ToolsPanelItem>
-					</ToolsPanel> */}
+					</ToolsPanel>
 				</div>
 
 				<div className="dropdown-customizer-preview">
