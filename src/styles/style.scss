@@ -6,6 +6,34 @@
 	// Reset any WordPress core border styles that might interfere
 	border: none !important;
 
+	// Prevent the nav from expanding beyond its parent when it's a flex/grid
+	// child. Without this, min-width: auto causes the nav to grow to fit all
+	// items, inflating the JS width calculation on initial load.
+	min-width: 0;
+	max-width: 100%;
+
+	// Prevent the More button from wrapping to a new line.
+	// WordPress is-layout-flex sets flex-wrap: wrap on the nav, which causes
+	// the More div (sibling to the UL) to drop below when space is tight.
+	&.is-layout-flex {
+		flex-wrap: nowrap !important;
+	}
+
+	.wp-block-navigation__container {
+		flex-wrap: nowrap !important;
+		flex-shrink: 1;
+		min-width: 0;
+
+		> .wp-block-navigation-item {
+			white-space: nowrap;
+			flex-shrink: 0;
+		}
+	}
+
+	.priority-plus-navigation-more {
+		flex-shrink: 0;
+	}
+
 	.priority-plus-navigation-more-button {
 		display: flex;
 		align-items: center;
