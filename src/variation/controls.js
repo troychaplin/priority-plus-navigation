@@ -19,11 +19,12 @@ import {
 	__experimentalToolsPanelItem as ToolsPanelItem,
 } from '@wordpress/components';
 import { createHigherOrderComponent } from '@wordpress/compose';
-import { useEffect, useState } from '@wordpress/element';
+import { useEffect, useRef, useState } from '@wordpress/element';
 
 /**
  * Internal dependencies
  */
+import { MoreButtonPreview } from './components/more-button-preview';
 import { DropdownCustomizerModal } from './components/dropdown-customizer-modal';
 import {
 	DEFAULT_MENU_BACKGROUND_COLOR,
@@ -123,6 +124,9 @@ const withPriorityPlusControls = createHigherOrderComponent((BlockEdit) => {
 			overlayMenu,
 		} = attributes;
 
+		// Ref for the editor wrapper so the MoreButtonPreview can read nav item styles
+		const wrapperRef = useRef(null);
+
 		// State for dropdown customizer modal
 		const [isDropdownCustomizerOpen, setIsDropdownCustomizerOpen] =
 			useState(false);
@@ -187,7 +191,16 @@ const withPriorityPlusControls = createHigherOrderComponent((BlockEdit) => {
 
 		return (
 			<>
-				<BlockEdit {...props} />
+				<div
+					className="priority-plus-navigation-editor-wrapper"
+					ref={wrapperRef}
+				>
+					<BlockEdit {...props} />
+					<MoreButtonPreview
+						attributes={attributes}
+						wrapperRef={wrapperRef}
+					/>
+				</div>
 
 				<InspectorControls group="settings">
 					<Notice status="info" isDismissible={false}>
