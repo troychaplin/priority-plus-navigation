@@ -19,7 +19,7 @@ import {
 	ToggleControl,
 	__experimentalToolsPanel as ToolsPanel,
 	__experimentalToolsPanelItem as ToolsPanelItem,
-	__experimentalBorderBoxControl as BorderBoxControl,
+	BorderBoxControl,
 } from '@wordpress/components';
 import { createHigherOrderComponent } from '@wordpress/compose';
 import { useEffect, useRef, useState } from '@wordpress/element';
