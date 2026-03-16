@@ -44,10 +44,10 @@
 		color: var(--priority-plus-navigation--color);
 		padding: var(--priority-plus-navigation--padding);
 		background: var(--priority-plus-navigation--background);
-		border-color: var(--priority-plus-navigation--border-color);
-		border-style: var(--priority-plus-navigation--border-style);
-		border-width: var(--priority-plus-navigation--border-width);
-		border-radius: var(--priority-plus-navigation--border-radius);
+		border-color: var(--priority-plus-navigation--border-color, transparent);
+		border-style: var(--priority-plus-navigation--border-style, none);
+		border-width: var(--priority-plus-navigation--border-width, 0);
+		border-radius: var(--priority-plus-navigation--border-radius, 0);
 		transition: background 0.2s ease, color 0.2s ease;
 		cursor: pointer;
 		outline: none;

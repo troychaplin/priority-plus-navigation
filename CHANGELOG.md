@@ -19,6 +19,8 @@ Prefix the change with one of these keywords:
 -   _Added_: Editor preview of the More button that reflects label, colors, and padding settings
 -   _Added_: Transform to convert Priority Plus Navigation back to standard Navigation block
 -   _Added_: Mobile collapse option to collapse all items into the toggle button at the mobile breakpoint (enabled by default)
+-   _Added_: Button border controls (color, width, style) with per-side support in new "Priority Plus Button Border" panel
+-   _Added_: Button border radius control with per-corner support
 -   _Changed_: All items can now move into the dropdown when space is insufficient, removing the forced minimum of one visible item
 -   _Fixed_: Navigation items and More button no longer wrap to a second line
 -   _Fixed_: Initial page load now correctly calculates overflow and shows the More button

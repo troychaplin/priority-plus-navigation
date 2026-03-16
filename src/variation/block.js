@@ -100,6 +100,14 @@ addFilter(
 					type: 'object',
 					default: undefined,
 				},
+				priorityPlusToggleBorder: {
+					type: 'object',
+					default: undefined,
+				},
+				priorityPlusToggleBorderRadius: {
+					type: ['string', 'object'],
+					default: undefined,
+				},
 				// Menu style attributes (the dropdown menu)
 				priorityPlusMenuBackgroundColor: {
 					type: 'string',

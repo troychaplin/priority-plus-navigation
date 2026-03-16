@@ -42,6 +42,15 @@ export const DEFAULT_MENU_ITEM_SEPARATOR = {
 	style: 'solid',
 };
 
+// Toggle button border defaults
+export const DEFAULT_TOGGLE_BORDER = {
+	color: undefined,
+	width: undefined,
+	style: undefined,
+};
+
+export const DEFAULT_TOGGLE_BORDER_RADIUS = undefined;
+
 // Submenu colors (same defaults as menu colors)
 export const DEFAULT_SUBMENU_BACKGROUND_COLOR = '#ffffff';
 export const DEFAULT_SUBMENU_ITEM_HOVER_BACKGROUND = 'rgba(0, 0, 0, 0.05)';

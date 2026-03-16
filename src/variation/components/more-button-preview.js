@@ -27,6 +27,64 @@ function convertPresetValue(value) {
 }
 
 /**
+ * Convert border attribute to inline style properties.
+ *
+ * @param {Object} border - Border attribute (flat or per-side)
+ * @return {Object} Inline style properties for border
+ */
+function getBorderStyles(border) {
+	if (!border) {
+		return { border: 'none' };
+	}
+
+	// Flat format: { color, width, style }
+	if (border.color || border.width || border.style) {
+		return {
+			borderColor: border.color || undefined,
+			borderWidth: border.width || undefined,
+			borderStyle: border.style || undefined,
+		};
+	}
+
+	// Per-side format: { top: {...}, right: {...}, bottom: {...}, left: {...} }
+	const styles = {};
+	const sides = { top: 'Top', right: 'Right', bottom: 'Bottom', left: 'Left' };
+	for (const [side, suffix] of Object.entries(sides)) {
+		const s = border[side];
+		if (s) {
+			if (s.color) styles[`border${suffix}Color`] = s.color;
+			if (s.width) styles[`border${suffix}Width`] = s.width;
+			if (s.style) styles[`border${suffix}Style`] = s.style;
+		}
+	}
+
+	return Object.keys(styles).length > 0 ? styles : { border: 'none' };
+}
+
+/**
+ * Convert border radius attribute to CSS string.
+ *
+ * @param {string|Object} borderRadius - Border radius value
+ * @return {string|undefined} CSS border-radius value
+ */
+function getBorderRadiusStyle(borderRadius) {
+	if (!borderRadius) {
+		return undefined;
+	}
+	if (typeof borderRadius === 'string') {
+		return borderRadius;
+	}
+	if (typeof borderRadius === 'object') {
+		const tl = borderRadius.topLeft || '0';
+		const tr = borderRadius.topRight || '0';
+		const br = borderRadius.bottomRight || '0';
+		const bl = borderRadius.bottomLeft || '0';
+		return `${tl} ${tr} ${br} ${bl}`;
+	}
+	return undefined;
+}
+
+/**
  * A fake "More" button rendered in the editor to visually represent
  * the Priority Plus pattern. Reads computed styles from the actual
  * nav items so the button matches their typography exactly.
@@ -37,6 +95,8 @@ export const MoreButtonPreview = ({ attributes, wrapperRef }) => {
 		priorityPlusToggleBackgroundColor,
 		priorityPlusToggleTextColor,
 		priorityPlusTogglePadding,
+		priorityPlusToggleBorder,
+		priorityPlusToggleBorderRadius,
 	} = attributes;
 
 	const buttonRef = useRef(null);
@@ -79,13 +139,17 @@ export const MoreButtonPreview = ({ attributes, wrapperRef }) => {
 		attributes.style?.typography?.fontStyle,
 	]);
 
+	const borderStyles = getBorderStyles(priorityPlusToggleBorder);
+	const borderRadiusStyle = getBorderRadiusStyle(priorityPlusToggleBorderRadius);
+
 	const buttonStyle = {
 		display: 'flex',
 		alignItems: 'center',
 		gap: '0.25em',
 		whiteSpace: 'nowrap',
 		cursor: 'default',
-		border: 'none',
+		...borderStyles,
+		borderRadius: borderRadiusStyle,
 		background: priorityPlusToggleBackgroundColor || 'transparent',
 		color: priorityPlusToggleTextColor || 'inherit',
 		paddingTop:

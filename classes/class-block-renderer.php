@@ -154,6 +154,8 @@ class Block_Renderer extends Plugin_Module {
 			'toggle_text_color'             => $this->get_priority_attr( $block, 'priorityPlusToggleTextColor', '' ),
 			'toggle_text_color_hover'       => $this->get_priority_attr( $block, 'priorityPlusToggleTextColorHover', '' ),
 			'toggle_padding'                => $this->get_priority_attr( $block, 'priorityPlusTogglePadding', array() ),
+			'toggle_border'                 => $this->get_priority_attr( $block, 'priorityPlusToggleBorder', array() ),
+			'toggle_border_radius'          => $this->get_priority_attr( $block, 'priorityPlusToggleBorderRadius', '' ),
 
 			// Core navigation attribute.
 			'overlay_menu'                  => $this->get_priority_attr( $block, 'overlayMenu', 'never' ),
@@ -306,6 +308,92 @@ class Block_Renderer extends Plugin_Module {
 				);
 			}
 		}
+
+		// Convert toggle border to CSS custom properties.
+		if ( is_array( $attributes['toggle_border'] ) && ! empty( $attributes['toggle_border'] ) ) {
+			$style_parts = $this->add_toggle_border_styles( $attributes['toggle_border'], $style_parts );
+		}
+
+		// Convert toggle border radius to CSS.
+		if ( ! empty( $attributes['toggle_border_radius'] ) ) {
+			$radius_css = $this->css_converter->border_radius_to_css( $attributes['toggle_border_radius'] );
+			if ( '' !== $radius_css ) {
+				$style_parts[] = sprintf(
+					'--priority-plus-navigation--border-radius: %s',
+					esc_attr( $radius_css )
+				);
+			}
+		}
+
+		return $style_parts;
+	}
+
+	/**
+	 * Add toggle button border CSS custom properties.
+	 *
+	 * Handles both flat format (color, width, style at top level) and
+	 * per-side format (top, right, bottom, left objects).
+	 * Outputs unified --border-color, --border-width, --border-style vars.
+	 *
+	 * @param array $border      Border attribute value.
+	 * @param array $style_parts Current style parts array.
+	 * @return array Updated style parts array.
+	 */
+	private function add_toggle_border_styles( array $border, array $style_parts ): array {
+		// Flat format: { color, width, style }.
+		if ( isset( $border['color'] ) || isset( $border['width'] ) || isset( $border['style'] ) ) {
+			if ( ! empty( $border['color'] ) ) {
+				$style_parts[] = sprintf(
+					'--priority-plus-navigation--border-color: %s',
+					esc_attr( $border['color'] )
+				);
+			}
+			if ( ! empty( $border['width'] ) ) {
+				$style_parts[] = sprintf(
+					'--priority-plus-navigation--border-width: %s',
+					esc_attr( $border['width'] )
+				);
+			}
+			if ( ! empty( $border['style'] ) ) {
+				$style_parts[] = sprintf(
+					'--priority-plus-navigation--border-style: %s',
+					esc_attr( $border['style'] )
+				);
+			}
+			return $style_parts;
+		}
+
+		// Per-side format: { top: {...}, right: {...}, bottom: {...}, left: {...} }.
+		$sides  = array( 'top', 'right', 'bottom', 'left' );
+		$colors = array();
+		$widths = array();
+		$styles = array();
+
+		foreach ( $sides as $side ) {
+			if ( isset( $border[ $side ] ) && is_array( $border[ $side ] ) ) {
+				$s        = $border[ $side ];
+				$colors[] = isset( $s['color'] ) ? $s['color'] : 'transparent';
+				$widths[] = isset( $s['width'] ) ? $s['width'] : '0';
+				$styles[] = isset( $s['style'] ) ? $s['style'] : 'none';
+			} else {
+				$colors[] = 'transparent';
+				$widths[] = '0';
+				$styles[] = 'none';
+			}
+		}
+
+		$style_parts[] = sprintf(
+			'--priority-plus-navigation--border-color: %s',
+			esc_attr( implode( ' ', $colors ) )
+		);
+		$style_parts[] = sprintf(
+			'--priority-plus-navigation--border-width: %s',
+			esc_attr( implode( ' ', $widths ) )
+		);
+		$style_parts[] = sprintf(
+			'--priority-plus-navigation--border-style: %s',
+			esc_attr( implode( ' ', $styles ) )
+		);
 
 		return $style_parts;
 	}
