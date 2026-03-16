@@ -90,43 +90,6 @@ The plugin provides sensible defaults, and you only need to specify the properti
 
 == Screenshots ==
 
-1. Priority Nav showing all items on wide screens
-2. Priority Nav with overflow items moved to "More" dropdown on smaller screens
-3. Block inspector controls for customization
-
-== Changelog ==
-
-= 0.5.0 =
-* Added item text color controls for menu items (non-hover state)
-* Added separate submenu color panel for nested accordion items
-* Submenu colors include: background, item hover background, item text color, item hover text color
-* Submenu background only applies to first-level submenus to prevent alpha transparency stacking
-* Item separator controls for menu item dividers
-
-= 0.4.0 =
-* Added dropdown menu customizer modal with live preview
-* Full control over menu colors: background, item hover background, item hover text
-* Border customization with per-side control
-* Border radius and box shadow controls
-* Menu item padding controls with theme spacing size support
-* Submenu indent control for nested navigation
-* Toggle button styling: text colors, background colors, hover states, padding
-
-= 0.3.0 =
-* Added intelligent overlay menu detection and compatibility
-* Priority Plus now properly disables when hamburger menu is active (overlayMenu: 'mobile')
-* "Always" overlay option is automatically prevented and visually disabled in editor
-* Improved hamburger mode detection using `is-menu-open` class
-* Enhanced documentation with overlay menu compatibility details
-
-= 0.2.0 =
-* Refactored to use block variation approach instead of wrapper block
-* Improved editor integration with isActive detection
-* Legacy wrapper blocks still supported for backward compatibility
-
-= 0.1.0 =
-* Initial release
-* Implements Priority Plus Navigation pattern
-* Automatic overflow detection and management
-* Customizable "More" button
-* Full keyboard and screen reader support
+1. Priority Plus Navigation provides a highly customizable responsive variation of the core navigation block.
+2. Priority Plus is a variation of the core navigation block and allows for an easy transition.
+3. Several controls are available to customize your priority menu to fit your site design.
