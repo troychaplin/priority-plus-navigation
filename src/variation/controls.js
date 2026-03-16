@@ -15,6 +15,7 @@ import {
 	BoxControl,
 	Notice,
 	Button,
+	ToggleControl,
 	__experimentalToolsPanel as ToolsPanel,
 	__experimentalToolsPanelItem as ToolsPanelItem,
 } from '@wordpress/components';
@@ -121,6 +122,7 @@ const withPriorityPlusControls = createHigherOrderComponent((BlockEdit) => {
 			priorityPlusToggleTextColor,
 			priorityPlusToggleTextColorHover,
 			priorityPlusTogglePadding,
+			priorityPlusMobileCollapse = true,
 			overlayMenu,
 		} = attributes;
 
@@ -277,6 +279,38 @@ const withPriorityPlusControls = createHigherOrderComponent((BlockEdit) => {
 								}
 								help={__(
 									'Text displayed on the toggle button',
+									'priority-plus-navigation'
+								)}
+							/>
+						</ToolsPanelItem>
+						<ToolsPanelItem
+							hasValue={() =>
+								priorityPlusMobileCollapse !== true
+							}
+							label={__(
+								'Mobile Collapse',
+								'priority-plus-navigation'
+							)}
+							onDeselect={() =>
+								setAttributes({
+									priorityPlusMobileCollapse: true,
+								})
+							}
+							isShownByDefault
+						>
+							<ToggleControl
+								label={__(
+									'Collapse all items on mobile',
+									'priority-plus-navigation'
+								)}
+								checked={priorityPlusMobileCollapse}
+								onChange={(value) =>
+									setAttributes({
+										priorityPlusMobileCollapse: value,
+									})
+								}
+								help={__(
+									'When enabled, all navigation items collapse into the toggle button at the mobile breakpoint.',
 									'priority-plus-navigation'
 								)}
 							/>

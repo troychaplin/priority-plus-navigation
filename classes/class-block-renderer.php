@@ -158,6 +158,9 @@ class Block_Renderer extends Plugin_Module {
 			// Core navigation attribute.
 			'overlay_menu'                  => $this->get_priority_attr( $block, 'overlayMenu', 'never' ),
 
+			// Mobile collapse.
+			'mobile_collapse'               => $this->get_priority_attr( $block, 'priorityPlusMobileCollapse', true ),
+
 			// Menu style attributes.
 			'menu_background_color'         => $this->get_priority_attr( $block, 'priorityPlusMenuBackgroundColor', '' ),
 			'menu_border'                   => $this->get_priority_attr( $block, 'priorityPlusMenuBorder', array() ),
@@ -198,10 +201,11 @@ class Block_Renderer extends Plugin_Module {
 
 		// Build data attributes string.
 		$data_attributes = sprintf(
-			'$1 data-more-label="%s" data-more-icon="%s" data-overlay-menu="%s"',
+			'$1 data-more-label="%s" data-more-icon="%s" data-overlay-menu="%s" data-mobile-collapse="%s"',
 			esc_attr( $attributes['toggle_label'] ),
 			esc_attr( $attributes['toggle_icon'] ),
-			esc_attr( $attributes['overlay_menu'] )
+			esc_attr( $attributes['overlay_menu'] ),
+			$attributes['mobile_collapse'] ? 'true' : 'false'
 		);
 
 		// Add style attribute if we have any styles.
