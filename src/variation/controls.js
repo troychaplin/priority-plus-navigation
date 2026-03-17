@@ -84,7 +84,7 @@ const addDisableAlwaysOption = createHigherOrderComponent((BlockEdit) => {
  */
 const withPriorityPlusControls = createHigherOrderComponent((BlockEdit) => {
 	return (props) => {
-		const { name, attributes, setAttributes } = props;
+		const { name, attributes, setAttributes, clientId } = props;
 
 		if (name !== 'core/navigation') {
 			return <BlockEdit {...props} />;
@@ -227,6 +227,7 @@ const withPriorityPlusControls = createHigherOrderComponent((BlockEdit) => {
 					<MoreButtonPreview
 						attributes={attributes}
 						wrapperRef={wrapperRef}
+						clientId={clientId}
 					/>
 				</div>
 
