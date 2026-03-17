@@ -16,6 +16,8 @@ Prefix the change with one of these keywords:
 
 ## [Unreleased]
 
+## [1.1.0]
+
 -   _Added_: Editor preview of the More button that reflects label, colors, and padding settings
 -   _Added_: Transform to convert Priority Plus Navigation back to standard Navigation block
 -   _Added_: Mobile collapse option to collapse all items into the toggle button at the mobile breakpoint (enabled by default)
