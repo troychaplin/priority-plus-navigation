@@ -16,11 +16,7 @@ import { __ } from '@wordpress/i18n';
 /**
  * Internal dependencies
  */
-import {
-	DEFAULT_MENU_ITEM_PADDING,
-	DEFAULT_MENU_SUBMENU_INDENT,
-	DEFAULT_MENU_ITEM_SEPARATOR,
-} from '../../constants';
+import { tokens } from '../../../tokens';
 
 /**
  * Check if item padding has values
@@ -67,7 +63,7 @@ function hasSubmenuIndentValue(indent) {
  */
 function normalizeIndentValue(indent) {
 	if (!indent) {
-		return { left: DEFAULT_MENU_SUBMENU_INDENT };
+		return { left: tokens.dropdown.submenu.indent };
 	}
 	// Already in object format
 	if (typeof indent === 'object' && indent.left) {
@@ -77,7 +73,7 @@ function normalizeIndentValue(indent) {
 	if (typeof indent === 'string') {
 		return { left: indent };
 	}
-	return { left: DEFAULT_MENU_SUBMENU_INDENT };
+	return { left: tokens.dropdown.submenu.indent };
 }
 
 /**
@@ -102,7 +98,7 @@ function hasItemSeparatorValue(separator) {
  * @param {Object}   props.attributes    - Block attributes
  * @param {Function} props.setAttributes - Function to update attributes
  * @param {Array}    props.spacingSizes  - Available spacing sizes from theme
- * @return {JSX.Element} Menu items panel component
+ * @return {Element} Menu items panel component
  */
 export function MenuItemsPanel({ attributes, setAttributes, spacingSizes }) {
 	const {
@@ -119,9 +115,11 @@ export function MenuItemsPanel({ attributes, setAttributes, spacingSizes }) {
 			label={__('Priority Menu Item Styles', 'priority-plus-navigation')}
 			resetAll={() => {
 				setAttributes({
-					priorityPlusMenuItemPadding: DEFAULT_MENU_ITEM_PADDING,
-					priorityPlusMenuSubmenuIndent: DEFAULT_MENU_SUBMENU_INDENT,
-					priorityPlusMenuItemSeparator: DEFAULT_MENU_ITEM_SEPARATOR,
+					priorityPlusMenuItemPadding: tokens.dropdown.item.padding,
+					priorityPlusMenuSubmenuIndent:
+						tokens.dropdown.submenu.indent,
+					priorityPlusMenuItemSeparator:
+						tokens.dropdown.item.separator,
 				});
 			}}
 		>
@@ -133,7 +131,7 @@ export function MenuItemsPanel({ attributes, setAttributes, spacingSizes }) {
 				onDeselect={() =>
 					setAttributes({
 						priorityPlusMenuItemSeparator:
-							DEFAULT_MENU_ITEM_SEPARATOR,
+							tokens.dropdown.item.separator,
 					})
 				}
 				isShownByDefault
@@ -144,7 +142,7 @@ export function MenuItemsPanel({ attributes, setAttributes, spacingSizes }) {
 					colors={colors}
 					value={
 						priorityPlusMenuItemSeparator ||
-						DEFAULT_MENU_ITEM_SEPARATOR
+						tokens.dropdown.item.separator
 					}
 					onChange={(newBorder) =>
 						setAttributes({
@@ -163,7 +161,8 @@ export function MenuItemsPanel({ attributes, setAttributes, spacingSizes }) {
 				label={__('Menu Item Padding', 'priority-plus-navigation')}
 				onDeselect={() =>
 					setAttributes({
-						priorityPlusMenuItemPadding: DEFAULT_MENU_ITEM_PADDING,
+						priorityPlusMenuItemPadding:
+							tokens.dropdown.item.padding,
 					})
 				}
 				isShownByDefault
@@ -209,7 +208,7 @@ export function MenuItemsPanel({ attributes, setAttributes, spacingSizes }) {
 				onDeselect={() =>
 					setAttributes({
 						priorityPlusMenuSubmenuIndent: {
-							left: DEFAULT_MENU_SUBMENU_INDENT,
+							left: tokens.dropdown.submenu.indent,
 						},
 					})
 				}

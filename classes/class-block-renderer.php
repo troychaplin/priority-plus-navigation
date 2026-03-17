@@ -176,10 +176,10 @@ class Block_Renderer extends Plugin_Module {
 			'menu_item_separator'           => $this->get_priority_attr( $block, 'priorityPlusMenuItemSeparator', array() ),
 
 			// Submenu color attributes.
-			'submenu_background_color'       => $this->get_priority_attr( $block, 'priorityPlusSubmenuBackgroundColor', '' ),
-			'submenu_item_hover_background'  => $this->get_priority_attr( $block, 'priorityPlusSubmenuItemHoverBackground', '' ),
-			'submenu_item_text_color'        => $this->get_priority_attr( $block, 'priorityPlusSubmenuItemTextColor', '' ),
-			'submenu_item_hover_text_color'  => $this->get_priority_attr( $block, 'priorityPlusSubmenuItemHoverTextColor', '' ),
+			'submenu_background_color'      => $this->get_priority_attr( $block, 'priorityPlusSubmenuBackgroundColor', '' ),
+			'submenu_item_hover_background' => $this->get_priority_attr( $block, 'priorityPlusSubmenuItemHoverBackground', '' ),
+			'submenu_item_text_color'       => $this->get_priority_attr( $block, 'priorityPlusSubmenuItemTextColor', '' ),
+			'submenu_item_hover_text_color' => $this->get_priority_attr( $block, 'priorityPlusSubmenuItemHoverTextColor', '' ),
 		);
 	}
 
@@ -363,7 +363,6 @@ class Block_Renderer extends Plugin_Module {
 			return $style_parts;
 		}
 
-		// Per-side format: { top: {...}, right: {...}, bottom: {...}, left: {...} }.
 		$sides  = array( 'top', 'right', 'bottom', 'left' );
 		$colors = array();
 		$widths = array();

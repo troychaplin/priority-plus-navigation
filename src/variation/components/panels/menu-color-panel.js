@@ -7,12 +7,7 @@ import { __ } from '@wordpress/i18n';
 /**
  * Internal dependencies
  */
-import {
-	DEFAULT_MENU_BACKGROUND_COLOR,
-	DEFAULT_MENU_ITEM_HOVER_BACKGROUND,
-	DEFAULT_MENU_ITEM_TEXT_COLOR,
-	DEFAULT_MENU_ITEM_HOVER_TEXT_COLOR,
-} from '../../constants';
+import { tokens } from '../../../tokens';
 
 /**
  * ColorPanel Component
@@ -23,7 +18,7 @@ import {
  * @param {Object}   props               - Component props
  * @param {Object}   props.attributes    - Block attributes
  * @param {Function} props.setAttributes - Function to update attributes
- * @return {JSX.Element} Color panel component
+ * @return {Element} Color panel component
  */
 export function ColorPanel({ attributes, setAttributes }) {
 	const {
@@ -41,11 +36,11 @@ export function ColorPanel({ attributes, setAttributes }) {
 					label: __('Background Color', 'priority-plus-navigation'),
 					value:
 						priorityPlusMenuBackgroundColor ||
-						DEFAULT_MENU_BACKGROUND_COLOR,
+						tokens.dropdown.backgroundColor,
 					onChange: (color) =>
 						setAttributes({
 							priorityPlusMenuBackgroundColor:
-								color || DEFAULT_MENU_BACKGROUND_COLOR,
+								color || tokens.dropdown.backgroundColor,
 						}),
 					enableAlpha: true,
 				},
@@ -56,11 +51,11 @@ export function ColorPanel({ attributes, setAttributes }) {
 					),
 					value:
 						priorityPlusMenuItemHoverBackground ||
-						DEFAULT_MENU_ITEM_HOVER_BACKGROUND,
+						tokens.dropdown.item.hoverBackground,
 					onChange: (color) =>
 						setAttributes({
 							priorityPlusMenuItemHoverBackground:
-								color || DEFAULT_MENU_ITEM_HOVER_BACKGROUND,
+								color || tokens.dropdown.item.hoverBackground,
 						}),
 					enableAlpha: true,
 				},
@@ -68,11 +63,11 @@ export function ColorPanel({ attributes, setAttributes }) {
 					label: __('Item Text Color', 'priority-plus-navigation'),
 					value:
 						priorityPlusMenuItemTextColor ||
-						DEFAULT_MENU_ITEM_TEXT_COLOR,
+						tokens.dropdown.item.textColor,
 					onChange: (color) =>
 						setAttributes({
 							priorityPlusMenuItemTextColor:
-								color || DEFAULT_MENU_ITEM_TEXT_COLOR,
+								color || tokens.dropdown.item.textColor,
 						}),
 					enableAlpha: true,
 				},
@@ -83,11 +78,11 @@ export function ColorPanel({ attributes, setAttributes }) {
 					),
 					value:
 						priorityPlusMenuItemHoverTextColor ||
-						DEFAULT_MENU_ITEM_HOVER_TEXT_COLOR,
+						tokens.dropdown.item.hoverTextColor,
 					onChange: (color) =>
 						setAttributes({
 							priorityPlusMenuItemHoverTextColor:
-								color || DEFAULT_MENU_ITEM_HOVER_TEXT_COLOR,
+								color || tokens.dropdown.item.hoverTextColor,
 						}),
 					enableAlpha: true,
 				},

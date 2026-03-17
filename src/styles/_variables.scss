@@ -21,6 +21,41 @@
 	--wp--custom--priority-plus-navigation--dropdown--submenu-item-hover-text-color: #191919;
 }
 
+// Short aliases for the long --wp--custom-- dropdown properties.
+// Include this mixin on any .priority-plus-navigation-dropdown selector
+// so the rest of the styles can use the short --ppn-dropdown-* names.
+@mixin dropdown-aliases {
+	// Container
+	--ppn-dropdown-bg: var(--wp--custom--priority-plus-navigation--dropdown--background-color);
+	--ppn-dropdown-radius: var(--wp--custom--priority-plus-navigation--dropdown--border-radius);
+	--ppn-dropdown-shadow: var(--wp--custom--priority-plus-navigation--dropdown--box-shadow);
+
+	// Border
+	--ppn-dropdown-border-color: var(--wp--custom--priority-plus-navigation--dropdown--border-color, #ddd);
+	--ppn-dropdown-border-width: var(--wp--custom--priority-plus-navigation--dropdown--border-width, 1px);
+	--ppn-dropdown-border-style: var(--wp--custom--priority-plus-navigation--dropdown--border-style, solid);
+
+	// Items
+	--ppn-dropdown-item-spacing: var(--wp--custom--priority-plus-navigation--dropdown--item-spacing);
+	--ppn-dropdown-item-color: var(--wp--custom--priority-plus-navigation--dropdown--item-text-color, #191919);
+	--ppn-dropdown-item-hover-bg: var(--wp--custom--priority-plus-navigation--dropdown--item-hover-background-color);
+	--ppn-dropdown-item-hover-color: var(--wp--custom--priority-plus-navigation--dropdown--item-hover-text-color);
+
+	// Item separator
+	--ppn-dropdown-sep-color: var(--wp--custom--priority-plus-navigation--dropdown--item-separator-color, transparent);
+	--ppn-dropdown-sep-width: var(--wp--custom--priority-plus-navigation--dropdown--item-separator-width, 0);
+	--ppn-dropdown-sep-style: var(--wp--custom--priority-plus-navigation--dropdown--item-separator-style, solid);
+
+	// Submenu (accordion content)
+	--ppn-dropdown-sub-bg: var(--wp--custom--priority-plus-navigation--dropdown--submenu-background-color);
+	--ppn-dropdown-sub-color: var(--wp--custom--priority-plus-navigation--dropdown--submenu-item-text-color, #191919);
+	--ppn-dropdown-sub-hover-bg: var(--wp--custom--priority-plus-navigation--dropdown--submenu-item-hover-background-color);
+	--ppn-dropdown-sub-hover-color: var(--wp--custom--priority-plus-navigation--dropdown--submenu-item-hover-text-color);
+
+	// Indentation
+	--ppn-dropdown-indent: var(--wp--custom--priority-plus-navigation--dropdown--multi-level-indent);
+}
+
 // More button styles (controlled via block attributes, not theme.json)
 .is-style-priority-plus-navigation {
 	--priority-plus-navigation--background: transparent;

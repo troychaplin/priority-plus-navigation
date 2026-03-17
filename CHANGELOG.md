@@ -22,10 +22,14 @@ Prefix the change with one of these keywords:
 -   _Added_: Button border controls (color, width, style) with per-side support in new "Priority Plus Button Border" panel
 -   _Added_: Button border radius control with per-corner support
 -   _Changed_: All items can now move into the dropdown when space is insufficient, removing the forced minimum of one visible item
+-   _Changed_: Refactored constants into structured design tokens (`src/tokens.js`) and runtime config (`src/config.js`), replacing flat `DEFAULT_*` exports
+-   _Changed_: Refactored CSS custom properties to use readable `--ppn-dropdown-*` aliases defined in a single `@mixin dropdown-aliases` in `_variables.scss`, shared by both frontend and editor stylesheets
 -   _Fixed_: Navigation items and More button no longer wrap to a second line
 -   _Fixed_: Initial page load now correctly calculates overflow and shows the More button
 -   _Fixed_: Items correctly restore from mobile collapse when resizing to desktop
 -   _Fixed_: More button chevron icon spacing — offset SVG internal padding so the arrow sits flush with the button's right edge (frontend and editor)
+-   _Fixed_: Clicking the More button preview in the editor now selects the Priority Plus Navigation block instead of the parent block
+-   _Fixed_: Resolved all 36 CSS lint errors (`no-descending-specificity`, `no-duplicate-selectors`) by restructuring SCSS selector order and grouping submenu styles per selector
 
 ## [1.0.0]
 

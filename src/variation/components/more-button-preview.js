@@ -2,7 +2,9 @@
  * WordPress dependencies
  */
 import { __ } from '@wordpress/i18n';
+import { useDispatch } from '@wordpress/data';
 import { useEffect, useRef, useState } from '@wordpress/element';
+import { store as blockEditorStore } from '@wordpress/block-editor';
 
 /**
  * Convert WordPress preset value format to CSS custom property format.
@@ -48,13 +50,24 @@ function getBorderStyles(border) {
 
 	// Per-side format: { top: {...}, right: {...}, bottom: {...}, left: {...} }
 	const styles = {};
-	const sides = { top: 'Top', right: 'Right', bottom: 'Bottom', left: 'Left' };
+	const sides = {
+		top: 'Top',
+		right: 'Right',
+		bottom: 'Bottom',
+		left: 'Left',
+	};
 	for (const [side, suffix] of Object.entries(sides)) {
 		const s = border[side];
 		if (s) {
-			if (s.color) styles[`border${suffix}Color`] = s.color;
-			if (s.width) styles[`border${suffix}Width`] = s.width;
-			if (s.style) styles[`border${suffix}Style`] = s.style;
+			if (s.color) {
+				styles[`border${suffix}Color`] = s.color;
+			}
+			if (s.width) {
+				styles[`border${suffix}Width`] = s.width;
+			}
+			if (s.style) {
+				styles[`border${suffix}Style`] = s.style;
+			}
 		}
 	}
 
@@ -88,8 +101,12 @@ function getBorderRadiusStyle(borderRadius) {
  * A fake "More" button rendered in the editor to visually represent
  * the Priority Plus pattern. Reads computed styles from the actual
  * nav items so the button matches their typography exactly.
+ * @param {Object} root0            - Component props
+ * @param {Object} root0.attributes - Block attributes
+ * @param {Object} root0.wrapperRef - Ref to the editor wrapper element
+ * @param {string} root0.clientId   - Block client ID for selection
  */
-export const MoreButtonPreview = ({ attributes, wrapperRef }) => {
+export const MoreButtonPreview = ({ attributes, wrapperRef, clientId }) => {
 	const {
 		priorityPlusToggleLabel,
 		priorityPlusToggleBackgroundColor,
@@ -101,6 +118,7 @@ export const MoreButtonPreview = ({ attributes, wrapperRef }) => {
 
 	const buttonRef = useRef(null);
 	const [navFont, setNavFont] = useState({});
+	const { selectBlock } = useDispatch(blockEditorStore);
 
 	// Read computed font styles from an actual nav item
 	useEffect(() => {
@@ -140,14 +158,16 @@ export const MoreButtonPreview = ({ attributes, wrapperRef }) => {
 	]);
 
 	const borderStyles = getBorderStyles(priorityPlusToggleBorder);
-	const borderRadiusStyle = getBorderRadiusStyle(priorityPlusToggleBorderRadius);
+	const borderRadiusStyle = getBorderRadiusStyle(
+		priorityPlusToggleBorderRadius
+	);
 
 	const buttonStyle = {
 		display: 'flex',
 		alignItems: 'center',
 		gap: '0.25em',
 		whiteSpace: 'nowrap',
-		cursor: 'default',
+		cursor: 'pointer',
 		...borderStyles,
 		borderRadius: borderRadiusStyle,
 		background: priorityPlusToggleBackgroundColor || 'transparent',
@@ -173,6 +193,14 @@ export const MoreButtonPreview = ({ attributes, wrapperRef }) => {
 			className="priority-plus-navigation-editor-more-button"
 			style={buttonStyle}
 			aria-hidden="true"
+			role="button"
+			tabIndex={-1}
+			onClick={() => selectBlock(clientId)}
+			onKeyDown={(e) => {
+				if (e.key === 'Enter' || e.key === ' ') {
+					selectBlock(clientId);
+				}
+			}}
 		>
 			<span>
 				{priorityPlusToggleLabel ||

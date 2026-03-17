@@ -1,7 +1,7 @@
 /**
  * Width calculation utilities for PriorityNav
  */
-import { DEFAULT_GAP } from '../utils/constants.js';
+import { config } from '../config.js';
 import { isMeasurable, getElementWidth } from '../utils/dom-utils.js';
 
 /**
@@ -93,6 +93,6 @@ export function getGap(list, nav) {
 	const listStyles = window.getComputedStyle(list);
 	const navStyles = window.getComputedStyle(nav);
 	return (
-		parseFloat(listStyles.gap) || parseFloat(navStyles.gap) || DEFAULT_GAP
+		parseFloat(listStyles.gap) || parseFloat(navStyles.gap) || config.gap
 	);
 }

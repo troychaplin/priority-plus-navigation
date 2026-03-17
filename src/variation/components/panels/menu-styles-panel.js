@@ -17,11 +17,7 @@ import { useMemo, useState } from '@wordpress/element';
 /**
  * Internal dependencies
  */
-import {
-	DEFAULT_MENU_BORDER,
-	DEFAULT_MENU_BORDER_RADIUS,
-	DEFAULT_MENU_BOX_SHADOW,
-} from '../../constants';
+import { tokens } from '../../../tokens';
 
 /**
  * Check if border has a value (handles both flat and per-side formats)
@@ -82,7 +78,7 @@ function hasBorderRadiusValue(borderRadius) {
  * @param {Object}   props          - Component props
  * @param {string}   props.value    - Current shadow value
  * @param {Function} props.onChange - Callback when shadow changes
- * @return {JSX.Element} Shadow preset picker component
+ * @return {Element} Shadow preset picker component
  */
 function ShadowPresetPicker({ value, onChange }) {
 	// Get shadow presets from theme settings
@@ -100,7 +96,7 @@ function ShadowPresetPicker({ value, onChange }) {
 				label: __('None', 'priority-plus-navigation'),
 			},
 			{
-				value: DEFAULT_MENU_BOX_SHADOW,
+				value: tokens.dropdown.boxShadow,
 				label: __('Default', 'priority-plus-navigation'),
 			},
 		];
@@ -171,7 +167,7 @@ function ShadowPresetPicker({ value, onChange }) {
  * @param {Object}   props               - Component props
  * @param {Object}   props.attributes    - Block attributes
  * @param {Function} props.setAttributes - Function to update attributes
- * @return {JSX.Element} Menu styles panel component
+ * @return {Element} Menu styles panel component
  */
 export function MenuStylesPanel({ attributes, setAttributes }) {
 	const {
@@ -188,9 +184,9 @@ export function MenuStylesPanel({ attributes, setAttributes }) {
 			label={__('Priority Plus Menu Styles', 'priority-plus-navigation')}
 			resetAll={() => {
 				setAttributes({
-					priorityPlusMenuBorder: DEFAULT_MENU_BORDER,
-					priorityPlusMenuBorderRadius: DEFAULT_MENU_BORDER_RADIUS,
-					priorityPlusMenuBoxShadow: DEFAULT_MENU_BOX_SHADOW,
+					priorityPlusMenuBorder: tokens.dropdown.border,
+					priorityPlusMenuBorderRadius: tokens.dropdown.borderRadius,
+					priorityPlusMenuBoxShadow: tokens.dropdown.boxShadow,
 				});
 			}}
 		>
@@ -200,7 +196,7 @@ export function MenuStylesPanel({ attributes, setAttributes }) {
 				label={__('Menu Border', 'priority-plus-navigation')}
 				onDeselect={() =>
 					setAttributes({
-						priorityPlusMenuBorder: DEFAULT_MENU_BORDER,
+						priorityPlusMenuBorder: tokens.dropdown.border,
 					})
 				}
 				isShownByDefault
@@ -227,7 +223,7 @@ export function MenuStylesPanel({ attributes, setAttributes }) {
 				onDeselect={() =>
 					setAttributes({
 						priorityPlusMenuBorderRadius:
-							DEFAULT_MENU_BORDER_RADIUS,
+							tokens.dropdown.borderRadius,
 					})
 				}
 				isShownByDefault
@@ -247,13 +243,15 @@ export function MenuStylesPanel({ attributes, setAttributes }) {
 				label={__('Shadow', 'priority-plus-navigation')}
 				onDeselect={() =>
 					setAttributes({
-						priorityPlusMenuBoxShadow: DEFAULT_MENU_BOX_SHADOW,
+						priorityPlusMenuBoxShadow: tokens.dropdown.boxShadow,
 					})
 				}
 				isShownByDefault
 			>
 				<ShadowPresetPicker
-					value={priorityPlusMenuBoxShadow || DEFAULT_MENU_BOX_SHADOW}
+					value={
+						priorityPlusMenuBoxShadow || tokens.dropdown.boxShadow
+					}
 					onChange={(value) =>
 						setAttributes({ priorityPlusMenuBoxShadow: value })
 					}

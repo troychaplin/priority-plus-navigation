@@ -1,7 +1,7 @@
 /**
  * DOM building utilities for PriorityNav
  */
-import { DEFAULT_MORE_LABEL, CHEVRON_ICON_SVG } from '../utils/constants.js';
+import { config } from '../config.js';
 import { escapeHtml } from '../utils/html-utils.js';
 import { extractNavItemData } from './dom-extractor.js';
 
@@ -11,7 +11,7 @@ import { extractNavItemData } from './dom-extractor.js';
  * @param {string}      moreLabel - Label for the More button
  * @return {Object} Object containing moreContainer, moreButton, and dropdown elements
  */
-export function createMoreButton(list, moreLabel = DEFAULT_MORE_LABEL) {
+export function createMoreButton(list, moreLabel = config.moreLabel) {
 	// Create the more container
 	const moreContainer = document.createElement('div');
 	moreContainer.className = 'priority-plus-navigation-more';
@@ -27,7 +27,7 @@ export function createMoreButton(list, moreLabel = DEFAULT_MORE_LABEL) {
 
 	moreButton.innerHTML = `
 		<span class="wp-block-navigation-item__label">${moreLabel}</span>
-		<span class="priority-plus-navigation-icon">${CHEVRON_ICON_SVG}</span>
+		<span class="priority-plus-navigation-icon">${config.chevronIconSvg}</span>
 	`;
 
 	// Create dropdown

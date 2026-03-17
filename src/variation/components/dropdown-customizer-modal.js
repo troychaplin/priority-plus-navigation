@@ -14,22 +14,7 @@ import { ColorPanel } from './panels/menu-color-panel';
 import { SubmenuColorPanel } from './panels/submenu-color-panel';
 import { MenuStylesPanel } from './panels/menu-styles-panel';
 import { MenuItemsPanel } from './panels/menu-items-panel';
-import {
-	DEFAULT_MENU_BACKGROUND_COLOR,
-	DEFAULT_MENU_BORDER,
-	DEFAULT_MENU_BORDER_RADIUS,
-	DEFAULT_MENU_BOX_SHADOW,
-	DEFAULT_MENU_ITEM_PADDING,
-	DEFAULT_MENU_ITEM_HOVER_BACKGROUND,
-	DEFAULT_MENU_ITEM_TEXT_COLOR,
-	DEFAULT_MENU_ITEM_HOVER_TEXT_COLOR,
-	DEFAULT_MENU_SUBMENU_INDENT,
-	DEFAULT_MENU_ITEM_SEPARATOR,
-	DEFAULT_SUBMENU_BACKGROUND_COLOR,
-	DEFAULT_SUBMENU_ITEM_HOVER_BACKGROUND,
-	DEFAULT_SUBMENU_ITEM_TEXT_COLOR,
-	DEFAULT_SUBMENU_ITEM_HOVER_TEXT_COLOR,
-} from '../constants';
+import { tokens } from '../../tokens';
 
 export function DropdownCustomizerModal({
 	attributes,
@@ -118,27 +103,28 @@ export function DropdownCustomizerModal({
 	// Reset all menu styles to defaults
 	const resetAllToDefaults = () => {
 		setAttributes({
-			priorityPlusMenuBackgroundColor: DEFAULT_MENU_BACKGROUND_COLOR,
-			priorityPlusMenuBorder: DEFAULT_MENU_BORDER,
-			priorityPlusMenuBorderRadius: DEFAULT_MENU_BORDER_RADIUS,
-			priorityPlusMenuBoxShadow: DEFAULT_MENU_BOX_SHADOW,
-			priorityPlusMenuItemPadding: DEFAULT_MENU_ITEM_PADDING,
+			priorityPlusMenuBackgroundColor: tokens.dropdown.backgroundColor,
+			priorityPlusMenuBorder: tokens.dropdown.border,
+			priorityPlusMenuBorderRadius: tokens.dropdown.borderRadius,
+			priorityPlusMenuBoxShadow: tokens.dropdown.boxShadow,
+			priorityPlusMenuItemPadding: tokens.dropdown.item.padding,
 			priorityPlusMenuItemHoverBackground:
-				DEFAULT_MENU_ITEM_HOVER_BACKGROUND,
-			priorityPlusMenuItemTextColor: DEFAULT_MENU_ITEM_TEXT_COLOR,
+				tokens.dropdown.item.hoverBackground,
+			priorityPlusMenuItemTextColor: tokens.dropdown.item.textColor,
 			priorityPlusMenuItemHoverTextColor:
-				DEFAULT_MENU_ITEM_HOVER_TEXT_COLOR,
+				tokens.dropdown.item.hoverTextColor,
 			priorityPlusMenuSubmenuIndent: {
-				left: DEFAULT_MENU_SUBMENU_INDENT,
+				left: tokens.dropdown.submenu.indent,
 			},
-			priorityPlusMenuItemSeparator: DEFAULT_MENU_ITEM_SEPARATOR,
+			priorityPlusMenuItemSeparator: tokens.dropdown.item.separator,
 			priorityPlusSubmenuBackgroundColor:
-				DEFAULT_SUBMENU_BACKGROUND_COLOR,
+				tokens.dropdown.submenu.backgroundColor,
 			priorityPlusSubmenuItemHoverBackground:
-				DEFAULT_SUBMENU_ITEM_HOVER_BACKGROUND,
-			priorityPlusSubmenuItemTextColor: DEFAULT_SUBMENU_ITEM_TEXT_COLOR,
+				tokens.dropdown.submenu.itemHoverBackground,
+			priorityPlusSubmenuItemTextColor:
+				tokens.dropdown.submenu.itemTextColor,
 			priorityPlusSubmenuItemHoverTextColor:
-				DEFAULT_SUBMENU_ITEM_HOVER_TEXT_COLOR,
+				tokens.dropdown.submenu.itemHoverTextColor,
 		});
 	};
 
