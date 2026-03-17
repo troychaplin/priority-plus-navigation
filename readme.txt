@@ -4,7 +4,7 @@
 Contributors:      areziaal
 Tags:              block, navigation, responsive, priority-plus
 Tested up to:      7.0
-Stable tag:        1.0.0
+Stable tag:        1.1.0
 License:           GPLv2 or later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -61,32 +61,13 @@ Yes, the block is built with accessibility in mind, supporting keyboard navigati
 
 = Can I style the dropdown menu? =
 
-Absolutely! The dropdown menu can be fully customized through the block inspector or your theme's `theme.json` file. You can control:
+Absolutely! The dropdown menu can be fully customized through the block inspector. You can control:
 
 * Background color, item text color, and hover colors
 * Separate submenu colors for nested accordion items
 * Item spacing and hover effects
 * Multi-level navigation indentation
 * Box shadow, border radius, and item separators
-
-Example configuration in your theme's `theme.json`:
-
-`{
-  "version": 3,
-  "settings": {
-    "custom": {
-      "priorityPlusNavigation": {
-        "dropdown": {
-          "backgroundColor": "#f0f0f0",
-          "borderColor": "#999999",
-          "itemHoverBackgroundColor": "rgba(0, 0, 0, 0.08)"
-        }
-      }
-    }
-  }
-}`
-
-The plugin provides sensible defaults, and you only need to specify the properties you want to customize. For complete styling documentation, see the [GitHub repository](https://github.com/troychaplin/priority-plus-navigation/blob/main/docs/styling.md).
 
 == Screenshots ==
 

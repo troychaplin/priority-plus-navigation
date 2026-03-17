@@ -3,7 +3,7 @@
  * Plugin Name:       Priority Plus Navigation
  * Plugin URI:        https://github.com/troychaplin/priority-plus-nav-block
  * Description:       A WordPress block plugin that adds Priority+ pattern functionality to core WordPress navigation block. It automatically moves navigation items that don't fit into a responsive "More" dropdown menu as the viewport narrows.
- * Version:           1.0.0
+ * Version:           1.1.0
  * Requires at least: 6.0
  * Requires PHP:      7.4
  * Author:            Troy Chaplin

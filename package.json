@@ -1,6 +1,6 @@
 {
     "name": "priority-plus-navigation",
-    "version": "0.1.0",
+    "version": "1.1.0",
     "description": "A responsive navigation block implementing the Priority+ pattern that automatically moves overflow items to a 'More' dropdown.",
     "author": "Troy Chaplin",
     "license": "GPL-2.0-or-later",
