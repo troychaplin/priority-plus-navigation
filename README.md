@@ -13,8 +13,9 @@ Priority Plus Navigation is a responsive design pattern that keeps all navigatio
 - **Core Navigation Variation** - Extends the standard WordPress navigation block as a variation, no need to rebuild your menus
 - **Automatic Overflow Detection** - Intelligently calculates available space and moves items to dropdown
 - **Easy Conversion** - Transform any Navigation block to Priority Plus Navigation via block variations
-- **Customizable Toggle Button** - Choose label text, colors, and padding for the "More" button
-- **Customizable Dropdown Menu** - Full control over menu appearance with live preview: colors, borders, shadows, spacing
+- **Customizable Toggle Button** - Choose label text, colors, padding, border, and border radius for the "More" button
+- **Customizable Dropdown Menu** - Full control over menu appearance with live preview: colors, borders, shadows, spacing, separators
+- **Mobile Collapse** - Optionally collapse all items into the toggle button at the mobile breakpoint
 - **Responsive by Design** - Uses ResizeObserver for smooth, performant resizing
 - **Core Navigation Integration** - Automatically detects and respects "Open submenus on click" setting
 - **Smart Mobile Detection** - Automatically disables on mobile/hamburger mode to avoid conflicts
@@ -38,6 +39,7 @@ git clone [repository-url] priority-plus-navigation
 ```bash
 cd priority-plus-navigation
 npm install
+composer install
 ```
 
 3. Build the plugin:
@@ -45,7 +47,7 @@ npm install
 npm run build
 ```
 
-4. Activate the plugin in WordPress Admin → Plugins
+4. Activate the plugin in WordPress Admin > Plugins
 
 ## Usage
 
@@ -73,8 +75,6 @@ The Priority Plus Navigation is available as a variation of the core Navigation 
 2. In the block variations switcher, choose the standard **"Navigation"** variation
 3. The Priority Plus behavior is disabled, returning to standard WordPress navigation
 
-**Note:** Legacy wrapper blocks (from previous versions) will continue to work on the frontend, but are no longer available for insertion in the editor. If you have existing wrapper blocks, consider converting them to the variation approach.
-
 ## Configuration
 
 ### Block Settings (Inspector Sidebar)
@@ -83,22 +83,27 @@ When Priority Plus Navigation is active, you'll find these control panels in the
 
 #### Priority Plus Settings
 - **Toggle Button Label**: Customize the text displayed on the "More" button (default: "More")
+- **Mobile Collapse**: Toggle to collapse all items into the button at the mobile breakpoint (default: enabled)
+- **Customize Dropdown Menu**: Opens a modal with a live preview for full menu customization
 
-#### Toggle Button Colors
+#### Priority Plus Button Colors
 - **Text Color**: Color of the button text
 - **Text Hover Color**: Color when hovering over the button
 - **Background Color**: Background color of the button
 - **Background Hover Color**: Background when hovering
 
-#### Toggle Button Spacing
+#### Priority Plus Button Spacing
 - **Padding**: Control the internal padding of the toggle button
 
-#### Menu Styles
-- **Customize Menu**: Opens a modal with a live preview where you can customize:
-  - **Menu Colors**: Background, item hover background, item text color, item hover text color
-  - **Menu Styles**: Border (with per-side control), border radius, box shadow
-  - **Submenu Colors**: Background, item hover background, item text color, item hover text color
-  - **Menu Items**: Item padding, submenu indent, item separator
+#### Priority Plus Button Border
+- **Border**: Color, width, and style with per-side support
+- **Border Radius**: Corner radius with per-corner support
+
+#### Dropdown Menu (via Customize Dropdown Menu modal)
+- **Menu Colors**: Background, item hover background, item text color, item hover text color
+- **Menu Styles**: Border (with per-side control), border radius, box shadow
+- **Submenu Colors**: Background, item hover background, item text color, item hover text color
+- **Menu Items**: Item padding, submenu indent, item separator (color, width, style)
 
 ### Core Navigation Settings
 
@@ -123,7 +128,7 @@ The block supports all standard WordPress block features:
 
 #### Option 1: Block Inspector (Recommended)
 
-Use the "Customize Menu" button in the block inspector to open a modal with a live preview. This is the easiest way to customize your dropdown menu and allows per-block customization.
+Use the "Customize Dropdown Menu" button in the block inspector to open a modal with a live preview. This is the easiest way to customize your dropdown menu and allows per-block customization.
 
 #### Option 2: Theme.json (Global Defaults)
 
@@ -144,7 +149,7 @@ For site-wide defaults, customize via your theme's `theme.json`. Block-level cus
                     "itemSpacing": "1rem 1.5rem",
                     "itemHoverBackgroundColor": "rgba(0, 0, 0, 0.08)",
                     "itemHoverTextColor": "#007cba",
-                    "multiLevelIndent": "3.5rem"
+                    "multiLevelIndent": "1.5rem"
                 }
             }
         }
@@ -152,7 +157,7 @@ For site-wide defaults, customize via your theme's `theme.json`. Block-level cus
 }
 ```
 
-**📖 For complete styling documentation, examples, and troubleshooting, see [docs/styling.md](docs/styling.md)**
+For complete styling documentation, examples, and troubleshooting, see [docs/styling.md](docs/styling.md).
 
 ## How It Works
 
@@ -162,10 +167,10 @@ The plugin extends the core Navigation block as a **block variation**:
 
 ```
 core/navigation (with Priority Plus variation enabled)
-  ├── core/navigation-link
-  ├── core/navigation-submenu
-  ├── core/page-list
-  └── etc.
+  +-- core/navigation-link
+  +-- core/navigation-submenu
+  +-- core/page-list
+  +-- etc.
 ```
 
 The variation approach:
@@ -179,13 +184,15 @@ The variation approach:
 1. **On page load**: The script measures all navigation items
 2. **Mobile detection**: Automatically detects if WordPress is in hamburger/responsive mode and disables Priority Nav to avoid conflicts
 3. **Overflow detection**: Calculates how many items fit in available space
-4. **Item distribution**: 
+4. **Item distribution**:
    - Visible items stay in the main navigation
    - Overflow items move to the "More" dropdown
-   - At least one item always remains visible
+   - All items can overflow when space is insufficient
 5. **Submenu handling**: Items with submenus in the dropdown are converted to accessible accordions that respect the Core Navigation "Open on click" setting
 6. **Responsive updates**: ResizeObserver automatically recalculates on viewport changes
 7. **Smooth transitions**: Uses `requestAnimationFrame` for optimal performance
+
+For detailed technical documentation, see [docs/how-it-works.md](docs/how-it-works.md) and [docs/architecture.md](docs/architecture.md).
 
 ## Development
 
@@ -200,6 +207,7 @@ The variation approach:
 ```bash
 # Install dependencies
 npm install
+composer install
 
 # Start development mode with hot reload
 npm run start
@@ -224,17 +232,27 @@ npm run plugin-zip
 
 ```
 priority-plus-navigation/
-├── build/                  # Compiled assets (generated)
-├── src/
-│   ├── index.js           # Editor extension entry point
-│   ├── extend.js          # Variation registration & block extension
-│   ├── view.js            # Frontend JavaScript
-│   ├── style.scss         # Frontend styles
-│   └── block.json         # Block configuration
-├── priority-plus-navigation.php       # Main plugin file
-├── package.json           # Node dependencies & scripts
-└── README.md             # Documentation
++-- classes/                    # PHP backend (renderer, CSS converter, enqueues)
++-- src/
+|   +-- config.js              # Runtime config (labels, gaps, breakpoints)
+|   +-- tokens.js              # Design tokens (default styling values)
+|   +-- priority-plus-navigation.js    # Frontend entry point
+|   +-- priority-plus-nav-editor.js    # Editor entry point
+|   +-- core/                  # PriorityNav class (overflow detection, state)
+|   +-- dom/                   # DOM builders and extractors
+|   +-- layout/                # Width calculation
+|   +-- events/                # Event handlers and accordion logic
+|   +-- utils/                 # DOM and HTML utilities
+|   +-- styles/                # SCSS (variables, frontend, editor)
+|   +-- variation/             # Block variation, controls, and editor components
++-- build/                     # Compiled assets (generated)
++-- docs/                      # Documentation
++-- priority-plus-navigation.php   # Main plugin file
++-- package.json               # Node dependencies & scripts
++-- composer.json              # PHP dependencies
 ```
+
+For the complete file map and architecture details, see [docs/architecture.md](docs/architecture.md).
 
 ## Browser Support
 
@@ -275,50 +293,10 @@ The plugin detects when WordPress's overlay/hamburger menu is active by checking
 
 - When using multiple Priority Plus Navigation blocks on the same page with "Open submenus on click" enabled, ensure each block has unique navigation content to avoid potential ID conflicts
 - Priority Plus Navigation is not compatible with the "Always" overlay menu setting - it will automatically prevent usage and switch to "Mobile" mode
-- Legacy wrapper blocks (from previous plugin versions) are no longer insertable in the editor, but will continue to function on the frontend for backward compatibility
 
 ## Changelog
 
-### 0.5.0 - Item Text Colors & Submenu Styling
-- Added item text color controls for menu items (non-hover state)
-- Added separate submenu color panel for nested accordion items
-- Submenu colors include: background, item hover background, item text color, item hover text color
-- Submenu background only applies to first-level submenus to prevent alpha transparency stacking
-- Item separator controls for menu item dividers
-
-### 0.4.0 - Menu Customization & UI Improvements
-- Added dropdown menu customizer modal with live preview
-- Full control over menu colors: background, item hover background, item hover text
-- Border customization with per-side control (top, right, bottom, left)
-- Border radius and box shadow controls
-- Menu item padding controls with theme spacing size support
-- Submenu indent control for nested navigation
-- Toggle button styling: text colors, background colors, hover states, padding
-- Renamed attributes for clarity (`priorityPlus*` prefix)
-- Improved reset functionality for all style controls
-
-### 0.3.0 - Overlay Menu Compatibility
-- Added intelligent overlay menu detection and compatibility
-- Priority Plus now properly disables when hamburger menu is active (overlayMenu: 'mobile')
-- "Always" overlay option is automatically prevented and visually disabled in editor
-- Improved hamburger mode detection using `is-menu-open` class
-- Added overlay menu data attribute for frontend detection
-- Enhanced documentation with overlay menu compatibility details
-
-### 0.2.0 - Variation-Only Approach
-- Refactored to use block variation instead of wrapper block
-- Namespaced variation name (`lumen-priority-plus-navigation`) for better compatibility
-- Improved editor integration with `isActive` detection
-- Legacy wrapper blocks still supported on frontend for backward compatibility
-
-### 0.1.0 - Initial Release
-- Priority Plus Navigation as core/navigation variation
-- Customizable "More" button label and icon
-- Full block theme support
-- Responsive overflow detection
-- Core Navigation "Open on click" integration
-- Automatic hamburger mode detection
-- Accessible accordion submenus in dropdown
+See [CHANGELOG.md](CHANGELOG.md) for the full version history.
 
 ## Credits
 
@@ -331,4 +309,3 @@ GPL-2.0-or-later
 ## Support
 
 For issues, questions, or contributions, please visit the plugin repository.
-
