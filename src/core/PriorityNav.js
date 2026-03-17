@@ -3,7 +3,7 @@
 /**
  * Internal dependencies
  */
-import { DEFAULT_MORE_LABEL } from '../utils/constants.js';
+import { DEFAULT_MORE_LABEL, MOBILE_BREAKPOINT } from '../utils/constants.js';
 import { isMeasurable, isInHamburgerMode } from '../utils/dom-utils.js';
 import { setupEventListeners } from '../events/event-handlers.js';
 import {
@@ -58,6 +58,8 @@ class PriorityNav {
 			this.nav.getAttribute('data-more-label') || DEFAULT_MORE_LABEL;
 		this.overlayMenu =
 			this.nav.getAttribute('data-overlay-menu') || 'never';
+		this.mobileCollapse =
+			this.nav.getAttribute('data-mobile-collapse') !== 'false';
 
 		// If overlayMenu is 'always', Priority+ should never run
 		if (this.overlayMenu === 'always') {
@@ -369,8 +371,16 @@ class PriorityNav {
 	 * Check overflow and update display
 	 */
 	checkOverflow() {
-		// Don't run if disabled (hamburger mode) or not measurable
-		if (!this.isEnabled || !isMeasurable(this.list)) {
+		// Don't run if disabled (hamburger mode)
+		if (!this.isEnabled) {
+			this.isCalculating = false;
+			return;
+		}
+
+		// Check measurability using nav width (not list height, which may be 0
+		// when all items are hidden from mobile collapse)
+		const navRect = this.nav.getBoundingClientRect();
+		if (!navRect.width || navRect.width <= 0) {
 			this.isCalculating = false;
 			return;
 		}
@@ -382,6 +392,23 @@ class PriorityNav {
 		}
 
 		this.isCalculating = true;
+
+		// If mobile collapse is enabled and viewport is at mobile breakpoint,
+		// collapse all items into the More button
+		if (this.mobileCollapse && window.innerWidth <= MOBILE_BREAKPOINT) {
+			this.items.forEach((item) => (item.style.display = 'none'));
+			buildDropdownFromOverflow(
+				this.dropdown,
+				this.items,
+				0,
+				this.instanceId,
+				this.submenuCounter,
+				this.openSubmenusOnClick
+			);
+			this.moreContainer.style.display = '';
+			this.isCalculating = false;
+			return;
+		}
 
 		// Ensure we have valid item widths
 		if (!hasValidWidthCache(this.itemWidths, this.items.length)) {
@@ -516,8 +543,7 @@ class PriorityNav {
 				usedWidth + itemTotalWidth + moreButtonGap + moreButtonWidth <=
 				availableWidth;
 
-			// Always show at least one item
-			if (wouldFit || i === 0) {
+			if (wouldFit) {
 				usedWidth += itemTotalWidth;
 				visibleCount++;
 			} else {

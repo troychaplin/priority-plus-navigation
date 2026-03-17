@@ -9,21 +9,25 @@ import {
 	PanelColorSettings,
 	useSetting,
 	__experimentalSpacingSizesControl as SpacingSizesControl,
+	__experimentalBorderRadiusControl as BorderRadiusControl,
 } from '@wordpress/block-editor';
 import {
 	TextControl,
 	BoxControl,
 	Notice,
 	Button,
+	ToggleControl,
 	__experimentalToolsPanel as ToolsPanel,
 	__experimentalToolsPanelItem as ToolsPanelItem,
+	BorderBoxControl,
 } from '@wordpress/components';
 import { createHigherOrderComponent } from '@wordpress/compose';
-import { useEffect, useState } from '@wordpress/element';
+import { useEffect, useRef, useState } from '@wordpress/element';
 
 /**
  * Internal dependencies
  */
+import { MoreButtonPreview } from './components/more-button-preview';
 import { DropdownCustomizerModal } from './components/dropdown-customizer-modal';
 import {
 	DEFAULT_MENU_BACKGROUND_COLOR,
@@ -120,8 +124,14 @@ const withPriorityPlusControls = createHigherOrderComponent((BlockEdit) => {
 			priorityPlusToggleTextColor,
 			priorityPlusToggleTextColorHover,
 			priorityPlusTogglePadding,
+			priorityPlusToggleBorder,
+			priorityPlusToggleBorderRadius,
+			priorityPlusMobileCollapse = true,
 			overlayMenu,
 		} = attributes;
+
+		// Ref for the editor wrapper so the MoreButtonPreview can read nav item styles
+		const wrapperRef = useRef(null);
 
 		// State for dropdown customizer modal
 		const [isDropdownCustomizerOpen, setIsDropdownCustomizerOpen] =
@@ -177,6 +187,43 @@ const withPriorityPlusControls = createHigherOrderComponent((BlockEdit) => {
 		// Get spacing sizes from theme.
 		const spacingSizes = useSetting('spacing.spacingSizes') || [];
 
+		// Get color palette for border controls.
+		const colors = useSetting('color.palette') || [];
+
+		// Helper to check if border has values.
+		const hasBorderValue = () => {
+			if (!priorityPlusToggleBorder) {
+				return false;
+			}
+			if (
+				priorityPlusToggleBorder.color ||
+				priorityPlusToggleBorder.width ||
+				priorityPlusToggleBorder.style
+			) {
+				return true;
+			}
+			return ['top', 'right', 'bottom', 'left'].some((side) => {
+				const s = priorityPlusToggleBorder[side];
+				return s && (s.color || s.width || s.style);
+			});
+		};
+
+		// Helper to check if border radius has values.
+		const hasBorderRadiusValue = () => {
+			if (!priorityPlusToggleBorderRadius) {
+				return false;
+			}
+			if (typeof priorityPlusToggleBorderRadius === 'string') {
+				return priorityPlusToggleBorderRadius !== '';
+			}
+			if (typeof priorityPlusToggleBorderRadius === 'object') {
+				return Object.values(priorityPlusToggleBorderRadius).some(
+					(v) => v && v !== ''
+				);
+			}
+			return false;
+		};
+
 		// Helper to check if padding has values.
 		const hasPaddingValue = () => {
 			if (!priorityPlusTogglePadding) {
@@ -187,7 +234,16 @@ const withPriorityPlusControls = createHigherOrderComponent((BlockEdit) => {
 
 		return (
 			<>
-				<BlockEdit {...props} />
+				<div
+					className="priority-plus-navigation-editor-wrapper"
+					ref={wrapperRef}
+				>
+					<BlockEdit {...props} />
+					<MoreButtonPreview
+						attributes={attributes}
+						wrapperRef={wrapperRef}
+					/>
+				</div>
 
 				<InspectorControls group="settings">
 					<Notice status="info" isDismissible={false}>
@@ -264,6 +320,38 @@ const withPriorityPlusControls = createHigherOrderComponent((BlockEdit) => {
 								}
 								help={__(
 									'Text displayed on the toggle button',
+									'priority-plus-navigation'
+								)}
+							/>
+						</ToolsPanelItem>
+						<ToolsPanelItem
+							hasValue={() =>
+								priorityPlusMobileCollapse !== true
+							}
+							label={__(
+								'Mobile Collapse',
+								'priority-plus-navigation'
+							)}
+							onDeselect={() =>
+								setAttributes({
+									priorityPlusMobileCollapse: true,
+								})
+							}
+							isShownByDefault
+						>
+							<ToggleControl
+								label={__(
+									'Collapse all items on mobile',
+									'priority-plus-navigation'
+								)}
+								checked={priorityPlusMobileCollapse}
+								onChange={(value) =>
+									setAttributes({
+										priorityPlusMobileCollapse: value,
+									})
+								}
+								help={__(
+									'When enabled, all navigation items collapse into the toggle button at the mobile breakpoint.',
 									'priority-plus-navigation'
 								)}
 							/>
@@ -459,6 +547,75 @@ const withPriorityPlusControls = createHigherOrderComponent((BlockEdit) => {
 									allowReset={true}
 								/>
 							)}
+						</ToolsPanelItem>
+					</ToolsPanel>
+					<ToolsPanel
+						label={__(
+							'Priority Plus Button Border',
+							'priority-plus-navigation'
+						)}
+						resetAll={() =>
+							setAttributes({
+								priorityPlusToggleBorder: undefined,
+								priorityPlusToggleBorderRadius: undefined,
+							})
+						}
+					>
+						<ToolsPanelItem
+							hasValue={hasBorderValue}
+							label={__(
+								'Border',
+								'priority-plus-navigation'
+							)}
+							onDeselect={() =>
+								setAttributes({
+									priorityPlusToggleBorder: undefined,
+								})
+							}
+							isShownByDefault
+						>
+							<BorderBoxControl
+								label={__(
+									'Border',
+									'priority-plus-navigation'
+								)}
+								colors={colors}
+								value={priorityPlusToggleBorder}
+								onChange={(value) =>
+									setAttributes({
+										priorityPlusToggleBorder: value,
+									})
+								}
+								enableAlpha={true}
+								enableStyle={true}
+								size="__unstable-large"
+							/>
+						</ToolsPanelItem>
+						<ToolsPanelItem
+							hasValue={hasBorderRadiusValue}
+							label={__(
+								'Border Radius',
+								'priority-plus-navigation'
+							)}
+							onDeselect={() =>
+								setAttributes({
+									priorityPlusToggleBorderRadius: undefined,
+								})
+							}
+							isShownByDefault
+						>
+							<BorderRadiusControl
+								label={__(
+									'Border Radius',
+									'priority-plus-navigation'
+								)}
+								values={priorityPlusToggleBorderRadius}
+								onChange={(value) =>
+									setAttributes({
+										priorityPlusToggleBorderRadius: value,
+									})
+								}
+							/>
 						</ToolsPanelItem>
 					</ToolsPanel>
 				</InspectorControls>

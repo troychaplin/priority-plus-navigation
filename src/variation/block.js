@@ -100,6 +100,14 @@ addFilter(
 					type: 'object',
 					default: undefined,
 				},
+				priorityPlusToggleBorder: {
+					type: 'object',
+					default: undefined,
+				},
+				priorityPlusToggleBorderRadius: {
+					type: ['string', 'object'],
+					default: undefined,
+				},
 				// Menu style attributes (the dropdown menu)
 				priorityPlusMenuBackgroundColor: {
 					type: 'string',
@@ -157,6 +165,11 @@ addFilter(
 				priorityPlusSubmenuItemHoverTextColor: {
 					type: 'string',
 					default: DEFAULT_SUBMENU_ITEM_HOVER_TEXT_COLOR,
+				},
+				// Mobile collapse - collapse all items into More button at mobile breakpoint
+				priorityPlusMobileCollapse: {
+					type: 'boolean',
+					default: true,
 				},
 				// Typography attributes (for preview)
 				priorityPlusTypographyFontFamily: {
