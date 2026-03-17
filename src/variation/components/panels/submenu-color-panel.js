@@ -7,12 +7,7 @@ import { __ } from '@wordpress/i18n';
 /**
  * Internal dependencies
  */
-import {
-	DEFAULT_SUBMENU_BACKGROUND_COLOR,
-	DEFAULT_SUBMENU_ITEM_HOVER_BACKGROUND,
-	DEFAULT_SUBMENU_ITEM_TEXT_COLOR,
-	DEFAULT_SUBMENU_ITEM_HOVER_TEXT_COLOR,
-} from '../../constants';
+import { tokens } from '../../../tokens';
 
 /**
  * SubmenuColorPanel Component
@@ -23,7 +18,7 @@ import {
  * @param {Object}   props               - Component props
  * @param {Object}   props.attributes    - Block attributes
  * @param {Function} props.setAttributes - Function to update attributes
- * @return {JSX.Element} Submenu color panel component
+ * @return {Element} Submenu color panel component
  */
 export function SubmenuColorPanel({ attributes, setAttributes }) {
 	const {
@@ -35,19 +30,23 @@ export function SubmenuColorPanel({ attributes, setAttributes }) {
 
 	return (
 		<PanelColorSettings
-			title={__('Priority Plus Submenu Colors', 'priority-plus-navigation')}
+			title={__(
+				'Priority Plus Submenu Colors',
+				'priority-plus-navigation'
+			)}
 			colorSettings={[
 				{
 					label: __('Background Color', 'priority-plus-navigation'),
 					value:
 						priorityPlusSubmenuBackgroundColor ||
-						DEFAULT_SUBMENU_BACKGROUND_COLOR,
+						tokens.dropdown.submenu.backgroundColor,
 					onChange: (color) =>
 						setAttributes({
 							priorityPlusSubmenuBackgroundColor:
-								color || DEFAULT_SUBMENU_BACKGROUND_COLOR,
+								color ||
+								tokens.dropdown.submenu.backgroundColor,
 						}),
-                        enableAlpha: true,
+					enableAlpha: true,
 				},
 				{
 					label: __(
@@ -56,11 +55,12 @@ export function SubmenuColorPanel({ attributes, setAttributes }) {
 					),
 					value:
 						priorityPlusSubmenuItemHoverBackground ||
-						DEFAULT_SUBMENU_ITEM_HOVER_BACKGROUND,
+						tokens.dropdown.submenu.itemHoverBackground,
 					onChange: (color) =>
 						setAttributes({
 							priorityPlusSubmenuItemHoverBackground:
-								color || DEFAULT_SUBMENU_ITEM_HOVER_BACKGROUND,
+								color ||
+								tokens.dropdown.submenu.itemHoverBackground,
 						}),
 					enableAlpha: true,
 				},
@@ -68,11 +68,11 @@ export function SubmenuColorPanel({ attributes, setAttributes }) {
 					label: __('Item Text Color', 'priority-plus-navigation'),
 					value:
 						priorityPlusSubmenuItemTextColor ||
-						DEFAULT_SUBMENU_ITEM_TEXT_COLOR,
+						tokens.dropdown.submenu.itemTextColor,
 					onChange: (color) =>
 						setAttributes({
 							priorityPlusSubmenuItemTextColor:
-								color || DEFAULT_SUBMENU_ITEM_TEXT_COLOR,
+								color || tokens.dropdown.submenu.itemTextColor,
 						}),
 					enableAlpha: true,
 				},
@@ -83,13 +83,14 @@ export function SubmenuColorPanel({ attributes, setAttributes }) {
 					),
 					value:
 						priorityPlusSubmenuItemHoverTextColor ||
-						DEFAULT_SUBMENU_ITEM_HOVER_TEXT_COLOR,
+						tokens.dropdown.submenu.itemHoverTextColor,
 					onChange: (color) =>
 						setAttributes({
 							priorityPlusSubmenuItemHoverTextColor:
-								color || DEFAULT_SUBMENU_ITEM_HOVER_TEXT_COLOR,
+								color ||
+								tokens.dropdown.submenu.itemHoverTextColor,
 						}),
-                        enableAlpha: true,
+					enableAlpha: true,
 				},
 			]}
 		/>

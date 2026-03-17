@@ -9,22 +9,7 @@ import { addFilter } from '@wordpress/hooks';
 /**
  * Internal dependencies
  */
-import {
-	DEFAULT_MENU_BACKGROUND_COLOR,
-	DEFAULT_MENU_BORDER,
-	DEFAULT_MENU_BORDER_RADIUS,
-	DEFAULT_MENU_BOX_SHADOW,
-	DEFAULT_MENU_ITEM_PADDING,
-	DEFAULT_MENU_ITEM_HOVER_BACKGROUND,
-	DEFAULT_MENU_ITEM_TEXT_COLOR,
-	DEFAULT_MENU_ITEM_HOVER_TEXT_COLOR,
-	DEFAULT_MENU_SUBMENU_INDENT,
-	DEFAULT_MENU_ITEM_SEPARATOR,
-	DEFAULT_SUBMENU_BACKGROUND_COLOR,
-	DEFAULT_SUBMENU_ITEM_HOVER_BACKGROUND,
-	DEFAULT_SUBMENU_ITEM_TEXT_COLOR,
-	DEFAULT_SUBMENU_ITEM_HOVER_TEXT_COLOR,
-} from './constants';
+import { tokens } from '../tokens';
 
 /**
  * Register Priority Plus Navigation block variation
@@ -111,60 +96,60 @@ addFilter(
 				// Menu style attributes (the dropdown menu)
 				priorityPlusMenuBackgroundColor: {
 					type: 'string',
-					default: DEFAULT_MENU_BACKGROUND_COLOR,
+					default: tokens.dropdown.backgroundColor,
 				},
 				priorityPlusMenuBorder: {
 					type: 'object',
-					default: DEFAULT_MENU_BORDER,
+					default: tokens.dropdown.border,
 				},
 				priorityPlusMenuBorderRadius: {
 					type: ['string', 'object'],
-					default: DEFAULT_MENU_BORDER_RADIUS,
+					default: tokens.dropdown.borderRadius,
 				},
 				priorityPlusMenuBoxShadow: {
 					type: 'string',
-					default: DEFAULT_MENU_BOX_SHADOW,
+					default: tokens.dropdown.boxShadow,
 				},
 				priorityPlusMenuItemPadding: {
 					type: 'object',
-					default: DEFAULT_MENU_ITEM_PADDING,
+					default: tokens.dropdown.item.padding,
 				},
 				priorityPlusMenuItemHoverBackground: {
 					type: 'string',
-					default: DEFAULT_MENU_ITEM_HOVER_BACKGROUND,
+					default: tokens.dropdown.item.hoverBackground,
 				},
 				priorityPlusMenuItemTextColor: {
 					type: 'string',
-					default: DEFAULT_MENU_ITEM_TEXT_COLOR,
+					default: tokens.dropdown.item.textColor,
 				},
 				priorityPlusMenuItemHoverTextColor: {
 					type: 'string',
-					default: DEFAULT_MENU_ITEM_HOVER_TEXT_COLOR,
+					default: tokens.dropdown.item.hoverTextColor,
 				},
 				priorityPlusMenuSubmenuIndent: {
 					type: 'string',
-					default: DEFAULT_MENU_SUBMENU_INDENT,
+					default: tokens.dropdown.submenu.indent,
 				},
 				priorityPlusMenuItemSeparator: {
 					type: 'object',
-					default: DEFAULT_MENU_ITEM_SEPARATOR,
+					default: tokens.dropdown.item.separator,
 				},
 				// Submenu color attributes
 				priorityPlusSubmenuBackgroundColor: {
 					type: 'string',
-					default: DEFAULT_SUBMENU_BACKGROUND_COLOR,
+					default: tokens.dropdown.submenu.backgroundColor,
 				},
 				priorityPlusSubmenuItemHoverBackground: {
 					type: 'string',
-					default: DEFAULT_SUBMENU_ITEM_HOVER_BACKGROUND,
+					default: tokens.dropdown.submenu.itemHoverBackground,
 				},
 				priorityPlusSubmenuItemTextColor: {
 					type: 'string',
-					default: DEFAULT_SUBMENU_ITEM_TEXT_COLOR,
+					default: tokens.dropdown.submenu.itemTextColor,
 				},
 				priorityPlusSubmenuItemHoverTextColor: {
 					type: 'string',
-					default: DEFAULT_SUBMENU_ITEM_HOVER_TEXT_COLOR,
+					default: tokens.dropdown.submenu.itemHoverTextColor,
 				},
 				// Mobile collapse - collapse all items into More button at mobile breakpoint
 				priorityPlusMobileCollapse: {

@@ -18,7 +18,7 @@ Key Features:
 
 * **Automatic Overflow Detection**: Continuously monitors available space and adjusts navigation visibility
 * **Responsive by Design**: Adapts to any screen size or container width
-* **Customizable Styling**: Full theme.json support for dropdown menu styling with CSS custom properties
+* **Customizable Styling**: Per-block dropdown menu styling via inspector controls, using CSS custom properties
 * **Customizable Labels**: Change the "More" button text and icon
 * **Seamless Integration**: Works beautifully with WordPress themes
 * **Performance Optimized**: Uses ResizeObserver for efficient layout calculations

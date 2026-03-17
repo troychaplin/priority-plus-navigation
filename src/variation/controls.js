@@ -29,22 +29,7 @@ import { useEffect, useRef, useState } from '@wordpress/element';
  */
 import { MoreButtonPreview } from './components/more-button-preview';
 import { DropdownCustomizerModal } from './components/dropdown-customizer-modal';
-import {
-	DEFAULT_MENU_BACKGROUND_COLOR,
-	DEFAULT_MENU_BORDER,
-	DEFAULT_MENU_BORDER_RADIUS,
-	DEFAULT_MENU_BOX_SHADOW,
-	DEFAULT_MENU_ITEM_PADDING,
-	DEFAULT_MENU_ITEM_HOVER_BACKGROUND,
-	DEFAULT_MENU_ITEM_TEXT_COLOR,
-	DEFAULT_MENU_ITEM_HOVER_TEXT_COLOR,
-	DEFAULT_MENU_SUBMENU_INDENT,
-	DEFAULT_MENU_ITEM_SEPARATOR,
-	DEFAULT_SUBMENU_BACKGROUND_COLOR,
-	DEFAULT_SUBMENU_ITEM_HOVER_BACKGROUND,
-	DEFAULT_SUBMENU_ITEM_TEXT_COLOR,
-	DEFAULT_SUBMENU_ITEM_HOVER_TEXT_COLOR,
-} from './constants';
+import { tokens } from '../tokens';
 
 /**
  * Add DOM manipulation to disable 'always' overlay option when Priority+ is active
@@ -264,33 +249,33 @@ const withPriorityPlusControls = createHigherOrderComponent((BlockEdit) => {
 							setAttributes({
 								priorityPlusToggleLabel: 'More',
 								priorityPlusMenuBackgroundColor:
-									DEFAULT_MENU_BACKGROUND_COLOR,
-								priorityPlusMenuBorder: DEFAULT_MENU_BORDER,
+									tokens.dropdown.backgroundColor,
+								priorityPlusMenuBorder: tokens.dropdown.border,
 								priorityPlusMenuBorderRadius:
-									DEFAULT_MENU_BORDER_RADIUS,
+									tokens.dropdown.borderRadius,
 								priorityPlusMenuBoxShadow:
-									DEFAULT_MENU_BOX_SHADOW,
+									tokens.dropdown.boxShadow,
 								priorityPlusMenuItemPadding:
-									DEFAULT_MENU_ITEM_PADDING,
+									tokens.dropdown.item.padding,
 								priorityPlusMenuItemHoverBackground:
-									DEFAULT_MENU_ITEM_HOVER_BACKGROUND,
+									tokens.dropdown.item.hoverBackground,
 								priorityPlusMenuItemTextColor:
-									DEFAULT_MENU_ITEM_TEXT_COLOR,
+									tokens.dropdown.item.textColor,
 								priorityPlusMenuItemHoverTextColor:
-									DEFAULT_MENU_ITEM_HOVER_TEXT_COLOR,
+									tokens.dropdown.item.hoverTextColor,
 								priorityPlusMenuSubmenuIndent: {
-									left: DEFAULT_MENU_SUBMENU_INDENT,
+									left: tokens.dropdown.submenu.indent,
 								},
 								priorityPlusMenuItemSeparator:
-									DEFAULT_MENU_ITEM_SEPARATOR,
+									tokens.dropdown.item.separator,
 								priorityPlusSubmenuBackgroundColor:
-									DEFAULT_SUBMENU_BACKGROUND_COLOR,
+									tokens.dropdown.submenu.backgroundColor,
 								priorityPlusSubmenuItemHoverBackground:
-									DEFAULT_SUBMENU_ITEM_HOVER_BACKGROUND,
+									tokens.dropdown.submenu.itemHoverBackground,
 								priorityPlusSubmenuItemTextColor:
-									DEFAULT_SUBMENU_ITEM_TEXT_COLOR,
+									tokens.dropdown.submenu.itemTextColor,
 								priorityPlusSubmenuItemHoverTextColor:
-									DEFAULT_SUBMENU_ITEM_HOVER_TEXT_COLOR,
+									tokens.dropdown.submenu.itemHoverTextColor,
 							})
 						}
 					>
@@ -325,9 +310,7 @@ const withPriorityPlusControls = createHigherOrderComponent((BlockEdit) => {
 							/>
 						</ToolsPanelItem>
 						<ToolsPanelItem
-							hasValue={() =>
-								priorityPlusMobileCollapse !== true
-							}
+							hasValue={() => priorityPlusMobileCollapse !== true}
 							label={__(
 								'Mobile Collapse',
 								'priority-plus-navigation'
@@ -386,33 +369,36 @@ const withPriorityPlusControls = createHigherOrderComponent((BlockEdit) => {
 							onDeselect={() =>
 								setAttributes({
 									priorityPlusMenuBackgroundColor:
-										DEFAULT_MENU_BACKGROUND_COLOR,
-									priorityPlusMenuBorder: DEFAULT_MENU_BORDER,
+										tokens.dropdown.backgroundColor,
+									priorityPlusMenuBorder:
+										tokens.dropdown.border,
 									priorityPlusMenuBorderRadius:
-										DEFAULT_MENU_BORDER_RADIUS,
+										tokens.dropdown.borderRadius,
 									priorityPlusMenuBoxShadow:
-										DEFAULT_MENU_BOX_SHADOW,
+										tokens.dropdown.boxShadow,
 									priorityPlusMenuItemPadding:
-										DEFAULT_MENU_ITEM_PADDING,
+										tokens.dropdown.item.padding,
 									priorityPlusMenuItemHoverBackground:
-										DEFAULT_MENU_ITEM_HOVER_BACKGROUND,
+										tokens.dropdown.item.hoverBackground,
 									priorityPlusMenuItemTextColor:
-										DEFAULT_MENU_ITEM_TEXT_COLOR,
+										tokens.dropdown.item.textColor,
 									priorityPlusMenuItemHoverTextColor:
-										DEFAULT_MENU_ITEM_HOVER_TEXT_COLOR,
+										tokens.dropdown.item.hoverTextColor,
 									priorityPlusMenuSubmenuIndent: {
-										left: DEFAULT_MENU_SUBMENU_INDENT,
+										left: tokens.dropdown.submenu.indent,
 									},
 									priorityPlusMenuItemSeparator:
-										DEFAULT_MENU_ITEM_SEPARATOR,
+										tokens.dropdown.item.separator,
 									priorityPlusSubmenuBackgroundColor:
-										DEFAULT_SUBMENU_BACKGROUND_COLOR,
+										tokens.dropdown.submenu.backgroundColor,
 									priorityPlusSubmenuItemHoverBackground:
-										DEFAULT_SUBMENU_ITEM_HOVER_BACKGROUND,
+										tokens.dropdown.submenu
+											.itemHoverBackground,
 									priorityPlusSubmenuItemTextColor:
-										DEFAULT_SUBMENU_ITEM_TEXT_COLOR,
+										tokens.dropdown.submenu.itemTextColor,
 									priorityPlusSubmenuItemHoverTextColor:
-										DEFAULT_SUBMENU_ITEM_HOVER_TEXT_COLOR,
+										tokens.dropdown.submenu
+											.itemHoverTextColor,
 								})
 							}
 							isShownByDefault
@@ -563,10 +549,7 @@ const withPriorityPlusControls = createHigherOrderComponent((BlockEdit) => {
 					>
 						<ToolsPanelItem
 							hasValue={hasBorderValue}
-							label={__(
-								'Border',
-								'priority-plus-navigation'
-							)}
+							label={__('Border', 'priority-plus-navigation')}
 							onDeselect={() =>
 								setAttributes({
 									priorityPlusToggleBorder: undefined,
@@ -575,10 +558,7 @@ const withPriorityPlusControls = createHigherOrderComponent((BlockEdit) => {
 							isShownByDefault
 						>
 							<BorderBoxControl
-								label={__(
-									'Border',
-									'priority-plus-navigation'
-								)}
+								label={__('Border', 'priority-plus-navigation')}
 								colors={colors}
 								value={priorityPlusToggleBorder}
 								onChange={(value) =>

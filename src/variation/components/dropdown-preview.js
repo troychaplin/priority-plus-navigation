@@ -7,22 +7,7 @@ import { useMemo, useState } from '@wordpress/element';
 /**
  * Internal dependencies
  */
-import {
-	DEFAULT_MENU_BACKGROUND_COLOR,
-	DEFAULT_MENU_BORDER,
-	DEFAULT_MENU_BORDER_RADIUS,
-	DEFAULT_MENU_BOX_SHADOW,
-	DEFAULT_MENU_ITEM_PADDING,
-	DEFAULT_MENU_ITEM_HOVER_BACKGROUND,
-	DEFAULT_MENU_ITEM_TEXT_COLOR,
-	DEFAULT_MENU_ITEM_HOVER_TEXT_COLOR,
-	DEFAULT_MENU_SUBMENU_INDENT,
-	DEFAULT_MENU_ITEM_SEPARATOR,
-	DEFAULT_SUBMENU_BACKGROUND_COLOR,
-	DEFAULT_SUBMENU_ITEM_HOVER_BACKGROUND,
-	DEFAULT_SUBMENU_ITEM_TEXT_COLOR,
-	DEFAULT_SUBMENU_ITEM_HOVER_TEXT_COLOR,
-} from '../constants';
+import { tokens } from '../../tokens';
 
 /**
  * Convert WordPress preset value format to CSS custom property format.
@@ -67,7 +52,7 @@ function convertPresetValue(value) {
  * @return {Object} Object with CSS custom properties for borders
  */
 function getBorderCSSProperties(border) {
-	const defaults = DEFAULT_MENU_BORDER;
+	const defaults = tokens.dropdown.border;
 
 	const cssVarPrefix = '--wp--custom--priority-plus-navigation--dropdown--';
 
@@ -136,7 +121,7 @@ function getBorderCSSProperties(border) {
 function getBorderRadiusCSS(borderRadius) {
 	// Handle null, undefined, or empty values
 	if (!borderRadius) {
-		return DEFAULT_MENU_BORDER_RADIUS;
+		return tokens.dropdown.borderRadius;
 	}
 
 	// If it's already a string, return as-is
@@ -167,7 +152,7 @@ function getBorderRadiusCSS(borderRadius) {
 		return `${tl} ${tr} ${br} ${bl}`;
 	}
 
-	return DEFAULT_MENU_BORDER_RADIUS;
+	return tokens.dropdown.borderRadius;
 }
 
 /**
@@ -179,7 +164,7 @@ function getBorderRadiusCSS(borderRadius) {
  */
 function getSubmenuIndentCSS(indent) {
 	if (!indent) {
-		return DEFAULT_MENU_SUBMENU_INDENT;
+		return tokens.dropdown.submenu.indent;
 	}
 
 	// Handle object format from SpacingSizesControl (e.g., { left: '1.25rem' })
@@ -192,7 +177,7 @@ function getSubmenuIndentCSS(indent) {
 		return convertPresetValue(indent);
 	}
 
-	return DEFAULT_MENU_SUBMENU_INDENT;
+	return tokens.dropdown.submenu.indent;
 }
 
 /**
@@ -202,7 +187,7 @@ function getSubmenuIndentCSS(indent) {
  * @return {string} CSS padding value
  */
 function getItemPaddingCSS(padding) {
-	const defaultPadding = `${DEFAULT_MENU_ITEM_PADDING.top} ${DEFAULT_MENU_ITEM_PADDING.right} ${DEFAULT_MENU_ITEM_PADDING.bottom} ${DEFAULT_MENU_ITEM_PADDING.left}`;
+	const defaultPadding = `${tokens.dropdown.item.padding.top} ${tokens.dropdown.item.padding.right} ${tokens.dropdown.item.padding.bottom} ${tokens.dropdown.item.padding.left}`;
 
 	// Handle null, undefined, or empty values
 	if (!padding) {
@@ -277,7 +262,7 @@ function getItemPaddingCSS(padding) {
  * @param {Object} props                  - Component props
  * @param {Object} props.attributes       - Block attributes
  * @param {Object} props.typographyStyles - Typography values from navigation block
- * @return {JSX.Element} Preview component
+ * @return {Element} Preview component
  */
 export function DropdownPreview({ attributes, typographyStyles = {} }) {
 	const {
@@ -299,33 +284,35 @@ export function DropdownPreview({ attributes, typographyStyles = {} }) {
 
 	// Use defaults if attributes are undefined
 	const backgroundColor =
-		priorityPlusMenuBackgroundColor || DEFAULT_MENU_BACKGROUND_COLOR;
-	const border = priorityPlusMenuBorder || DEFAULT_MENU_BORDER;
+		priorityPlusMenuBackgroundColor || tokens.dropdown.backgroundColor;
+	const border = priorityPlusMenuBorder || tokens.dropdown.border;
 	const borderRadius =
-		priorityPlusMenuBorderRadius || DEFAULT_MENU_BORDER_RADIUS;
-	const boxShadow = priorityPlusMenuBoxShadow || DEFAULT_MENU_BOX_SHADOW;
+		priorityPlusMenuBorderRadius || tokens.dropdown.borderRadius;
+	const boxShadow = priorityPlusMenuBoxShadow || tokens.dropdown.boxShadow;
 	const itemPadding =
-		priorityPlusMenuItemPadding || DEFAULT_MENU_ITEM_PADDING;
+		priorityPlusMenuItemPadding || tokens.dropdown.item.padding;
 	const itemHoverBackground =
 		priorityPlusMenuItemHoverBackground ||
-		DEFAULT_MENU_ITEM_HOVER_BACKGROUND;
+		tokens.dropdown.item.hoverBackground;
 	const itemTextColor =
-		priorityPlusMenuItemTextColor || DEFAULT_MENU_ITEM_TEXT_COLOR;
+		priorityPlusMenuItemTextColor || tokens.dropdown.item.textColor;
 	const itemHoverTextColor =
 		priorityPlusMenuItemHoverTextColor ||
-		DEFAULT_MENU_ITEM_HOVER_TEXT_COLOR;
+		tokens.dropdown.item.hoverTextColor;
 	const itemSeparator =
-		priorityPlusMenuItemSeparator || DEFAULT_MENU_ITEM_SEPARATOR;
+		priorityPlusMenuItemSeparator || tokens.dropdown.item.separator;
 	const submenuBackgroundColor =
-		priorityPlusSubmenuBackgroundColor || DEFAULT_SUBMENU_BACKGROUND_COLOR;
+		priorityPlusSubmenuBackgroundColor ||
+		tokens.dropdown.submenu.backgroundColor;
 	const submenuItemHoverBackground =
 		priorityPlusSubmenuItemHoverBackground ||
-		DEFAULT_SUBMENU_ITEM_HOVER_BACKGROUND;
+		tokens.dropdown.submenu.itemHoverBackground;
 	const submenuItemTextColor =
-		priorityPlusSubmenuItemTextColor || DEFAULT_SUBMENU_ITEM_TEXT_COLOR;
+		priorityPlusSubmenuItemTextColor ||
+		tokens.dropdown.submenu.itemTextColor;
 	const submenuItemHoverTextColor =
 		priorityPlusSubmenuItemHoverTextColor ||
-		DEFAULT_SUBMENU_ITEM_HOVER_TEXT_COLOR;
+		tokens.dropdown.submenu.itemHoverTextColor;
 	// State for accordion open/closed
 	const [isAccordionOpen, setIsAccordionOpen] = useState(true);
 

@@ -26,6 +26,7 @@ Prefix the change with one of these keywords:
 -   _Fixed_: Initial page load now correctly calculates overflow and shows the More button
 -   _Fixed_: Items correctly restore from mobile collapse when resizing to desktop
 -   _Fixed_: More button chevron icon spacing — offset SVG internal padding so the arrow sits flush with the button's right edge (frontend and editor)
+-   _Changed_: Refactored constants into structured design tokens (`src/tokens.js`) and runtime config (`src/config.js`), replacing flat `DEFAULT_*` exports
 
 ## [1.0.0]
 

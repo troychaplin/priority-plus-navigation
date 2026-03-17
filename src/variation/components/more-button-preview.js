@@ -48,13 +48,24 @@ function getBorderStyles(border) {
 
 	// Per-side format: { top: {...}, right: {...}, bottom: {...}, left: {...} }
 	const styles = {};
-	const sides = { top: 'Top', right: 'Right', bottom: 'Bottom', left: 'Left' };
+	const sides = {
+		top: 'Top',
+		right: 'Right',
+		bottom: 'Bottom',
+		left: 'Left',
+	};
 	for (const [side, suffix] of Object.entries(sides)) {
 		const s = border[side];
 		if (s) {
-			if (s.color) styles[`border${suffix}Color`] = s.color;
-			if (s.width) styles[`border${suffix}Width`] = s.width;
-			if (s.style) styles[`border${suffix}Style`] = s.style;
+			if (s.color) {
+				styles[`border${suffix}Color`] = s.color;
+			}
+			if (s.width) {
+				styles[`border${suffix}Width`] = s.width;
+			}
+			if (s.style) {
+				styles[`border${suffix}Style`] = s.style;
+			}
 		}
 	}
 
@@ -88,6 +99,9 @@ function getBorderRadiusStyle(borderRadius) {
  * A fake "More" button rendered in the editor to visually represent
  * the Priority Plus pattern. Reads computed styles from the actual
  * nav items so the button matches their typography exactly.
+ * @param {Object} root0            - Component props
+ * @param {Object} root0.attributes - Block attributes
+ * @param {Object} root0.wrapperRef - Ref to the editor wrapper element
  */
 export const MoreButtonPreview = ({ attributes, wrapperRef }) => {
 	const {
@@ -140,7 +154,9 @@ export const MoreButtonPreview = ({ attributes, wrapperRef }) => {
 	]);
 
 	const borderStyles = getBorderStyles(priorityPlusToggleBorder);
-	const borderRadiusStyle = getBorderRadiusStyle(priorityPlusToggleBorderRadius);
+	const borderRadiusStyle = getBorderRadiusStyle(
+		priorityPlusToggleBorderRadius
+	);
 
 	const buttonStyle = {
 		display: 'flex',

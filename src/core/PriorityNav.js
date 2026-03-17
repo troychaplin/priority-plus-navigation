@@ -3,7 +3,7 @@
 /**
  * Internal dependencies
  */
-import { DEFAULT_MORE_LABEL, MOBILE_BREAKPOINT } from '../utils/constants.js';
+import { config } from '../config.js';
 import { isMeasurable, isInHamburgerMode } from '../utils/dom-utils.js';
 import { setupEventListeners } from '../events/event-handlers.js';
 import {
@@ -55,7 +55,7 @@ class PriorityNav {
 
 		// Get attributes from nav element
 		this.moreLabel =
-			this.nav.getAttribute('data-more-label') || DEFAULT_MORE_LABEL;
+			this.nav.getAttribute('data-more-label') || config.moreLabel;
 		this.overlayMenu =
 			this.nav.getAttribute('data-overlay-menu') || 'never';
 		this.mobileCollapse =
@@ -395,7 +395,10 @@ class PriorityNav {
 
 		// If mobile collapse is enabled and viewport is at mobile breakpoint,
 		// collapse all items into the More button
-		if (this.mobileCollapse && window.innerWidth <= MOBILE_BREAKPOINT) {
+		if (
+			this.mobileCollapse &&
+			window.innerWidth <= config.mobileBreakpoint
+		) {
 			this.items.forEach((item) => (item.style.display = 'none'));
 			buildDropdownFromOverflow(
 				this.dropdown,
