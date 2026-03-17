@@ -25,6 +25,7 @@ Prefix the change with one of these keywords:
 -   _Fixed_: Navigation items and More button no longer wrap to a second line
 -   _Fixed_: Initial page load now correctly calculates overflow and shows the More button
 -   _Fixed_: Items correctly restore from mobile collapse when resizing to desktop
+-   _Fixed_: More button chevron icon spacing — offset SVG internal padding so the arrow sits flush with the button's right edge (frontend and editor)
 
 ## [1.0.0]
 
