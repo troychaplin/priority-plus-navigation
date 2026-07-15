@@ -186,6 +186,9 @@ class Block_Renderer extends Plugin_Module {
 	/**
 	 * Inject Priority+ data attributes into the navigation element.
 	 *
+	 * Uses WP_HTML_Tag_Processor to modify the opening nav tag, mirroring how
+	 * core injects directives into rendered navigation markup.
+	 *
 	 * @param string $block_content The block HTML content.
 	 * @param array  $attributes    Collected attributes array.
 	 * @return string Modified block content with data attributes.
@@ -195,45 +198,47 @@ class Block_Renderer extends Plugin_Module {
 			return $block_content;
 		}
 
-		// Match the opening <nav> tag with wp-block-navigation class.
-		$pattern = '/(<nav[^>]*\bclass="[^"]*wp-block-navigation[^"]*")/i';
+		$processor = new \WP_HTML_Tag_Processor( $block_content );
 
-		// Build style parts array.
-		$style_parts = $this->build_style_parts( $block_content, $attributes );
-
-		// Build data attributes string.
-		$data_attributes = sprintf(
-			'$1 data-more-label="%s" data-more-icon="%s" data-overlay-menu="%s" data-mobile-collapse="%s"',
-			esc_attr( $attributes['toggle_label'] ),
-			esc_attr( $attributes['toggle_icon'] ),
-			esc_attr( $attributes['overlay_menu'] ),
-			$attributes['mobile_collapse'] ? 'true' : 'false'
-		);
-
-		// Add style attribute if we have any styles.
-		if ( ! empty( $style_parts ) ) {
-			$style_attr       = implode( '; ', $style_parts );
-			$data_attributes .= ' style="' . $style_attr . ';"';
+		if ( ! $processor->next_tag(
+			array(
+				'tag_name'   => 'NAV',
+				'class_name' => 'wp-block-navigation',
+			)
+		) ) {
+			return $block_content;
 		}
 
-		// Remove existing style attribute from the nav tag if it exists.
-		$block_content = preg_replace( '/(<nav[^>]*?)\s+style="[^"]*"([^>]*?>)/i', '$1$2', $block_content, 1 );
+		$existing_style = $processor->get_attribute( 'style' );
+		$style_parts    = $this->build_style_parts(
+			is_string( $existing_style ) ? $existing_style : '',
+			$attributes
+		);
 
-		return preg_replace( $pattern, $data_attributes, $block_content, 1 );
+		$processor->set_attribute( 'data-more-label', $attributes['toggle_label'] );
+		$processor->set_attribute( 'data-more-icon', $attributes['toggle_icon'] );
+		$processor->set_attribute( 'data-overlay-menu', $attributes['overlay_menu'] );
+		$processor->set_attribute( 'data-mobile-collapse', $attributes['mobile_collapse'] ? 'true' : 'false' );
+
+		if ( ! empty( $style_parts ) ) {
+			$processor->set_attribute( 'style', implode( '; ', $style_parts ) . ';' );
+		}
+
+		return $processor->get_updated_html();
 	}
 
 	/**
 	 * Build array of CSS style declarations.
 	 *
-	 * @param string $block_content Original block content (to preserve existing styles).
-	 * @param array  $attributes    Collected attributes.
+	 * @param string $existing_style Existing inline style attribute value on the nav element.
+	 * @param array  $attributes     Collected attributes.
 	 * @return array Array of CSS style declarations.
 	 */
-	private function build_style_parts( string $block_content, array $attributes ): array {
+	private function build_style_parts( string $existing_style, array $attributes ): array {
 		$style_parts = array();
 
 		// First, preserve WordPress's existing inline styles (typography, etc.).
-		$style_parts = $this->preserve_existing_styles( $block_content, $style_parts );
+		$style_parts = $this->preserve_existing_styles( $existing_style, $style_parts );
 
 		// Add toggle button styles.
 		$style_parts = $this->add_toggle_styles( $attributes, $style_parts );
@@ -245,21 +250,18 @@ class Block_Renderer extends Plugin_Module {
 	}
 
 	/**
-	 * Preserve existing inline styles from the block content.
+	 * Preserve existing inline style declarations.
 	 *
-	 * @param string $block_content Block HTML content.
-	 * @param array  $style_parts   Current style parts array.
+	 * @param string $existing_style Existing inline style attribute value.
+	 * @param array  $style_parts    Current style parts array.
 	 * @return array Updated style parts array.
 	 */
-	private function preserve_existing_styles( string $block_content, array $style_parts ): array {
-		if ( preg_match( '/<nav[^>]*\bstyle="([^"]*)"/i', $block_content, $style_matches ) ) {
-			$existing_style     = $style_matches[1];
-			$style_declarations = explode( ';', $existing_style );
-			foreach ( $style_declarations as $declaration ) {
-				$declaration = trim( $declaration );
-				if ( ! empty( $declaration ) ) {
-					$style_parts[] = $declaration;
-				}
+	private function preserve_existing_styles( string $existing_style, array $style_parts ): array {
+		$style_declarations = explode( ';', $existing_style );
+		foreach ( $style_declarations as $declaration ) {
+			$declaration = trim( $declaration );
+			if ( ! empty( $declaration ) ) {
+				$style_parts[] = $declaration;
 			}
 		}
 		return $style_parts;

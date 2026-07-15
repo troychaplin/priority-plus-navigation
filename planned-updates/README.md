@@ -1,5 +1,13 @@
 # Planned Updates: Gutenberg Alignment & Interactivity API Migration
 
+> **Current staged scope (July 2026):** work in progress is limited to code-level Gutenberg
+> alignment and an Interactivity API exploration, in small reviewable stages:
+> **A** — Tag Processor refactor (doc 02); **B** — enqueue registration fix (doc 03 part 1);
+> **C** — editor API alignment on the existing toolchain (doc 07, minus eslint-config changes);
+> **D** — a throwaway Interactivity API spike feeding findings back into doc 05.
+> Build-tool upgrades (wp-scripts 32, Node, eslint flat config), test infrastructure (doc 09),
+> and version-metadata bumps (doc 01) are deferred until explicitly scheduled.
+
 This folder contains the modernization plan for Priority Plus Navigation. The goal is to move the plugin from its WP 6.0-era architecture — regex-based HTML rewriting, classic script enqueues, and an imperative vanilla-JS frontend that rebuilds DOM at runtime — to the patterns WordPress core itself now uses, with `core/navigation` in WP 6.9 / Gutenberg 23.x as the reference implementation: `WP_HTML_Tag_Processor` for server-side markup manipulation, the Script Modules API for asset loading, and the Interactivity API for frontend behavior.
 
 ## The most important thing to know first
