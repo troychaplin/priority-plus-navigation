@@ -53,7 +53,7 @@ Priority Plus Navigation intelligently integrates with WordPress core navigation
 
 * **Never**: Priority Plus is always active across all screen sizes
 * **Mobile**: Priority Plus works on desktop and automatically disables when the hamburger menu activates
-* **Always**: Not compatible - Priority Plus is automatically disabled and the "Always" option appears greyed out in the editor
+* **Always**: Not compatible - selecting it in the editor switches the overlay back to "Mobile" (with an explanatory notice), and Priority Plus is disabled on the frontend if the attribute is ever set to "Always"
 
 = Is it accessible? =
 

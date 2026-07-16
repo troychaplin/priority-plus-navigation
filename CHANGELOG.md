@@ -16,6 +16,16 @@ Prefix the change with one of these keywords:
 
 ## [Unreleased]
 
+-   _Added_: `ColorToolsPanel` component replicating core's private color panel wrapper (`color-block-support-panel` class, `hasInnerWrapper`, first/last item classes) for identical grouped-item styling
+-   _Changed_: Migrated `useSetting` to `useSettings` (stable block editor API)
+-   _Changed_: Border controls updated to use stable `BorderBoxControl` and `BorderRadiusControl` imports, replacing experimental aliases
+-   _Changed_: Replaced `PanelColorSettings` with `ColorGradientSettingsDropdown` and `useMultipleOriginColorsAndGradients` in the button color panel, menu color panel, and submenu color panel — matches core's own color control pattern and restores the CSS grid layout shared by all other panels
+-   _Changed_: Replaced regex-based HTML attribute injection in `Block_Renderer` with `WP_HTML_Tag_Processor`, aligning with core's own render-block pattern
+-   _Changed_: Frontend assets now register early on `wp_enqueue_scripts` and enqueue at render time, so scripts and styles only load on pages that contain a Priority+ navigation block
+-   _Changed_: Updated FAQ entry for the "Always" overlay option to reflect the new normalize-to-mobile behaviour
+-   _Removed_: `addDisableAlwaysOption` HOC that manipulated the DOM to disable the "Always" overlay button; selecting "Always" now normalizes back to "Mobile" via an effect, with an explanatory inspector notice
+
+
 ## [1.1.0]
 
 -   _Added_: Editor preview of the More button that reflects label, colors, and padding settings

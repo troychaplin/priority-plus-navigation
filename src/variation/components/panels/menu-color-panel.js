@@ -1,12 +1,18 @@
 /**
  * WordPress dependencies
  */
-import { PanelColorSettings } from '@wordpress/block-editor';
+import {
+	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis -- No stable equivalent; matches core's own navigation/edit color controls.
+	__experimentalColorGradientSettingsDropdown as ColorGradientSettingsDropdown,
+	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis -- No stable equivalent; matches core's own navigation/edit color controls.
+	__experimentalUseMultipleOriginColorsAndGradients as useMultipleOriginColorsAndGradients,
+} from '@wordpress/block-editor';
 import { __ } from '@wordpress/i18n';
 
 /**
  * Internal dependencies
  */
+import { ColorToolsPanel } from '../color-tools-panel';
 import { tokens } from '../../../tokens';
 
 /**
@@ -28,65 +34,118 @@ export function ColorPanel({ attributes, setAttributes }) {
 		priorityPlusMenuItemHoverTextColor,
 	} = attributes;
 
+	const colorGradientSettings = useMultipleOriginColorsAndGradients();
+
 	return (
-		<PanelColorSettings
-			title={__('Priority Plus Menu Colors', 'priority-plus-navigation')}
-			colorSettings={[
-				{
-					label: __('Background Color', 'priority-plus-navigation'),
-					value:
-						priorityPlusMenuBackgroundColor ||
+		<ColorToolsPanel
+			label={__('Priority Plus Menu Colors', 'priority-plus-navigation')}
+			resetAll={() =>
+				setAttributes({
+					priorityPlusMenuBackgroundColor:
 						tokens.dropdown.backgroundColor,
-					onChange: (color) =>
-						setAttributes({
-							priorityPlusMenuBackgroundColor:
-								color || tokens.dropdown.backgroundColor,
-						}),
-					enableAlpha: true,
-				},
-				{
-					label: __(
-						'Item Hover Background',
-						'priority-plus-navigation'
-					),
-					value:
-						priorityPlusMenuItemHoverBackground ||
+					priorityPlusMenuItemHoverBackground:
 						tokens.dropdown.item.hoverBackground,
-					onChange: (color) =>
-						setAttributes({
-							priorityPlusMenuItemHoverBackground:
-								color || tokens.dropdown.item.hoverBackground,
-						}),
-					enableAlpha: true,
-				},
-				{
-					label: __('Item Text Color', 'priority-plus-navigation'),
-					value:
-						priorityPlusMenuItemTextColor ||
+					priorityPlusMenuItemTextColor:
 						tokens.dropdown.item.textColor,
-					onChange: (color) =>
-						setAttributes({
-							priorityPlusMenuItemTextColor:
-								color || tokens.dropdown.item.textColor,
-						}),
-					enableAlpha: true,
-				},
-				{
-					label: __(
-						'Item Hover Text Color',
-						'priority-plus-navigation'
-					),
-					value:
-						priorityPlusMenuItemHoverTextColor ||
+					priorityPlusMenuItemHoverTextColor:
 						tokens.dropdown.item.hoverTextColor,
-					onChange: (color) =>
-						setAttributes({
-							priorityPlusMenuItemHoverTextColor:
-								color || tokens.dropdown.item.hoverTextColor,
-						}),
-					enableAlpha: true,
-				},
-			]}
-		/>
+				})
+			}
+		>
+			<ColorGradientSettingsDropdown
+				__experimentalIsRenderedInSidebar
+				settings={[
+					{
+						label: __(
+							'Background Color',
+							'priority-plus-navigation'
+						),
+						colorValue:
+							priorityPlusMenuBackgroundColor ||
+							tokens.dropdown.backgroundColor,
+						onColorChange: (color) =>
+							setAttributes({
+								priorityPlusMenuBackgroundColor:
+									color || tokens.dropdown.backgroundColor,
+							}),
+						resetAllFilter: () =>
+							setAttributes({
+								priorityPlusMenuBackgroundColor:
+									tokens.dropdown.backgroundColor,
+							}),
+						enableAlpha: true,
+						isShownByDefault: true,
+					},
+					{
+						label: __(
+							'Item Hover Background',
+							'priority-plus-navigation'
+						),
+						colorValue:
+							priorityPlusMenuItemHoverBackground ||
+							tokens.dropdown.item.hoverBackground,
+						onColorChange: (color) =>
+							setAttributes({
+								priorityPlusMenuItemHoverBackground:
+									color ||
+									tokens.dropdown.item.hoverBackground,
+							}),
+						resetAllFilter: () =>
+							setAttributes({
+								priorityPlusMenuItemHoverBackground:
+									tokens.dropdown.item.hoverBackground,
+							}),
+						enableAlpha: true,
+						isShownByDefault: true,
+					},
+					{
+						label: __(
+							'Item Text Color',
+							'priority-plus-navigation'
+						),
+						colorValue:
+							priorityPlusMenuItemTextColor ||
+							tokens.dropdown.item.textColor,
+						onColorChange: (color) =>
+							setAttributes({
+								priorityPlusMenuItemTextColor:
+									color || tokens.dropdown.item.textColor,
+							}),
+						resetAllFilter: () =>
+							setAttributes({
+								priorityPlusMenuItemTextColor:
+									tokens.dropdown.item.textColor,
+							}),
+						enableAlpha: true,
+						isShownByDefault: true,
+					},
+					{
+						label: __(
+							'Item Hover Text Color',
+							'priority-plus-navigation'
+						),
+						colorValue:
+							priorityPlusMenuItemHoverTextColor ||
+							tokens.dropdown.item.hoverTextColor,
+						onColorChange: (color) =>
+							setAttributes({
+								priorityPlusMenuItemHoverTextColor:
+									color ||
+									tokens.dropdown.item.hoverTextColor,
+							}),
+						resetAllFilter: () =>
+							setAttributes({
+								priorityPlusMenuItemHoverTextColor:
+									tokens.dropdown.item.hoverTextColor,
+							}),
+						enableAlpha: true,
+						isShownByDefault: true,
+					},
+				]}
+				{...colorGradientSettings}
+				gradients={[]}
+				disableCustomGradients
+			/>
+		</ColorToolsPanel>
 	);
 }

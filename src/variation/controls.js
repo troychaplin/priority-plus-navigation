@@ -6,10 +6,15 @@ import { addFilter } from '@wordpress/hooks';
 
 import {
 	InspectorControls,
-	PanelColorSettings,
-	useSetting,
+	useSettings,
+	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis -- No stable equivalent exists yet; matches core block UIs.
 	__experimentalSpacingSizesControl as SpacingSizesControl,
+	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis -- No stable equivalent exists yet; matches core block UIs.
 	__experimentalBorderRadiusControl as BorderRadiusControl,
+	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis -- No stable equivalent; matches core's own navigation/edit color controls.
+	__experimentalColorGradientSettingsDropdown as ColorGradientSettingsDropdown,
+	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis -- No stable equivalent; matches core's own navigation/edit color controls.
+	__experimentalUseMultipleOriginColorsAndGradients as useMultipleOriginColorsAndGradients,
 } from '@wordpress/block-editor';
 import {
 	TextControl,
@@ -29,58 +34,16 @@ import { useEffect, useRef, useState } from '@wordpress/element';
  */
 import { MoreButtonPreview } from './components/more-button-preview';
 import { DropdownCustomizerModal } from './components/dropdown-customizer-modal';
+import { ColorToolsPanel } from './components/color-tools-panel';
 import { tokens } from '../tokens';
 
 /**
- * Add DOM manipulation to disable 'always' overlay option when Priority+ is active
- */
-const addDisableAlwaysOption = createHigherOrderComponent((BlockEdit) => {
-	return (props) => {
-		const { name, attributes } = props;
-
-		if (name !== 'core/navigation') {
-			return <BlockEdit {...props} />;
-		}
-
-		// Check if Priority+ variation is active
-		const className = attributes.className || '';
-		const isPriorityPlusVariation =
-			className.includes('is-style-priority-plus-navigation') ||
-			attributes.priorityPlusEnabled === true;
-
-		// Use effect to modify the DOM after render
-		useEffect(() => {
-			if (!isPriorityPlusVariation) {
-				return;
-			}
-
-			// Find all toggle group control buttons in the inspector
-			const inspector = document.querySelector(
-				'.block-editor-block-inspector'
-			);
-			if (!inspector) {
-				return;
-			}
-
-			// Find the 'always' button by data-value attribute
-			const alwaysButton = inspector.querySelector(
-				'.components-toggle-group-control-option-base[data-value="always"]'
-			);
-
-			if (alwaysButton) {
-				alwaysButton.style.opacity = '0.4';
-				alwaysButton.style.pointerEvents = 'none';
-				alwaysButton.style.textDecoration = 'line-through';
-				alwaysButton.style.cursor = 'not-allowed';
-			}
-		}, [isPriorityPlusVariation, attributes.overlayMenu]);
-
-		return <BlockEdit {...props} />;
-	};
-}, 'addDisableAlwaysOption');
-
-/**
- * Add Inspector Controls to core/navigation block
+ * Add Inspector Controls to core/navigation block.
+ *
+ * The "Always" overlay option is intentionally left selectable in core's
+ * control rather than disabled in the DOM: selecting it is normalized back
+ * to "mobile" by an effect below, the inspector Notice explains why, and the
+ * server-side renderer treats "always" as Priority+ disabled regardless.
  */
 const withPriorityPlusControls = createHigherOrderComponent((BlockEdit) => {
 	return (props) => {
@@ -169,11 +132,14 @@ const withPriorityPlusControls = createHigherOrderComponent((BlockEdit) => {
 			setAttributes,
 		]);
 
-		// Get spacing sizes from theme.
-		const spacingSizes = useSetting('spacing.spacingSizes') || [];
+		// Get spacing sizes and color palette from theme settings.
+		const [spacingSizes = [], colors = []] = useSettings(
+			'spacing.spacingSizes',
+			'color.palette'
+		);
 
-		// Get color palette for border controls.
-		const colors = useSetting('color.palette') || [];
+		// Theme/default color and gradient palettes for the button color dropdowns.
+		const colorGradientSettings = useMultipleOriginColorsAndGradients();
 
 		// Helper to check if border has values.
 		const hasBorderValue = () => {
@@ -417,67 +383,110 @@ const withPriorityPlusControls = createHigherOrderComponent((BlockEdit) => {
 							</Button>
 						</ToolsPanelItem>
 					</ToolsPanel>
-					<PanelColorSettings
-						title={__(
+					<ColorToolsPanel
+						label={__(
 							'Priority Plus Button Colors',
 							'priority-plus-navigation'
 						)}
-						colorSettings={[
-							{
-								label: __(
-									'Text Color',
-									'priority-plus-navigation'
-								),
-								value: priorityPlusToggleTextColor,
-								onChange: (color) =>
-									setAttributes({
-										priorityPlusToggleTextColor:
-											color || undefined,
-									}),
-								clearable: true,
-							},
-							{
-								label: __(
-									'Text Hover Color',
-									'priority-plus-navigation'
-								),
-								value: priorityPlusToggleTextColorHover,
-								onChange: (color) =>
-									setAttributes({
-										priorityPlusToggleTextColorHover:
-											color || undefined,
-									}),
-								clearable: true,
-							},
-							{
-								label: __(
-									'Background Color',
-									'priority-plus-navigation'
-								),
-								value: priorityPlusToggleBackgroundColor,
-								onChange: (color) =>
-									setAttributes({
-										priorityPlusToggleBackgroundColor:
-											color || undefined,
-									}),
-								clearable: true,
-							},
-							{
-								label: __(
-									'Background Hover Color',
-									'priority-plus-navigation'
-								),
-								value: priorityPlusToggleBackgroundColorHover,
-								onChange: (color) =>
-									setAttributes({
-										priorityPlusToggleBackgroundColorHover:
-											color || undefined,
-									}),
-								clearable: true,
-								enableAlpha: true,
-							},
-						]}
-					/>
+						resetAll={() =>
+							setAttributes({
+								priorityPlusToggleTextColor: undefined,
+								priorityPlusToggleTextColorHover: undefined,
+								priorityPlusToggleBackgroundColor: undefined,
+								priorityPlusToggleBackgroundColorHover:
+									undefined,
+							})
+						}
+					>
+						<ColorGradientSettingsDropdown
+							__experimentalIsRenderedInSidebar
+							settings={[
+								{
+									label: __(
+										'Text Color',
+										'priority-plus-navigation'
+									),
+									colorValue: priorityPlusToggleTextColor,
+									onColorChange: (color) =>
+										setAttributes({
+											priorityPlusToggleTextColor:
+												color || undefined,
+										}),
+									resetAllFilter: () =>
+										setAttributes({
+											priorityPlusToggleTextColor:
+												undefined,
+										}),
+									clearable: true,
+									isShownByDefault: true,
+								},
+								{
+									label: __(
+										'Text Hover Color',
+										'priority-plus-navigation'
+									),
+									colorValue:
+										priorityPlusToggleTextColorHover,
+									onColorChange: (color) =>
+										setAttributes({
+											priorityPlusToggleTextColorHover:
+												color || undefined,
+										}),
+									resetAllFilter: () =>
+										setAttributes({
+											priorityPlusToggleTextColorHover:
+												undefined,
+										}),
+									clearable: true,
+									isShownByDefault: true,
+								},
+								{
+									label: __(
+										'Background Color',
+										'priority-plus-navigation'
+									),
+									colorValue:
+										priorityPlusToggleBackgroundColor,
+									onColorChange: (color) =>
+										setAttributes({
+											priorityPlusToggleBackgroundColor:
+												color || undefined,
+										}),
+									resetAllFilter: () =>
+										setAttributes({
+											priorityPlusToggleBackgroundColor:
+												undefined,
+										}),
+									clearable: true,
+									isShownByDefault: true,
+								},
+								{
+									label: __(
+										'Background Hover Color',
+										'priority-plus-navigation'
+									),
+									colorValue:
+										priorityPlusToggleBackgroundColorHover,
+									onColorChange: (color) =>
+										setAttributes({
+											priorityPlusToggleBackgroundColorHover:
+												color || undefined,
+										}),
+									resetAllFilter: () =>
+										setAttributes({
+											priorityPlusToggleBackgroundColorHover:
+												undefined,
+										}),
+									clearable: true,
+									enableAlpha: true,
+									isShownByDefault: true,
+								},
+							]}
+							{...colorGradientSettings}
+							gradients={[]}
+							disableCustomGradients
+						/>
+					</ColorToolsPanel>
 					<ToolsPanel
 						label={__(
 							'Priority Plus Button Spacing',
@@ -613,14 +622,6 @@ const withPriorityPlusControls = createHigherOrderComponent((BlockEdit) => {
 		);
 	};
 }, 'withPriorityPlusControls');
-
-// Apply filters in order: first add DOM manipulation for styling, then our controls
-addFilter(
-	'editor.BlockEdit',
-	'priority-plus-navigation/add-disable-always-option',
-	addDisableAlwaysOption,
-	5
-);
 
 addFilter(
 	'editor.BlockEdit',
