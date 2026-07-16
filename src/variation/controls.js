@@ -6,10 +6,15 @@ import { addFilter } from '@wordpress/hooks';
 
 import {
 	InspectorControls,
-	PanelColorSettings,
 	useSettings,
+	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis -- No stable equivalent exists yet; matches core block UIs.
 	__experimentalSpacingSizesControl as SpacingSizesControl,
+	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis -- No stable equivalent exists yet; matches core block UIs.
 	__experimentalBorderRadiusControl as BorderRadiusControl,
+	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis -- No stable equivalent; matches core's own navigation/edit color controls.
+	__experimentalColorGradientSettingsDropdown as ColorGradientSettingsDropdown,
+	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis -- No stable equivalent; matches core's own navigation/edit color controls.
+	__experimentalUseMultipleOriginColorsAndGradients as useMultipleOriginColorsAndGradients,
 } from '@wordpress/block-editor';
 import {
 	TextControl,
@@ -29,6 +34,7 @@ import { useEffect, useRef, useState } from '@wordpress/element';
  */
 import { MoreButtonPreview } from './components/more-button-preview';
 import { DropdownCustomizerModal } from './components/dropdown-customizer-modal';
+import { ColorToolsPanel } from './components/color-tools-panel';
 import { tokens } from '../tokens';
 
 /**
@@ -131,6 +137,9 @@ const withPriorityPlusControls = createHigherOrderComponent((BlockEdit) => {
 			'spacing.spacingSizes',
 			'color.palette'
 		);
+
+		// Theme/default color and gradient palettes for the button color dropdowns.
+		const colorGradientSettings = useMultipleOriginColorsAndGradients();
 
 		// Helper to check if border has values.
 		const hasBorderValue = () => {
@@ -374,67 +383,110 @@ const withPriorityPlusControls = createHigherOrderComponent((BlockEdit) => {
 							</Button>
 						</ToolsPanelItem>
 					</ToolsPanel>
-					<PanelColorSettings
-						title={__(
+					<ColorToolsPanel
+						label={__(
 							'Priority Plus Button Colors',
 							'priority-plus-navigation'
 						)}
-						colorSettings={[
-							{
-								label: __(
-									'Text Color',
-									'priority-plus-navigation'
-								),
-								value: priorityPlusToggleTextColor,
-								onChange: (color) =>
-									setAttributes({
-										priorityPlusToggleTextColor:
-											color || undefined,
-									}),
-								clearable: true,
-							},
-							{
-								label: __(
-									'Text Hover Color',
-									'priority-plus-navigation'
-								),
-								value: priorityPlusToggleTextColorHover,
-								onChange: (color) =>
-									setAttributes({
-										priorityPlusToggleTextColorHover:
-											color || undefined,
-									}),
-								clearable: true,
-							},
-							{
-								label: __(
-									'Background Color',
-									'priority-plus-navigation'
-								),
-								value: priorityPlusToggleBackgroundColor,
-								onChange: (color) =>
-									setAttributes({
-										priorityPlusToggleBackgroundColor:
-											color || undefined,
-									}),
-								clearable: true,
-							},
-							{
-								label: __(
-									'Background Hover Color',
-									'priority-plus-navigation'
-								),
-								value: priorityPlusToggleBackgroundColorHover,
-								onChange: (color) =>
-									setAttributes({
-										priorityPlusToggleBackgroundColorHover:
-											color || undefined,
-									}),
-								clearable: true,
-								enableAlpha: true,
-							},
-						]}
-					/>
+						resetAll={() =>
+							setAttributes({
+								priorityPlusToggleTextColor: undefined,
+								priorityPlusToggleTextColorHover: undefined,
+								priorityPlusToggleBackgroundColor: undefined,
+								priorityPlusToggleBackgroundColorHover:
+									undefined,
+							})
+						}
+					>
+						<ColorGradientSettingsDropdown
+							__experimentalIsRenderedInSidebar
+							settings={[
+								{
+									label: __(
+										'Text Color',
+										'priority-plus-navigation'
+									),
+									colorValue: priorityPlusToggleTextColor,
+									onColorChange: (color) =>
+										setAttributes({
+											priorityPlusToggleTextColor:
+												color || undefined,
+										}),
+									resetAllFilter: () =>
+										setAttributes({
+											priorityPlusToggleTextColor:
+												undefined,
+										}),
+									clearable: true,
+									isShownByDefault: true,
+								},
+								{
+									label: __(
+										'Text Hover Color',
+										'priority-plus-navigation'
+									),
+									colorValue:
+										priorityPlusToggleTextColorHover,
+									onColorChange: (color) =>
+										setAttributes({
+											priorityPlusToggleTextColorHover:
+												color || undefined,
+										}),
+									resetAllFilter: () =>
+										setAttributes({
+											priorityPlusToggleTextColorHover:
+												undefined,
+										}),
+									clearable: true,
+									isShownByDefault: true,
+								},
+								{
+									label: __(
+										'Background Color',
+										'priority-plus-navigation'
+									),
+									colorValue:
+										priorityPlusToggleBackgroundColor,
+									onColorChange: (color) =>
+										setAttributes({
+											priorityPlusToggleBackgroundColor:
+												color || undefined,
+										}),
+									resetAllFilter: () =>
+										setAttributes({
+											priorityPlusToggleBackgroundColor:
+												undefined,
+										}),
+									clearable: true,
+									isShownByDefault: true,
+								},
+								{
+									label: __(
+										'Background Hover Color',
+										'priority-plus-navigation'
+									),
+									colorValue:
+										priorityPlusToggleBackgroundColorHover,
+									onColorChange: (color) =>
+										setAttributes({
+											priorityPlusToggleBackgroundColorHover:
+												color || undefined,
+										}),
+									resetAllFilter: () =>
+										setAttributes({
+											priorityPlusToggleBackgroundColorHover:
+												undefined,
+										}),
+									clearable: true,
+									enableAlpha: true,
+									isShownByDefault: true,
+								},
+							]}
+							{...colorGradientSettings}
+							gradients={[]}
+							disableCustomGradients
+						/>
+					</ColorToolsPanel>
 					<ToolsPanel
 						label={__(
 							'Priority Plus Button Spacing',
