@@ -1,92 +1,252 @@
-# Planned Updates: Gutenberg Alignment & Interactivity API Migration
+# Plan: Stage D — Interactivity API Migration (Phase 1)
 
-> **Current staged scope (July 2026):** work in progress is limited to code-level Gutenberg
-> alignment and an Interactivity API exploration, in small reviewable stages:
-> **A** — Tag Processor refactor (doc 02); **B** — enqueue registration fix (doc 03 part 1);
-> **C** — editor API alignment on the existing toolchain (doc 07, minus eslint-config changes);
-> **D** — a throwaway Interactivity API spike feeding findings back into doc 05.
-> Build-tool upgrades (wp-scripts 32, Node, eslint flat config), test infrastructure (doc 09),
-> and version-metadata bumps (doc 01) are deferred until explicitly scheduled.
+## Context
 
-This folder contains the modernization plan for Priority Plus Navigation. The goal is to move the plugin from its WP 6.0-era architecture — regex-based HTML rewriting, classic script enqueues, and an imperative vanilla-JS frontend that rebuilds DOM at runtime — to the patterns WordPress core itself now uses, with `core/navigation` in WP 6.9 / Gutenberg 23.x as the reference implementation: `WP_HTML_Tag_Processor` for server-side markup manipulation, the Script Modules API for asset loading, and the Interactivity API for frontend behavior.
+The plugin's frontend is a class-based UMD script (`src/priority-plus-navigation.js` → `src/core/PriorityNav.js`) that manually manages ResizeObserver, MutationObserver, event listeners, DOM manipulation, and innerHTML rebuilding. There are no backwards-compatibility concerns — this is a full replacement targeting the best long-term architecture.
 
-## The most important thing to know first
+**Why the Interactivity API?**
+- Proper lifecycle via `callbacks.init` (returning a cleanup function) fixes the dead `destroy()` method that leaks observers today — nothing ever calls it
+- `data-wp-context` replaces scattered `data-more-label` / `data-overlay-menu` / `data-mobile-collapse` attributes with one structured object
+- Event directives on the `<nav>` replace document-level `addEventListener` calls
+- Server-rendering the More button (required for directives) positions Phase 2 (server-rendered dropdown content) to delete all of `dom-builder.js`, `dom-extractor.js`, and `html-utils.js` — the biggest long-term win
 
-**None of these changes touch saved content.** All `priorityPlus*` attributes live inside the `core/navigation` block's comment delimiters in posts and templates, and everything the plugin adds to the frontend markup is generated at render time by a `render_block` filter. Changing how that output is generated requires **no block deprecations, no migrations, and no changes to existing sites' stored content**. The risk surface is rendered-output parity, not data.
+**What the API does NOT change**: the ResizeObserver width-measurement kernel is inherently imperative and stays inside `callbacks.init`. This is expected — no core block does measure-and-collapse either.
 
-## Documents
+**Permanent caveat**: core registers `store('core/navigation', …, { lock: true })`. We cannot read `state.isMenuOpen`. The MutationObserver that watches `.is-menu-open` / `.has-modal-open` on the responsive container survives inside `callbacks.init`.
 
-| Doc | Title | Priority | Effort | Release | Depends on |
-|-----|-------|----------|--------|---------|------------|
-| [01](01-platform-baseline.md) | Platform baseline: requirements, metadata, tooling | High | 0.5–1 day | v1.2 (readme fixes) / v2.0 (version bumps) | — |
-| [02](02-tag-processor-refactor.md) | Replace regex HTML rewriting with `WP_HTML_Tag_Processor` | High | 2–3 days | v1.2 | — |
-| [03](03-enqueue-and-script-modules.md) | Asset loading: enqueue fix + Script Modules migration | High | 2–3 days | Part 1: v1.2 / Part 2: v2.0 | Part 2: 01 |
-| [04](04-single-source-design-tokens.md) | Single source of truth for design tokens | Medium | 2 days | v2.0 | — |
-| [05](05-interactivity-api-migration.md) | **Interactivity API migration (evaluation + verdict + phases)** | High | 1.5–2 weeks | v2.0 | 01, 02, 03.2 |
-| [06](06-server-rendered-dropdown.md) | Server-rendered dropdown (eliminate client DOM building) | High | 1 week | v2.0 | 02, 05; consumes 04 |
-| [07](07-editor-controls-modernization.md) | Editor controls modernization | Medium | 2–3 days | v1.2 | — |
-| [08](08-accessibility-hardening.md) | Accessibility hardening | Medium-High | 2–3 days | Partial v1.2, final v2.0 | Final form: 05, 06 |
-| [09](09-config-extensibility-and-qa.md) | Config surface, extensibility, and QA scaffolding | Low | 2–3 days | v1.2 | — (QA should land before 05/06) |
+**Phase 1 scope (this stage)**: Store + directives + server-rendered More button + `data-wp-init` for observers. Dropdown content (the `<ul>` inside More button) is still JS-rebuilt on every overflow change via a `callbacks.watchOverflow` watcher — eliminated in Phase 2 (doc06).
 
-## Dependency graph
+---
 
-```mermaid
-graph TD
-    A01["01 Platform baseline<br/>(WP 6.8 / PHP 8.0 bump)"]
-    A02["02 Tag Processor refactor"]
-    A031["03.1 Enqueue fix"]
-    A032["03.2 Script Modules"]
-    A04["04 Token unification"]
-    A05["05 Interactivity API<br/>(phase 1: hybrid store)"]
-    A06["06 Server-rendered dropdown"]
-    A07["07 Editor controls"]
-    A08["08 A11y hardening (final)"]
-    A09["09 Config & QA"]
+## The key architectural shift: More button moves to PHP
 
-    A01 --> A032
-    A02 --> A05
-    A032 --> A05
-    A01 --> A05
-    A05 --> A06
-    A02 --> A06
-    A04 -.consumed by.-> A06
-    A05 --> A08
-    A06 --> A08
-    A09 -.safety net before.-> A05
+Interactivity API directives only process HTML that existed in the server response at hydration time. The More button is currently created entirely by `dom-builder.js::createMoreButton()` at runtime. For directives like `data-wp-on--click="actions.toggleDropdown"` and `data-wp-bind--aria-expanded="context.isOpen"` to work on the button, PHP must render it.
+
+Approach: after `WP_HTML_Tag_Processor` modifies the `<nav>` tag, use `strrpos($html, '</nav>')` to locate the nav's closing tag and inject the More button HTML just before it.
+
+The More button is always rendered but starts hidden (CSS `display:none`). `callbacks.init` shows it when overflow is detected (writing `context.moreVisible = true`), and `data-wp-style--display` drives visibility.
+
+---
+
+## Files
+
+### New
+- **`src/view.js`** — single hand-authored ES module; all behavior inlined (no imports from `src/` siblings since this is buildless). Registered via `wp_register_script_module`.
+- **`package.json`** — add `"copy:view": "node -e \"require('fs').copyFileSync('src/view.js', 'build/view.js')\""` and wire it into the existing `build` and `start` scripts.
+
+### Modified
+- **`classes/class-block-renderer.php`**:
+  - `inject_priority_attributes()`: replace the four `data-*` attributes with `data-wp-interactive="priority-plus-navigation"` + `data-wp-context` (via `wp_interactivity_data_wp_context()`); add `data-wp-init="callbacks.init"`, `data-wp-on-document--keydown="actions.handleKeydown"`, `data-wp-on-document--click="actions.closeOnClickOutside"` to the `<nav>` tag
+  - New method `render_more_button( array $attributes ): string` — returns the More button HTML with all directives baked in
+  - `inject_priority_attributes()` appends More button HTML before `</nav>` via `strrpos`
+  - Add `openSubmenusOnClick` to `collect_attributes()` (read from `$block['attrs']['openSubmenusOnClick']`, default `false`)
+- **`classes/class-enqueues.php`**:
+  - On `init`: `wp_register_script_module('priority-plus-navigation/view', get_url('build/view.js'), ['@wordpress/interactivity'], $version)`
+  - `enqueue_frontend_assets()`: call `wp_enqueue_script_module('priority-plus-navigation/view')`, remove `wp_enqueue_script('priority-plus-navigation')` and `wp_enqueue_style` (style remains classic)
+  - `register_frontend_assets()`: remove `wp_register_script` for the classic handle
+
+### Deleted
+- `src/priority-plus-navigation.js` — bootstrap replaced by `data-wp-interactive` hydration
+- `src/core/PriorityNav.js` — class replaced by the store
+- `src/events/event-handlers.js` — replaced by directives on `<nav>` and `callbacks.init`
+- `src/events/accordion-handler.js` — logic inlined into `src/view.js`
+- Entry `'priority-plus-navigation'` in `webpack.config.js` — classic bundle gone
+
+### Kept (temporarily)
+`src/layout/width-calculator.js`, `src/dom/dom-builder.js`, `src/dom/dom-extractor.js`, `src/utils/`, `src/config.js` — logic is **inlined** into `src/view.js` rather than imported. These files can be deleted after the migration is verified. `src/config.js`'s `moreLabel` and `mobileBreakpoint` are now covered by `data-wp-context`; only `chevronIconSvg` might survive as a constant inside `view.js` if the chevron is still JS-rendered (it won't be — it's in the PHP template now). So `src/config.js` can be deleted once confirmed.
+
+---
+
+## `data-wp-context` shape
+
+Set on the `<nav>` server-side by `wp_interactivity_data_wp_context()`:
+
+```json
+{
+  "moreLabel": "More",
+  "overlayMenu": "never",
+  "mobileCollapse": true,
+  "openSubmenusOnClick": false,
+  "visibleCount": 9999,
+  "isOpen": false,
+  "moreVisible": false,
+  "coreOverlayOpen": false
+}
 ```
 
-Docs 02, 03.1, 07, and 09 are independent and non-breaking — they can ship anytime. Docs 04, 05, 06, and 08 (final form) are the v2.0 train.
+`visibleCount` and `moreVisible` start as "all visible, button hidden" — `callbacks.init` writes the correct values after the first measurement.
 
-## Release mapping
+---
 
-### v1.2 — non-breaking maintenance release (keeps WP 6.0* support)
+## More button PHP template
 
-- **01** (readme.txt corrections only — headers, "Browse"/"More" fix)
-- **02** Tag Processor refactor (output-identical, snapshot-tested)
-- **03 part 1** Enqueue registration fix
-- **07** Editor controls hygiene
-- **09** QA scaffolding (PHPUnit + e2e) — this is the safety net for v2.0
+```php
+private function render_more_button( array $attributes ): string {
+    $label = esc_html( $attributes['toggle_label'] );
+    $chevron = '<svg …>…</svg>'; // inline chevron SVG (moved from src/config.js)
+    return sprintf(
+        '<div class="priority-plus-navigation-more" style="display:none"
+              data-wp-style--display="context.moreVisible ? \'block\' : \'none\'">'
+        . '<button class="priority-plus-navigation-more__button"'
+        .         ' aria-expanded="false"'
+        .         ' aria-haspopup="true"'
+        .         ' data-wp-bind--aria-expanded="context.isOpen"'
+        .         ' data-wp-on--click="actions.toggleDropdown">'
+        .     '<span class="priority-plus-navigation-more__label"'
+        .           ' data-wp-text="context.moreLabel">%s</span>'
+        .     '%s'
+        . '</button>'
+        . '<ul role="menu" class="priority-plus-navigation-more__dropdown"'
+        .      ' data-wp-class--is-open="context.isOpen">'
+        . '</ul>'
+        . '</div>',
+        $label,
+        $chevron
+    );
+}
+```
 
-\* Note: the code already calls `wp_trigger_error()` (WP 6.4+) in the bootstrap, so the declared 6.0 minimum is inaccurate today. v1.2 should honestly declare 6.4 unless that call is guarded.
+---
 
-### v2.0 — WP 6.8+ / PHP 8.0+, Interactivity API
+## `src/view.js` store shape
 
-- **01** version bumps (Requires at least: 6.8, Requires PHP: 8.0)
-- **03 part 2** Script Modules migration
-- **04** Token unification
-- **05** Interactivity API migration (phased)
-- **06** Server-rendered dropdown
-- **08** Accessibility hardening (final form)
+```js
+import {
+    store,
+    getContext,
+    getElement,
+    withSyncEvent,
+} from '@wordpress/interactivity';
 
-Sites on WP 6.4–6.7 stay on the 1.x line; readme.txt and the WP.org changelog should state this support policy explicitly.
+// --- inlined utilities (from src/layout/width-calculator.js, src/dom/, src/utils/) ---
+function cacheItemWidths(list) { /* … */ }
+function checkOverflow(ctx, nav, list, moreContainer, dropdown, itemWidths) { /* … */ }
+function buildDropdownContent(dropdown, list, visibleCount, ctx) { /* … */ }
+// (hamburger detection, accordion toggling, etc.)
 
-## Cross-cutting risks
+store('priority-plus-navigation', {
+    actions: {
+        toggleDropdown() {
+            const ctx = getContext();
+            ctx.isOpen = !ctx.isOpen;
+        },
+        handleKeydown: withSyncEvent(function (event) {
+            const ctx = getContext();
+            if (event.key !== 'Escape') return;
+            if (ctx.isOpen) {
+                ctx.isOpen = false;
+                event.preventDefault();
+            }
+        }),
+        closeOnClickOutside(event) {
+            const ctx = getContext();
+            const { ref } = getElement();
+            if (ctx.isOpen && !ref.contains(event.target)) {
+                ctx.isOpen = false;
+            }
+        },
+    },
+    callbacks: {
+        init() {
+            const ctx = getContext();
+            const { ref } = getElement();
 
-1. **Public contracts to keep byte-stable through v2.0:** the `is-style-priority-plus-navigation` class, the CSS custom property names (`--priority-plus-navigation--*` and `--wp--custom--priority-plus-navigation--dropdown--*`), and the generated dropdown class names styled in `src/styles/style.scss`. These are the de-facto API for theme authors.
-2. **`data-*` attribute contract change (v2.0):** `data-more-label`, `data-overlay-menu`, and `data-mobile-collapse` on the `<nav>` are replaced by a single `data-wp-context` in doc 05. Unlikely to have third-party consumers, but list it as breaking in v2.0 release notes.
-3. **Core navigation internals dependency:** the plugin detects core's hamburger overlay state by observing undocumented classes (`is-menu-open`, `has-modal-open`). Core's Interactivity store is locked, so there is no supported alternative (see doc 05). Isolate the dependency and re-verify each WP release with the e2e test from doc 09.
-4. **Regex → Tag Processor parity:** subtle differences (attribute ordering, entity handling, malformed markup tolerance) are mitigated by the snapshot test matrix in doc 02.
+            const list = ref.querySelector('.wp-block-navigation__container');
+            const moreContainer = ref.querySelector('.priority-plus-navigation-more');
+            const dropdown = moreContainer.querySelector('[role="menu"]');
 
-## Relationship to existing docs
+            // Bail if overlayMenu=always (same guard as current JS)
+            if (ctx.overlayMenu === 'always') return;
 
-`docs/architecture.md`, `docs/how-it-works.md`, and `docs/styling.md` describe the **current** state and remain authoritative until plans land. Each planned-updates doc lists which of those files it obsoletes or amends; updating them is part of each change's definition of done.
+            const itemWidths = cacheItemWidths(list);
+
+            // ResizeObserver — hosts the measurement kernel
+            const ro = new ResizeObserver(() => {
+                requestAnimationFrame(() =>
+                    checkOverflow(ctx, ref, list, moreContainer, dropdown, itemWidths)
+                );
+            });
+            ro.observe(ref);
+
+            // MutationObserver — hamburger detection (core's store is locked)
+            const responsiveContainer = ref
+                .closest('.wp-block-navigation')
+                ?.querySelector('.wp-block-navigation__responsive-container');
+            let mo;
+            if (responsiveContainer) {
+                mo = new MutationObserver(() => {
+                    ctx.coreOverlayOpen =
+                        responsiveContainer.classList.contains('is-menu-open') ||
+                        responsiveContainer.classList.contains('has-modal-open');
+                });
+                mo.observe(responsiveContainer, {
+                    attributes: true,
+                    attributeFilter: ['class', 'aria-hidden'],
+                });
+            }
+
+            // Initial measurement
+            checkOverflow(ctx, ref, list, moreContainer, dropdown, itemWidths);
+
+            // Cleanup — this is what the dead destroy() never provided
+            return () => {
+                ro.disconnect();
+                mo?.disconnect();
+            };
+        },
+    },
+});
+```
+
+**Notes on `withSyncEvent`**: needed so `event.preventDefault()` in `handleKeydown` fires synchronously. Verify the exact import path when implementing — it's `@wordpress/interactivity` in WP 6.5+.
+
+---
+
+## SCSS / CSS
+
+No changes to frontend SCSS needed initially. The More button's existing CSS classes (`priority-plus-navigation-more`, `is-open`, etc.) are unchanged. The `display:none` initial state is set inline on the div; `data-wp-style--display` overrides it once `context.moreVisible` is set. Verify there are no existing stylesheet rules that fight this (likely fine since the button was always JS-injected before).
+
+---
+
+## Build wiring
+
+After implementation, the npm scripts should look like:
+
+```json
+"build": "wp-scripts build && node -e \"require('fs').copyFileSync('src/view.js','build/view.js')\"",
+"start": "wp-scripts start & nodemon --watch src/view.js --exec \"cp src/view.js build/view.js\""
+```
+
+(Or use a simpler `concurrently` + watch approach — decide during implementation based on what's already in package.json.)
+
+The `priority-plus-navigation` entry is removed from `webpack.config.js`.
+
+---
+
+## What Phase 2 will clean up (doc 06, not this stage)
+
+Once Phase 1 is stable, Phase 2 (server-rendered dropdown) will:
+- PHP renders ALL nav items as accordion HTML inside the More button's `<ul>` at server time
+- Each item gets `data-wp-class--hidden="context.visibleCount > __index"` (or similar) so JS only needs to write `ctx.visibleCount`, not rebuild innerHTML
+- Delete `src/dom/dom-builder.js`, `src/dom/dom-extractor.js`, `src/utils/html-utils.js`
+- At that point `buildDropdownContent()` in `view.js` and the entire `dom-extractor.js` logic are gone
+
+---
+
+## Verification
+
+1. `npm run build` (with the updated copy step) — confirm `build/view.js` is present and readable
+2. Browser: insert a Priority Plus Navigation block on a page with multiple nav items. Confirm:
+   - More button appears when items overflow (ResizeObserver working)
+   - More button click opens/closes the dropdown (`context.isOpen` toggling via directive)
+   - Escape closes the dropdown (document keydown handler)
+   - Click outside closes the dropdown (document click handler)
+   - Hamburger menu overlay disables Priority+ (MutationObserver + `context.coreOverlayOpen`)
+   - Mobile collapse works at the breakpoint
+   - Accordion submenus expand/collapse inside the dropdown
+   - Browser console is empty throughout
+3. Confirm `<script type="module">` in page source (not a classic `<script>`) — verifies module registration worked
+4. Confirm old `priority-plus-navigation.js` is NOT in the page source (classic handle gone)
+5. `npm run lint:js` clean
+
+Leave uncommitted for user review.
