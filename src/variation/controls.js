@@ -7,7 +7,7 @@ import { addFilter } from '@wordpress/hooks';
 import {
 	InspectorControls,
 	PanelColorSettings,
-	useSetting,
+	useSettings,
 	__experimentalSpacingSizesControl as SpacingSizesControl,
 	__experimentalBorderRadiusControl as BorderRadiusControl,
 } from '@wordpress/block-editor';
@@ -32,55 +32,12 @@ import { DropdownCustomizerModal } from './components/dropdown-customizer-modal'
 import { tokens } from '../tokens';
 
 /**
- * Add DOM manipulation to disable 'always' overlay option when Priority+ is active
- */
-const addDisableAlwaysOption = createHigherOrderComponent((BlockEdit) => {
-	return (props) => {
-		const { name, attributes } = props;
-
-		if (name !== 'core/navigation') {
-			return <BlockEdit {...props} />;
-		}
-
-		// Check if Priority+ variation is active
-		const className = attributes.className || '';
-		const isPriorityPlusVariation =
-			className.includes('is-style-priority-plus-navigation') ||
-			attributes.priorityPlusEnabled === true;
-
-		// Use effect to modify the DOM after render
-		useEffect(() => {
-			if (!isPriorityPlusVariation) {
-				return;
-			}
-
-			// Find all toggle group control buttons in the inspector
-			const inspector = document.querySelector(
-				'.block-editor-block-inspector'
-			);
-			if (!inspector) {
-				return;
-			}
-
-			// Find the 'always' button by data-value attribute
-			const alwaysButton = inspector.querySelector(
-				'.components-toggle-group-control-option-base[data-value="always"]'
-			);
-
-			if (alwaysButton) {
-				alwaysButton.style.opacity = '0.4';
-				alwaysButton.style.pointerEvents = 'none';
-				alwaysButton.style.textDecoration = 'line-through';
-				alwaysButton.style.cursor = 'not-allowed';
-			}
-		}, [isPriorityPlusVariation, attributes.overlayMenu]);
-
-		return <BlockEdit {...props} />;
-	};
-}, 'addDisableAlwaysOption');
-
-/**
- * Add Inspector Controls to core/navigation block
+ * Add Inspector Controls to core/navigation block.
+ *
+ * The "Always" overlay option is intentionally left selectable in core's
+ * control rather than disabled in the DOM: selecting it is normalized back
+ * to "mobile" by an effect below, the inspector Notice explains why, and the
+ * server-side renderer treats "always" as Priority+ disabled regardless.
  */
 const withPriorityPlusControls = createHigherOrderComponent((BlockEdit) => {
 	return (props) => {
@@ -169,11 +126,11 @@ const withPriorityPlusControls = createHigherOrderComponent((BlockEdit) => {
 			setAttributes,
 		]);
 
-		// Get spacing sizes from theme.
-		const spacingSizes = useSetting('spacing.spacingSizes') || [];
-
-		// Get color palette for border controls.
-		const colors = useSetting('color.palette') || [];
+		// Get spacing sizes and color palette from theme settings.
+		const [spacingSizes = [], colors = []] = useSettings(
+			'spacing.spacingSizes',
+			'color.palette'
+		);
 
 		// Helper to check if border has values.
 		const hasBorderValue = () => {
@@ -613,14 +570,6 @@ const withPriorityPlusControls = createHigherOrderComponent((BlockEdit) => {
 		);
 	};
 }, 'withPriorityPlusControls');
-
-// Apply filters in order: first add DOM manipulation for styling, then our controls
-addFilter(
-	'editor.BlockEdit',
-	'priority-plus-navigation/add-disable-always-option',
-	addDisableAlwaysOption,
-	5
-);
 
 addFilter(
 	'editor.BlockEdit',

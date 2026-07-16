@@ -3,12 +3,12 @@
  */
 import {
 	ComboboxControl,
-	__experimentalBorderBoxControl as BorderBoxControl,
+	BorderBoxControl,
 	__experimentalToolsPanel as ToolsPanel,
 	__experimentalToolsPanelItem as ToolsPanelItem,
 } from '@wordpress/components';
 import {
-	useSetting,
+	useSettings,
 	__experimentalBorderRadiusControl as BorderRadiusControl,
 } from '@wordpress/block-editor';
 import { __ } from '@wordpress/i18n';
@@ -82,8 +82,10 @@ function hasBorderRadiusValue(borderRadius) {
  */
 function ShadowPresetPicker({ value, onChange }) {
 	// Get shadow presets from theme settings
-	const themeShadowsRaw = useSetting('shadow.presets.theme');
-	const defaultShadowsRaw = useSetting('shadow.presets.default');
+	const [themeShadowsRaw, defaultShadowsRaw] = useSettings(
+		'shadow.presets.theme',
+		'shadow.presets.default'
+	);
 
 	// Build options for ComboboxControl (requires value/label format)
 	const shadowOptions = useMemo(() => {
@@ -177,7 +179,7 @@ export function MenuStylesPanel({ attributes, setAttributes }) {
 	} = attributes;
 
 	// Get color palette from theme settings
-	const colors = useSetting('color.palette') || [];
+	const [colors = []] = useSettings('color.palette');
 
 	return (
 		<ToolsPanel

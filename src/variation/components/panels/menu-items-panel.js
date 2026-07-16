@@ -3,12 +3,12 @@
  */
 import {
 	BoxControl,
+	BorderControl,
 	__experimentalToolsPanel as ToolsPanel,
 	__experimentalToolsPanelItem as ToolsPanelItem,
-	__experimentalBorderControl as BorderControl,
 } from '@wordpress/components';
 import {
-	useSetting,
+	useSettings,
 	__experimentalSpacingSizesControl as SpacingSizesControl,
 } from '@wordpress/block-editor';
 import { __ } from '@wordpress/i18n';
@@ -108,7 +108,7 @@ export function MenuItemsPanel({ attributes, setAttributes, spacingSizes }) {
 	} = attributes;
 
 	// Get color palette from theme settings
-	const colors = useSetting('color.palette') || [];
+	const [colors = []] = useSettings('color.palette');
 
 	return (
 		<ToolsPanel

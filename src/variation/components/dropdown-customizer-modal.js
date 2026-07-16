@@ -2,7 +2,7 @@
  * WordPress dependencies
  */
 import { Modal, Button } from '@wordpress/components';
-import { useSetting } from '@wordpress/block-editor';
+import { useSettings } from '@wordpress/block-editor';
 import { __ } from '@wordpress/i18n';
 
 /**
@@ -21,9 +21,12 @@ export function DropdownCustomizerModal({
 	setAttributes,
 	onClose,
 }) {
-	// Get typography settings from theme to convert slugs to values
-	const fontSizes = useSetting('typography.fontSizes') || [];
-	const fontFamilies = useSetting('typography.fontFamilies') || [];
+	// Get typography and spacing settings from theme to convert slugs to values
+	const [fontSizes = [], fontFamilies = [], spacingSizes = []] = useSettings(
+		'typography.fontSizes',
+		'typography.fontFamilies',
+		'spacing.spacingSizes'
+	);
 
 	// Convert typography slugs to actual CSS values
 	const typographyStyles = {};
@@ -96,9 +99,6 @@ export function DropdownCustomizerModal({
 	if (attributes.priorityPlusTypographyFontStyle) {
 		typographyStyles.fontStyle = attributes.priorityPlusTypographyFontStyle;
 	}
-
-	// Get spacing sizes from theme
-	const spacingSizes = useSetting('spacing.spacingSizes') || [];
 
 	// Reset all menu styles to defaults
 	const resetAllToDefaults = () => {
